@@ -1,0 +1,79 @@
+---
+// website/src/components/content/CodePreview.astro
+// Interactive code preview: embeds HTML/CSS/JS in a sandboxed iframe
+// with a "Run" button. Content is base64-encoded to avoid escaping issues.
+
+export interface Props {
+  title?: string;
+  html?: string;
+  css?: string;
+  js?: string;
+  height?: string;
+}
+
+const { title = '代码演示', html = '', css = '', js = '', height = '300px' } = Astro.props;
+
+// Use base64 via Node.js Buffer (available in Astro's server runtime)
+const btoa = (str: string) => Buffer.from(str, 'utf-8').toString('base64');
+const encoded = {
+  html: btoa(html),
+  css: btoa(css),
+  js: btoa(js),
+};
+---
+
+<div
+  class="code-preview my-6 rounded-xl border border-[var(--color-border)] overflow-hidden"
+  data-html={encoded.html}
+  data-css={encoded.css}
+  data-js={encoded.js}
+>
+  <div class="flex items-center justify-between px-4 py-2 bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
+    <span class="text-xs font-medium text-[var(--color-text-secondary)]">{title}</span>
+    <button class="run-btn text-xs px-3 py-1 rounded-md bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-light)] transition-colors">
+      运行 ▶
+    </button>
+  </div>
+  <div class="preview-container bg-white" style={`height: ${height}; overflow: auto;`}>
+    <iframe
+      class="preview-iframe w-full h-full border-0"
+      sandbox="allow-scripts"
+      srcdoc="<html><head><style>body{margin:0;font-family:sans-serif;padding:1rem;}</style></head><body><p style='color:#999;font-size:14px'>点击「运行」查看效果</p></body></html>"
+      title={title}
+    />
+  </div>
+</div>
+
+<script>
+  (function() {
+    function b64decode(str) {
+      try {
+        return decodeURIComponent(escape(atob(str)));
+      } catch {
+        return '';
+      }
+    }
+
+    const previews = document.querySelectorAll('.code-preview');
+    previews.forEach((container) => {
+      const btn = container.querySelector('.run-btn');
+      const iframe = container.querySelector('.preview-iframe');
+      if (!btn || !iframe) return;
+
+      const htmlB64 = container.getAttribute('data-html') || '';
+      const cssB64 = container.getAttribute('data-css') || '';
+      const jsB64 = container.getAttribute('data-js') || '';
+
+      btn.addEventListener('click', () => {
+        const html = b64decode(htmlB64);
+        const css = b64decode(cssB64);
+        const js = b64decode(jsB64);
+
+        iframe.setAttribute('srcdoc',
+          '<!DOCTYPE html>\n<html>\n<head>\n<style>body{margin:0}' + css + '</style>\n</head>\n<body>\n' +
+          html + '\n<script>' + js + '<\/script>\n</body>\n</html>'
+        );
+      });
+    });
+  })();
+</script>
