@@ -1,0 +1,44 @@
+---
+title: '设计与原型'
+phase: 2
+description: 'UI/UX 设计、Figma 联动、风格方案'
+icon: '🎨'
+order: 2
+---
+
+## 做什么
+
+在写代码之前，先想清楚网站长什么样子。
+
+## 设计风格提示词模板
+
+请为我的 [网站类型] 推荐 3 种设计风格方案：
+
+网站用途：[一句话描述]
+
+每种方案请给出：
+1. 主色、辅色、文字颜色
+2. 适合的字体
+3. 一句话风格描述
+4. 参考风格的关键词
+
+最终我选 [方案X]，请基于这个方案生成首页的 HTML 代码。
+
+## 可用的 Skills
+
+| Skill | 作用 | 安装命令 |
+|-------|------|----------|
+| nexu-io/open-design@ui-ux-pro-max | UI/UX 设计专家 | `npx skills add nexu-io/open-design@ui-ux-pro-max -g -y` |
+
+## Figma MCP 联动（进阶）
+
+如果你想让设计更专业，可以用 Figma MCP 直接把设计稿生成到 Figma 中：
+
+1. 在 Claude 中启用 Figma MCP
+2. 告诉 AI："帮我在 Figma 中创建一个 [网站类型] 的设计稿"
+3. AI 会调用 use_figma 工具在 Figma 中生成页面
+4. 你可以在 Figma 中微调后，再让 AI 生成对应代码
+
+## 🎯 练习
+
+**任务**：让 AI 为你生成 3 种设计风格方案。选一个你喜欢的，让 AI 生成该风格的首页 HTML 代码。在浏览器中预览效果。
