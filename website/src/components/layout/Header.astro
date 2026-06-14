@@ -1,6 +1,7 @@
 ---
 import { SITE_TITLE, NAV_ITEMS } from '@lib/constants';
 import SearchDialog from '@components/interactive/SearchDialog.tsx';
+import ThemeToggle from '@components/interactive/ThemeToggle.tsx';
 
 export interface Props {
   currentPath?: string;
@@ -33,9 +34,7 @@ const { currentPath = '' } = Astro.props;
           <span class="hidden sm:inline">搜索</span>
           <kbd class="hidden md:inline-flex text-xs px-1.5 py-0.5 rounded bg-[var(--color-bg-secondary)] border border-[var(--color-border)]">⌘K</kbd>
         </button>
-        <button id="theme-btn" class="p-2 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-secondary)] transition-colors" aria-label="切换主题">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </button>
+        <ThemeToggle client:idle />
         <button id="mobile-menu-btn" class="lg:hidden p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)]" aria-label="菜单">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
