@@ -17,7 +17,7 @@ website/
 │   │   └── zh/
 │   │       ├── intro/           # 了解 Vibe Coding（3 pages）
 │   │       ├── phases/          # 9 个实战阶段（phase-00 ~ phase-09）
-│   │       └── cases/           # 案例库（1 case study）
+│   │       └── cases/           # 案例库（9 个完整案例）
 │   ├── components/
 │   │   ├── layout/              # Header, Sidebar, Footer, MobileNav
 │   │   ├── ui/                  # Icon, PhaseCard
@@ -128,9 +128,30 @@ All MDX content uses `.content-article` class (not Tailwind prose — typography
 
 2. **Intro pages** (what-is-vibe-coding, why-now, misconceptions): Educational, concept-heavy. Use comparisons, tables, and examples extensively.
 
-3. **Case studies** (photography-portfolio): Detailed step-by-step walkthrough covering all 9 phases. Copy-paste ready prompts. Include Skills with install commands.
+3. **Case studies** (9 projects): Detailed step-by-step walkthrough covering all 9 phases. Each case includes:
+   - **Project overview** —人物画像、目标、用时、最终成果
+   - **Skills list** — 一键安装命令
+   - **Phase 0** — 准备工作（注册账号、安装工具）
+   - **Phase 1** — PRD 提示词（可直接复制给 AI）
+   - **Phase 2** — 设计原型提示词
+   - **Phase 3** — 前端开发（分步骤复制粘贴的详细提示词）
+   - **Phase 4** — 数据库构建提示词（含完整的建表 SQL/MongoDB/Firestore 结构）
+   - **Phase 5** — 测试清单
+   - **Phase 6** — 部署方案
+   - **Phase 7-9** — 运维、运营、文案优化
+   - **File structure** — 完整项目文件清单
+   - **进阶挑战** — 扩展功能列表
+   
+   Case study index is at `src/pages/cases/index.astro` with `src/components/interactive/CaseFilter.astro` for filtering by difficulty/category/tech.
 
 4. **FAQ pages**: Categorized Q&A, organized by topic.
+
+## MDX Guidelines
+
+- Use `{'{varName}'}` to escape curly braces in regular text (not inside fenced code blocks).
+- Inside fenced code blocks (``` ```), `{varName}` is safe — no escaping needed.
+- Add a "复制这段提示词给 AI" section before each major step (PRD, design, database, prompts) so readers can copy-paste directly.
+- Database sections should include: copy-paste prompt → "得到的结果" → actual SQL/schema → configuration steps.
 
 ## Setup & Commands
 

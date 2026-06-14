@@ -1,9 +1,9 @@
 ---
 title: '英语学习平台'
-description: '从零搭建一个在线英语学习平台——课程管理、学习进度追踪、小测验'
-emoji: '📚'
+description: '贯穿全流程的真实案例——从零做一个在线英语学习平台，含 AI 口语陪练'
 section: 'cases'
 order: 7
+emoji: '📚'
 difficulty: '进阶'
 category: '学习平台'
 tech_type: '全栈'
@@ -21,12 +21,14 @@ estimated_hours: 8
 
 **人物**：小刘，英语老师，想做一个在线学习平台辅助教学
 **目标**：课程展示 + 学习进度追踪 + AI 口语练习 + 小测验
-**用时**：约 8 小时
-**最终成果**：一个带 AI 功能的学习平台
+**用时**：约 8 小时（从零到上线）
+**最终成果**：一个带 AI 功能的学习平台，部署在 Vercel
 
 ---
 
 ## 用到的 Skills 一览
+
+开始前，先安装本案例会用到的所有 Skill：
 
 ```bash
 # 前端
@@ -39,49 +41,179 @@ npx skills add use-ai-sdk -g -y
 npx skills add yonatangross/orchestkit@devops-deployment -g -y
 ```
 
+> 💡 **提示**：以上命令在终端执行，`-g` 表示全局安装，`-y` 表示自动确认。如果某条报错，不影响其他 skill 的使用。
+
 ---
 
-## 阶段 1：技术选型分析
+## 阶段 0：准备工作
+
+### 需要注册的账号
+
+| 平台 | 用途 | 费用 |
+|------|------|------|
+| [GitHub](https://github.com) | 存放代码 | 免费 |
+| [Vercel](https://vercel.com) | 部署网站 | 免费 |
+| [Supabase](https://supabase.com) | 数据库 + 认证 | 免费 |
+| [OpenAI](https://platform.openai.com) | AI 口语陪练 API | 按量付费（约 $5/月） |
+| [Stripe](https://stripe.com) | 订阅付费（可选） | 免费 |
+
+### 需要安装的工具
+
+| 工具 | 用途 |
+|------|------|
+| VS Code | 写代码的编辑器 |
+| Node.js | 本地开发环境 |
+
+> ✅ 全部注册安装完大约需要 20 分钟。
+
+---
+
+## 阶段 1：产品定义（写 PRD）
+
+### 做什么
+
+让 AI 帮你写一份 PRD，明确学习平台的功能。
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我写一份产品需求文档（PRD），项目是「英语达人在线学习平台」。
+
+我是一名英语老师，想用 AI 帮我搭建一个在线英语学习平台。
+
+平台需要：
+1. 课程展示页 — 课程列表、课时大纲、价格
+2. 学习进度追踪 — 用户看到自己学了多少课
+3. AI 口语练习 — 和 AI 对话练习英语，AI 纠正语法错误
+4. 小测验 — 每课配套测验，自动评分
+5. 用户认证 — 注册/登录/订阅管理
+6. 定价 — 免费试学 + 月度订阅
+
+目标用户：想提高英语口语的中国人，初中级水平。
+```
+
+### 得到的结果
+
+AI 会生成完整的 PRD，包含课程体系设计、功能优先级、技术建议。
+
+---
+
+## 阶段 2：技术选型分析
 
 ### 为什么选 Astro + React islands？
 
 学习平台大部分是内容页（课程介绍），少部分需要交互（测验、AI 对话）。Astro 的 islands 架构正好匹配——静态内容用 Astro，交互组件用 React。
 
-### 数据库选择
+### 数据库设计
 
 | 表 | 说明 |
 |----|------|
-| `courses` | 课程信息 |
-| `lessons` | 课时内容 |
-| `user_progress` | 学习进度 |
-| `quiz_attempts` | 测验记录 |
+| `courses` | 课程信息（标题、描述、级别、价格） |
+| `lessons` | 课时内容（所属课程、标题、内容、排序） |
+| `user_progress` | 学习进度（用户、课时、完成状态、得分） |
+| `quiz_questions` | 测验题目（所属课时、题目、选项、答案） |
+| `quiz_attempts` | 测验记录（用户、得分、时间） |
 | `subscriptions` | 订阅信息 |
 
 PostgreSQL 的关系型结构完美匹配这种有严格数据关系的场景。
 
 ---
 
-## 阶段 2：数据库构建
+## 阶段 3：设计与原型
+
+### 做什么
+
+确定学习平台的视觉风格。
+
+> 🎨 **Skill**：`ui-ux-pro-max`
+
+### 复制这段提示词给 AI
+
+```markdown
+请为我的英语学习平台推荐设计风格。
+
+品牌名：英语达人（English Pro）
+目标用户：初中级英语学习者，中国人
+风格关键词：温暖、鼓励、学习感、不幼稚
+
+需要页面：
+1. 首页：课程列表 + 学习数据概览 + 试学入口
+2. 课程详情：课时大纲 + 课程介绍 + 订阅按钮
+3. 学习页面：课程内容展示 + 导航（上一课/下一课）
+4. AI 口语练习：对话界面（类似聊天 App）
+5. 测验页面：题目展示 + 选项 + 提交 + 评分结果
+6. 个人中心：学习进度 + 统计数据
+
+配色建议：蓝色为主（信任/专业）+ 暖橙色点缀（鼓励/活力），大量圆角，柔和阴影
+```
+
+---
+
+## 阶段 4：数据库构建
+
+### 做什么
+
+设计英语学习平台的数据库表结构，包括课程、课时、学习进度、测验等。
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我设计一个在线英语学习平台的数据库。
+
+项目名称：英语达人
+数据库平台：Supabase（PostgreSQL）
+
+业务需求：
+1. **课程管理**：多门课程，每门课包含多个课时，有级别（初级/中级/高级）和价格
+2. **课时内容**：每节课包含标题、正文内容（Markdown 格式）、视频链接（可选）、时长
+3. **学习进度**：记录每个用户每节课的学习完成状态和得分
+4. **测验系统**：每节课配套测验，选择题（4 个选项），自动评分
+5. **测验记录**：记录用户的每次测验提交，包括答案和得分
+6. **订阅管理**：用户订阅 Pro 计划后解锁付费课程（使用 Stripe）
+
+请帮我设计：
+1. 所有表的完整 SQL 建表语句
+2. 字段类型、约束和默认值
+3. 表之间的外键关系（课程 → 课时 → 测验）
+4. 合适的索引（如用户ID + 课时ID 的唯一约束）
+5. Row Level Security (RLS) 策略
+6. 插入一些示例课程数据的 SQL
+
+注意：level 字段使用 CHECK 约束限制为固定值。
+```
+
+### 得到的结果
+
+AI 会生成完整的建表 SQL、关系图和示例数据。以下是推荐设计：
+
+在 Supabase Dashboard 的 **SQL Editor** 中执行：
 
 ```sql
+-- 课程表
 CREATE TABLE courses (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT,
   level TEXT CHECK (level IN ('beginner', 'intermediate', 'advanced')),
-  price INTEGER,
+  cover_image TEXT,
+  price INTEGER DEFAULT 0,        -- 0 表示免费
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 课时表
 CREATE TABLE lessons (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   course_id BIGINT REFERENCES courses,
   title TEXT NOT NULL,
-  content_url TEXT,
+  content TEXT,                     -- Markdown 格式的课程内容
+  content_type TEXT DEFAULT 'text',  -- 'text' | 'video' | 'audio'
+  video_url TEXT,
   order_num INTEGER,
-  duration_minutes INTEGER
+  duration_minutes INTEGER,
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 学习进度表
 CREATE TABLE user_progress (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   user_id UUID REFERENCES auth.users,
@@ -91,35 +223,473 @@ CREATE TABLE user_progress (
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(user_id, lesson_id)
 );
+
+-- 测验题目表
+CREATE TABLE quiz_questions (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  lesson_id BIGINT REFERENCES lessons,
+  question TEXT NOT NULL,
+  options JSONB NOT NULL,            -- ["选项A", "选项B", "选项C", "选项D"]
+  correct_answer INTEGER NOT NULL,   -- 正确选项索引（0-based）
+  explanation TEXT                   -- 答案解析
+);
+
+-- 测验记录表
+CREATE TABLE quiz_attempts (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id UUID REFERENCES auth.users,
+  lesson_id BIGINT REFERENCES lessons,
+  score INTEGER NOT NULL,            -- 得分百分比
+  answers JSONB,                     -- 用户答案记录
+  completed_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 订阅表
+CREATE TABLE subscriptions (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id UUID REFERENCES auth.users,
+  stripe_subscription_id TEXT,
+  status TEXT DEFAULT 'active',      -- 'active' | 'canceled' | 'expired'
+  start_date TIMESTAMPTZ DEFAULT NOW(),
+  end_date TIMESTAMPTZ
+);
+```
+
+### 插入模拟数据
+
+```sql
+INSERT INTO courses (title, description, level, price) VALUES
+  ('英语基础入门', '从零开始学英语，掌握基础语法和日常会话', 'beginner', 0),
+  ('日常会话进阶', '提升日常英语对话能力，覆盖旅行、购物、餐饮等场景', 'intermediate', 9900),
+  ('职场英语精通', '商务邮件、会议演讲、谈判技巧，职场必备', 'advanced', 19900);
 ```
 
 ---
 
-## 阶段 3：AI 口语练习功能
+## 阶段 5：后端搭建
 
-使用 OpenAI API 做一个 AI 对话练习：
+### 做什么
 
-```javascript
-import OpenAI from 'openai';
+用 Supabase Edge Functions 处理后端逻辑。
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+### API 设计
 
-async function aiTutor(userMessage, level) {
-  const response = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [
-      { role: 'system', content: `你是英语陪练，用户水平：${level}。请用适合的词汇和语速回应，并在对话结束后给出语法纠正建议。` },
-      { role: 'user', content: userMessage },
-    ],
+| 端点 | 功能 |
+|------|------|
+| `GET /api/courses` | 获取课程列表 |
+| `GET /api/courses/:id/lessons` | 获取某课程的所有课时 |
+| `GET /api/lessons/:id` | 获取课时详情（含测验题） |
+| `POST /api/progress` | 更新学习进度 |
+| `GET /api/progress/:userId` | 获取用户学习进度 |
+| `POST /api/quiz/submit` | 提交测验答案 |
+| `POST /api/ai/chat` | AI 口语对话 |
+
+### Supabase Edge Function：AI 口语陪练
+
+```markdown
+请帮我创建一个 Supabase Edge Function，用于 AI 英语口语陪练。
+
+函数路径：supabase/functions/ai-tutor/index.ts
+
+功能：
+1. 接收用户的消息和语言级别
+2. 调用 OpenAI API 生成英语陪练回复
+3. 回复后附上语法纠正建议
+
+代码如下：
+```typescript
+import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+serve(async (req) => {
+  // 验证用户登录
+  const authHeader = req.headers.get('Authorization')!;
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_ANON_KEY')!
+  );
+  const { data: { user }, error: authError } = await supabase.auth.getUser(
+    authHeader.replace('Bearer ', '')
+  );
+  if (authError) return new Response('Unauthorized', { status: 401 });
+
+  // 获取用户消息和级别
+  const { message, level } = await req.json();
+  
+  // 调用 OpenAI
+  const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [
+        { 
+          role: 'system', 
+          content: `你是专业的英语陪练老师。用户英语水平：${level}。
+          规则：
+          1. 用适合用户水平的词汇和语速回应
+          2. 如果用户用中文提问，引导用户用英语表达
+          3. 每次回复后，附上"📝 语法纠正"部分：
+             - 指出用户回复中的语法/用词错误
+             - 给出正确说法
+             - 解释为什么错了
+          4. 保持鼓励的语气，多说"Great!" "Good job!"` 
+        },
+        { role: 'user', content: message },
+      ],
+      temperature: 0.7,
+      max_tokens: 500,
+    }),
   });
-  return response.choices[0].message.content;
-}
+
+  const data = await openaiResponse.json();
+  const reply = data.choices[0].message.content;
+
+  return new Response(JSON.stringify({ reply }), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+});
+```
+
+部署：`supabase functions deploy ai-tutor --no-verify-jwt`
+```
+
+> ⚠️ 在 Supabase Dashboard 的 **Edge Functions** 设置中添加 `OPENAI_API_KEY` 环境变量。
+
+---
+
+## 阶段 6：前端开发（核心）
+
+### 做什么
+
+用 Astro + React 搭建前端页面。
+
+> 💻 **Skill**：`tailwindcss-v4`
+
+### 第一步：创建项目
+
+```bash
+# 创建 Astro 项目
+npm create astro@latest english-pro -- --template basics
+cd english-pro
+npm install
+npm install @supabase/supabase-js react react-dom @stripe/react-stripe-js @stripe/stripe-js
+```
+
+### 第二步：生成首页（课程列表）
+
+```markdown
+请帮我生成英语学习平台的首页 (src/pages/index.astro)。
+
+网站名：英语达人
+风格：蓝色为主、温暖、学习感
+
+**首页内容：**
+1. 顶部导航栏：Logo「英语达人」+ 导航链接 + 登录/注册按钮
+2. Hero 区域：渐变蓝背景，标题「让 AI 陪你练英语」+ 副标题 + 免费试学按钮
+3. 课程卡片网格：
+   - 每门课程一张卡片：封面图（占位）+ 课程名 + 级别标签 + 价格 + 课时数
+   - 免费课程显示「免费」标签
+   - 点击跳转到课程详情
+4. 特色介绍：3 个图标卡片（AI 口语陪练 / 智能测验 / 进度追踪）
+5. 数据展示：注册学员数 / 课程总数 / AI 对话次数（静态数据）
+6. 页脚：版权 + 社交媒体
+```
+
+### 第三步：生成课程详情页
+
+```markdown
+请帮我生成课程详情页 (src/pages/course/[id].astro)。
+
+**内容：**
+1. 课程封面大图
+2. 课程信息：标题、级别标签、价格、总课时数、总学习时长
+3. 课程描述（多行文本）
+4. 订阅/购买按钮：
+   - 免费课程：显示「免费开始学习」
+   - 付费课程：显示「订阅 - ¥99/月」跳转 Stripe
+5. 课时大纲列表：
+   - 按顺序显示所有课时
+   - 每课：序号 + 标题 + 时长 + 类型图标
+   - 已完成的课时显示 ✅
+   - 当前进度中的高亮显示
+6. 推荐课程（底部）
+```
+
+### 第四步：生成 AI 口语练习（React 交互组件）
+
+```markdown
+请帮我在 Astro 中创建一个 React 组件，实现 AI 英语口语练习对话界面。
+
+文件位置：src/components/AiTutor.tsx（使用 client:load 在 Astro 页面中加载）
+
+**功能：**
+1. 聊天界面风格（类似微信/WhatsApp）
+2. 消息气泡：用户消息右侧蓝色，AI 回复左侧白色
+3. AI 回复中自动解析「📝 语法纠正」部分，用不同样式突出显示
+4. 输入框 + 发送按钮（按 Enter 发送）
+5. 加载中状态：AI 正在输入的动画（三个跳动小点）
+6. 对话历史保存在 React state 中
+7. 语言级别选择器（Beginner / Intermediate / Advanced）
+
+**API 调用：**
+```javascript
+const response = await fetch(
+  'https://你的项目.supabase.co/functions/v1/ai-tutor',
+  {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${supabaseAnonKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ message: userInput, level: selectedLevel }),
+  }
+);
+const data = await response.json();
+setMessages(prev => [...prev, { role: 'ai', content: data.reply }]);
+```
+
+**使用方式：** 在 Astro 页面中 `<AiTutor client:load />`
+
+要求：漂亮的 UI、响应式、中文提示词占位、示例对话引导。
+```
+
+### 第五步：生成测验页面
+
+```markdown
+请帮我创建测验组件 (src/components/Quiz.tsx)。
+
+**功能：**
+1. 展示题目和 4 个选项（单选）
+2. 点击选项后立即显示对错 + 显示正确答案
+3. 显示答案解析
+4. 所有题目完成后显示评分结果：
+   - 得分百分比
+   - 正确/错误题数
+   - 鼓励性文案
+   - 重做按钮
+5. 进度条显示完成情况
+
+**交互流程：**
+- 每课底部显示「开始测验」按钮
+- 测验完成后，结果提交到 Supabase quiz_attempts 表
+- 更新 user_progress 的 score 字段
+
+使用 React，用 client:load 在 Astro 页面中加载。
+```
+
+### 第六步：生成个人中心 + 学习追踪
+
+```markdown
+请帮我生成个人中心页面 (src/pages/dashboard.astro) 和进度组件 (src/components/Progress.tsx)。
+
+**个人中心页：**
+1. 欢迎语 + 用户信息（头像、昵称、邮箱）
+2. 学习统计数据：
+   - 已学课时 / 总课时
+   - 完成率（进度条）
+   - 平均测验得分
+   - 连续学习天数
+3. 学习进度列表：
+   - 每门课程的进度条
+   - 下一课继续学习按钮
+4. 订阅状态（免费/Pro）
+
+**学习进度组件 (Progress.tsx)：**
+- 环形进度图（SVG 实现）
+- 课程进度条
+- 课时完成列表
+
+使用 React 组件，client:load 加载。
 ```
 
 ---
 
-## 阶段 4：部署 + SEO + 营销
+## 阶段 7：测试
 
-- **部署**：Vercel + Supabase
-- **SEO**：课程页面独立 URL + 结构化数据（Course Schema）+ 博客引流
-- **营销**：免费试学课程 → 邮件收集 → 订阅转化。小红书发「30 天英语学习打卡」系列
+### 做什么
+
+检查英语学习平台能否正常运行。
+
+### 检查清单
+
+```markdown
+请帮我检查学习平台是否完整。逐项确认：
+
+功能测试：
+- [ ] 首页课程列表是否正常加载
+- [ ] 课程详情页信息是否正确
+- [ ] 课程内容页是否正常显示
+- [ ] 上一课/下一课导航是否正常
+- [ ] AI 口语对话是否能正常回复
+- [ ] AI 语法纠正是否正确显示
+- [ ] 测验题目是否正常展示
+- [ ] 提交答案后评分是否正确
+- [ ] 学习进度是否正确记录
+- [ ] 个人中心统计数据是否正确
+- [ ] 用户注册/登录是否正常
+- [ ] 订阅流程是否正常
+
+AI 测试：
+- [ ] 不同语言级别（beginner/intermediate/advanced）的回答是否适配
+- [ ] 中文提问是否有引导英文的提示
+- [ ] 语法纠正是否准确
+```
+
+### 常见问题及修复
+
+| 问题 | 修复方法 |
+|------|----------|
+| AI 回复超时 | Edge Functions 默认超时 60 秒，OpenAI 调用需设置合理超时 |
+| 测验答案不保存 | 检查 Supabase 的 RLS 策略是否允许插入 |
+| 进度不同步 | 确保 user_progress 表的 UNIQUE 约束正确处理 upsert |
+| AI 回复不准确 | 在 system prompt 中增加更详细的语法纠正规则 |
+| Stripe 订阅失败 | 检查 Webhook 配置和价格 ID 是否正确 |
+
+---
+
+## 阶段 8：部署上线
+
+### 做什么
+
+把学习平台部署到生产环境。
+
+> 🚀 **Skill**：`devops-deployment`
+
+### 部署步骤
+
+1. **前端 (Vercel)**：
+   - 推送代码到 GitHub
+   - 在 Vercel 导入仓库
+   - 设置环境变量（Supabase URL/Key、OpenAI Key 等）
+
+2. **Supabase Edge Functions**：
+   ```bash
+   supabase login
+   supabase link --project-ref 你的项目ID
+   supabase functions deploy ai-tutor --no-verify-jwt
+   ```
+
+3. **OpenAI**：
+   - 在 OpenAI Dashboard 查看使用量
+   - 设置用量限制，防止意外超支
+
+4. **Stripe（如启用付费）**：
+   - 创建产品和价格
+   - 配置 Webhook
+
+### 成本预估
+
+| 资源 | 预估月费 |
+|------|---------|
+| Vercel | 免费 |
+| Supabase | 免费 |
+| OpenAI API | $5-10（取决于使用量） |
+| Stripe | 免费（按交易扣费） |
+
+---
+
+## 阶段 9：文案优化
+
+### 做什么
+
+用 AI 优化课程文案和营销材料。
+
+> ✍️ **Skill**：不需要额外 skill
+
+### 课程描述优化
+
+```markdown
+请帮我优化英语课程描述。
+
+目标用户：想提高英语的中国人（初中级）
+课程风格：实用、循序渐进、贴近生活
+
+需要优化：
+1. 每门课程的简介（50 字以内，吸引人）
+2. 课程大纲中的课时标题（简洁明了）
+3. 平台首页的 slogan 和介绍文案
+
+参考风格：温暖鼓励、强调"你能做到"、强调实用性
+请为 3 门课程（基础入门/日常会话/职场英语）各写 2 个版本的描述。
+```
+
+### 学习激励文案
+
+```markdown
+请帮我写一些学习激励文案，用于以下场景：
+
+1. 完成一节课时的 🎉 恭喜弹窗
+2. 完成一门课程的 🏆 结业文案
+3. 连续学习 7 天的 🔥 鼓励文案
+4. 测验满分的 🌟 表扬文案
+5. 订阅转化的 💰 价值文案
+
+风格：温暖、真诚、不油腻。避免「你是最棒的」这类空洞表扬，而是具体肯定学习行为。
+```
+
+---
+
+## 完整项目文件清单
+
+```
+english-pro/
+├── src/
+│   ├── pages/
+│   │   ├── index.astro             # 首页
+│   │   ├── course/
+│   │   │   └── [id].astro          # 课程详情
+│   │   ├── learn/
+│   │   │   └── [lessonId].astro    # 学习页面
+│   │   ├── dashboard.astro         # 个人中心
+│   │   ├── login.astro             # 登录
+│   │   └── pricing.astro           # 定价
+│   ├── components/
+│   │   ├── AiTutor.tsx             # AI 口语陪练 (React)
+│   │   ├── Quiz.tsx                # 测验 (React)
+│   │   ├── Progress.tsx            # 进度组件 (React)
+│   │   ├── CourseCard.astro        # 课程卡片
+│   │   ├── LessonList.astro        # 课时列表
+│   │   ├── Nav.astro               # 导航栏
+│   │   └── Footer.astro            # 页脚
+│   ├── layouts/
+│   │   └── BaseLayout.astro        # 基础布局
+│   └── lib/
+│       └── supabase.ts             # Supabase 客户端
+├── supabase/
+│   └── functions/
+│       └── ai-tutor/
+│           └── index.ts            # AI 口语 API
+├── .env
+├── astro.config.mjs
+└── package.json
+```
+
+> 🎉 **恭喜！** 你已经用 Vibe Coding 做出了一个带 AI 口语陪练的英语学习平台。整个过程你只需要：
+> 1. 用自然语言描述课程和功能
+> 2. 配置 Supabase 数据库
+> 3. 让 AI 生成前端页面
+> 4. 部署上线
+>
+> 现在你的学生可以开始学英语了——AI 老师 24 小时在线陪练！
+
+---
+
+## 进阶挑战
+
+做完了基础版？试试这些进阶功能：
+
+- [ ] AI 语音对话（Whisper 语音识别 + TTS 语音合成）
+- [ ] 单词本功能（学习中收藏生词，支持复习）
+- [ ] AI 写作批改（用户写英语作文，AI 批改评分）
+- [ ] 学习提醒（邮件/推送通知）
+- [ ] 学习排行榜（和朋友一起学）
+- [ ] 课程视频播放（集成视频平台）
+- [ ] 学习报告周报（邮件发送学习总结）
+- [ ] 社区讨论（每课下方可提问讨论）
+- [ ] AI 自适应学习（根据用户水平推荐课程难度）
+
+想实现哪个？直接把需求告诉 AI："请为我的学习平台添加 [功能名]"

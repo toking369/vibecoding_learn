@@ -1,9 +1,9 @@
 ---
 title: '校园外卖点餐'
-description: '从零搭建一个校园外卖点餐系统——商家端、用户端、实时订单、管理后台'
-emoji: '🚚'
+description: '贯穿全流程的真实案例——从零搭建校园外卖点餐系统，含商家端、用户端、实时订单'
 section: 'cases'
 order: 9
+emoji: '🚚'
 difficulty: '高阶'
 category: '小程序风格'
 tech_type: '前后端分离'
@@ -21,12 +21,14 @@ estimated_hours: 12
 
 **人物**：小周，大学生，想做一个校园内外卖点餐平台
 **目标**：学生点餐 + 商家接单 + 实时订单状态
-**用时**：约 12 小时
-**最终成果**：一个前后端分离的外卖系统
+**用时**：约 12 小时（从零到上线）
+**最终成果**：一个前后端分离的外卖系统，部署在云服务器
 
 ---
 
 ## 用到的 Skills 一览
+
+开始前，先安装本案例会用到的所有 Skill：
 
 ```bash
 # 前端
@@ -39,9 +41,76 @@ npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y
 npx skills add yonatangross/orchestkit@devops-deployment -g -y
 ```
 
+> 💡 **提示**：以上命令在终端执行，`-g` 表示全局安装，`-y` 表示自动确认。如果某条报错，不影响其他 skill 的使用。
+
 ---
 
-## 阶段 1：技术选型分析
+## 阶段 0：准备工作
+
+### 需要注册的账号
+
+| 平台 | 用途 | 费用 |
+|------|------|------|
+| [GitHub](https://github.com) | 存放代码 | 免费 |
+| [阿里云](https://aliyun.com) 或 [腾讯云](https://cloud.tencent.com) | 部署服务器 | 约 ¥50/月（学生优惠 ¥10/月） |
+| [MySQL](https://mysql.com) | 数据库 | 免费（云服务商提供） |
+| [Redis](https://redis.io) | 缓存 + 实时消息 | 免费 |
+
+### 需要安装的工具
+
+| 工具 | 用途 |
+|------|------|
+| VS Code | 写代码的编辑器 |
+| Node.js | 本地开发环境 |
+| MySQL Workbench（可选） | 可视化数据库管理 |
+
+> ✅ 云服务器有学生优惠，认证后约 ¥10/月，一杯奶茶钱。
+
+---
+
+## 阶段 1：产品定义（写 PRD）
+
+### 做什么
+
+让 AI 帮你写一份 PRD，明确外卖系统的全貌。
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我写一份产品需求文档（PRD），项目是「校园鲜——校园外卖点餐平台」。
+
+我想做一个校园内外卖点餐系统，面向校内食堂和周边商家。
+
+有三个角色：
+
+1. **学生/用户端**：
+   - 浏览商家和商品
+   - 加购物车、下单
+   - 查看订单状态（实时更新）
+   - 订单历史
+
+2. **商家端**：
+   - 商品管理（上架/下架/修改）
+   - 接单/拒绝订单
+   - 更新订单状态（制作中 → 配送中 → 已完成）
+   - 查看今日营收
+
+3. **管理后台**：
+   - 用户管理
+   - 商家审核
+   - 订单监管
+   - 数据统计
+
+核心流程：用户浏览 → 加购 → 下单 → 商家接单 → 制作 → 配送 → 完成。
+```
+
+### 得到的结果
+
+AI 会生成完整的 PRD，包含三个端的功能清单、数据流程、页面结构。
+
+---
+
+## 阶段 2：技术选型分析
 
 ### 为什么前后端分离？
 
@@ -58,54 +127,174 @@ npx skills add yonatangross/orchestkit@devops-deployment -g -y
 
 | 框架 | 生态 | 学习曲线 | 适合 |
 |------|------|---------|------|
-| Express | 最丰富 | 低 | 推荐 |
+| Express | 最丰富 | 低 | ✅ 推荐 |
 | Fastify | 性能好 | 中 | 略小众 |
 | NestJS | 企业级 | 高 | 过重 |
 
 ---
 
-## 阶段 2：数据库构建
+## 阶段 3：设计与原型
 
-### MySQL 核心表
+### 做什么
+
+确定外卖系统的视觉风格。
+
+> 🎨 **Skill**：`ui-ux-pro-max`
+
+### 复制这段提示词给 AI
+
+```markdown
+请为我的校园外卖系统设计 UI 风格。
+
+品牌名：校园鲜
+目标用户：在校大学生
+风格关键词：年轻、活力、食欲、校园感
+
+需要三个端的界面：
+
+**用户端（移动优先，类似美团外卖）：**
+1. 首页：商家列表（卡片带logo）+ 分类筛选 + 搜索
+2. 商品页：商家信息 + 商品列表 + 购物车浮层
+3. 订单页：订单列表 + 实时状态（进度条）
+4. 个人中心
+
+**商家端（桌面+PWA）：**
+1. 订单台：新订单提醒 + 订单列表 + 状态更新按钮
+2. 商品管理：商品 CRUD
+3. 数据看板：今日订单数/营收/热销商品
+
+**管理后台：**
+1. 数据概览
+2. 商家审核
+3. 订单监管
+
+配色：橙色为主（食欲）+ 白色底，大圆角，卡片阴影。
+```
+
+---
+
+## 阶段 4：数据库构建
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我设计一个校园外卖点餐系统的数据库。
+
+项目名称：校园鲜
+数据库平台：MySQL（主数据库）+ Redis（缓存/实时）
+
+业务需求：
+1. **用户系统**：学生、商家、管理员三种角色，手机号注册登录
+2. **商家管理**：商家信息（名称、Logo、营业时间、起送价、配送费）
+3. **商品管理**：每个商家有自己的商品分类和商品（名称、价格、图片、库存）
+4. **购物车**：用户将商品加入购物车，临时存储（用 Redis）
+5. **订单系统**：用户下单生成订单，订单有多个商品项，状态流转（待接单→制作中→配送中→已完成）
+6. **实时推送**：订单状态变化时实时通知用户和商家（用 Redis Pub/Sub）
+7. **管理后台**：管理员审核商家、查看统计数据
+
+请帮我设计：
+1. 所有 MySQL 表的完整建表语句，包括主键、外键、索引、约束
+2. 表之间的关系（ER 关系）
+3. 订单状态枚举和流转规则
+4. Redis 的数据结构设计（购物车用 Hash，订单通知用 Pub/Sub）
+5. Redis 的过期策略（购物车 1 小时自动过期）
+6. 说明 MySQL 和 Redis 各自的用途和理由
+
+注意：金额字段使用 INT 类型（单位：分），订单号用唯一字符串。
+```
+
+### 得到的结果
+
+AI 会生成完整的 MySQL 建表语句、Redis 数据结构和状态流转图。以下是推荐设计：
+
+### MySQL 核心表结构
 
 ```sql
--- 用户表
+-- 用户表（学生 + 商家 + 管理员）
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   phone VARCHAR(20) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
   name VARCHAR(50),
+  avatar VARCHAR(500),
   role ENUM('customer', 'merchant', 'admin') DEFAULT 'customer',
+  status TINYINT DEFAULT 1,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 商家表
 CREATE TABLE merchants (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT REFERENCES users(id),
+  user_id INT UNIQUE REFERENCES users(id),
   name VARCHAR(100) NOT NULL,
+  description TEXT,
+  logo VARCHAR(500),
+  banner VARCHAR(500),
   address VARCHAR(200),
-  status ENUM('open', 'closed') DEFAULT 'open'
+  phone VARCHAR(20),
+  category VARCHAR(50),           -- 中餐/西餐/奶茶/小吃
+  status ENUM('open', 'closed', 'pending') DEFAULT 'pending',
+  delivery_fee INT DEFAULT 0,     -- 配送费（分）
+  min_order INT DEFAULT 0,        -- 起送价（分）
+  open_time TIME DEFAULT '08:00',
+  close_time TIME DEFAULT '22:00',
+  rating DECIMAL(2,1) DEFAULT 5.0,
+  sales_count INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 商品分类表（每个商家有自己的商品分类）
+CREATE TABLE product_categories (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  merchant_id INT REFERENCES merchants(id),
+  name VARCHAR(50) NOT NULL,
+  sort_order INT DEFAULT 0
 );
 
 -- 商品表
 CREATE TABLE products (
   id INT AUTO_INCREMENT PRIMARY KEY,
   merchant_id INT REFERENCES merchants(id),
+  category_id INT REFERENCES product_categories(id),
   name VARCHAR(100) NOT NULL,
-  price DECIMAL(10,2) NOT NULL,
-  image_url VARCHAR(500),
-  stock INT DEFAULT 0
+  description TEXT,
+  price INT NOT NULL,              -- 单位：分
+  image VARCHAR(500),
+  stock INT DEFAULT 999,
+  status ENUM('on', 'off') DEFAULT 'on',
+  sales_count INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 购物车表（Redis 为主，MySQL 做持久化）
+CREATE TABLE carts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT REFERENCES users(id),
+  merchant_id INT REFERENCES merchants(id),
+  product_id INT REFERENCES products(id),
+  quantity INT DEFAULT 1,
+  selected TINYINT DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user_id, merchant_id, product_id)
 );
 
 -- 订单表
 CREATE TABLE orders (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  order_no VARCHAR(32) UNIQUE NOT NULL,  -- 订单号
   customer_id INT REFERENCES users(id),
   merchant_id INT REFERENCES merchants(id),
-  status ENUM('pending', 'confirmed', 'preparing', 'delivering', 'completed', 'cancelled'),
-  total DECIMAL(10,2),
+  status ENUM('pending', 'confirmed', 'preparing', 'delivering', 'completed', 'cancelled') DEFAULT 'pending',
+  total_amount INT NOT NULL,             -- 总金额（分）
+  delivery_fee INT DEFAULT 0,
   delivery_address VARCHAR(200),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  delivery_phone VARCHAR(20),
+  delivery_note TEXT,
+  payment_method VARCHAR(20),
+  payment_status TINYINT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  confirmed_at TIMESTAMP,
+  completed_at TIMESTAMP
 );
 
 -- 订单项表
@@ -113,8 +302,10 @@ CREATE TABLE order_items (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_id INT REFERENCES orders(id),
   product_id INT REFERENCES products(id),
+  product_name VARCHAR(100),
+  product_price INT,
   quantity INT,
-  price DECIMAL(10,2)
+  subtotal INT
 );
 ```
 
@@ -122,53 +313,551 @@ CREATE TABLE order_items (
 
 ```javascript
 // 购物车（临时存储，过期时间 1 小时）
-redis.set(`cart:${userId}`, JSON.stringify(cartItems), 'EX', 3600);
+// 使用 Hash 结构：cart:{userId} → { productId: quantity }
+redis.hset(`cart:${userId}`, productId, quantity);
+redis.expire(`cart:${userId}`, 3600);
 
 // 订单状态推送（发布/订阅）
-redis.publish(`order:${orderId}`, JSON.stringify({ status: 'preparing' }));
+redis.publish(`order:${orderId}`, JSON.stringify({
+  status: 'preparing',
+  timestamp: Date.now()
+}));
+
+// 商家新订单提醒队列
+redis.lpush(`merchant:${merchantId}:new_orders`, orderId);
 ```
+
+> 💡 在本地或云服务器安装 Redis：`apt install redis-server`（Linux）或使用云 Redis 服务。
 
 ---
 
-## 阶段 3：后端搭建
+## 阶段 5：后端搭建（核心）
 
-### API 架构
+### 做什么
 
+用 Node.js + Express 搭建后端 API。
+
+> 🗄️ **Skill**：`nodejs-express-server`
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我用 Node.js + Express 搭建一个外卖系统的后端 API。
+
+项目结构：
 ```
 server/
+├── app.js                  # Express 入口
+├── config/
+│   └── db.js              # MySQL + Redis 连接
 ├── routes/
-│   ├── auth.js          # 登录注册
-│   ├── merchants.js     # 商家 CRUD
-│   ├── products.js      # 商品 CRUD
-│   ├── orders.js        # 订单流程
-│   └── admin.js         # 管理后台
+│   ├── auth.js            # 登录/注册
+│   ├── merchants.js       # 商家 API
+│   ├── products.js        # 商品 API
+│   ├── cart.js            # 购物车 API
+│   ├── orders.js          # 订单 API
+│   └── admin.js           # 管理后台 API
 ├── middleware/
-│   ├── auth.js          # JWT 验证
-│   └── role.js          # 角色鉴权
-├── models/              # MySQL 查询
-└── app.js               # Express 入口
+│   ├── auth.js            # JWT 验证
+│   └── role.js            # 角色鉴权
+├── utils/
+│   └── response.js        # 统一响应格式
+└── package.json
 ```
 
-### 订单状态流转
+**需要实现的 API：**
 
-```
-pending → confirmed → preparing → delivering → completed
-                     ↘ cancelled
+**认证模块 (routes/auth.js)：**
+- POST /api/auth/register — 注册（手机号 + 密码 + 角色）
+- POST /api/auth/login — 登录，返回 JWT token
+- GET /api/auth/me — 获取当前用户信息
+
+**商家模块 (routes/merchants.js)：**
+- GET /api/merchants — 获取商家列表（支持分类筛选、关键词搜索）
+- GET /api/merchants/:id — 获取商家详情（含商品列表）
+- PUT /api/merchants/:id — 更新商家信息（商家本人）
+
+**商品模块 (routes/products.js)：**
+- GET /api/merchants/:id/products — 获取商家商品（按分类分组）
+- POST /api/products — 新增商品（商家）
+- PUT /api/products/:id — 修改商品
+- DELETE /api/products/:id — 下架商品
+
+**购物车模块 (routes/cart.js)：**
+- GET /api/cart — 获取购物车（按商家分组）
+- POST /api/cart — 添加/修改购物车 { productId, quantity }
+- DELETE /api/cart/:productId — 删除购物车项
+- POST /api/cart/clear — 清空购物车
+
+**订单模块 (routes/orders.js)：**
+- POST /api/orders — 创建订单（从购物车生成）
+- GET /api/orders — 获取我的订单列表（用户端/商家端不同视图）
+- GET /api/orders/:id — 订单详情
+- PUT /api/orders/:id/status — 更新订单状态（商家）
+  - pending → confirmed（接单）
+  - confirmed → preparing（开始制作）
+  - preparing → delivering（配送中）
+  - delivering → completed（完成）
+  - pending → cancelled（拒单）
+- GET /api/merchant/orders — 商家端查看收到的订单（按状态分组）
+
+**管理后台 (routes/admin.js)：**
+- GET /api/admin/merchants — 商家列表（含审核状态）
+- PUT /api/admin/merchants/:id/approve — 审核通过/拒绝商家
+- GET /api/admin/stats — 数据统计（订单数/营收/用户数）
+
+**要求：**
+1. 所有 API 返回统一格式：{ code: 200, data: {...}, message: 'ok' }
+2. JWT token 放在 Authorization header
+3. 订单号生成规则：日期 + 随机数（如 20260614123456）
+4. 金额单位统一为「分」，前端显示时除以 100
+5. 完整的错误处理 + 参数验证
+6. MySQL 使用连接池，Redis 使用 ioredis 库
 ```
 
 ---
 
-## 阶段 4：部署方案
+## 阶段 6：前端开发（核心）
 
-- **前端**：Vercel 或云服务器 Nginx 托管
-- **后端**：阿里云/腾讯云轻量服务器（2核4G 够用）
-- **数据库**：云数据库 MySQL + Redis（或同服务器部署）
-- **WebSocket**：Socket.io 实现实时订单提醒
+### 做什么
+
+用 React 搭建三个客户端。
+
+> 💻 **Skill**：`tailwindcss-v4`
+
+### 第一步：创建项目
+
+```bash
+# 用户端
+npm create vite@latest campus-eats-user --template react
+cd campus-eats-user
+npm install
+npm install axios react-router-dom zustand tailwindcss @tailwindcss/vite
+
+# 商家端（可以单独项目，也可以在同一个项目用路由区分）
+npm create vite@latest campus-eats-merchant --template react
+cd campus-eats-merchant
+npm install axios react-router-dom zustand tailwindcss @tailwindcss/vite
+```
+
+### 第二步：生成用户端（下单页）
+
+```markdown
+请帮我生成校园外卖用户端的前端页面。
+
+使用 React + Tailwind CSS + Zustand（状态管理）。
+
+**首页 (pages/Home.jsx)：**
+1. 顶部搜索框 + 定位显示「xx大学」
+2. 分类水平滚动：全部 / 中餐 / 西餐 / 奶茶 / 小吃 / 快餐
+3. 商家卡片列表（瀑布滚动）：
+   - 商家 Logo + 名称
+   - 评分（⭐4.8）+ 月销量（月售 200）
+   - 起送价 / 配送费
+   - 配送时间（约 30 分钟）
+   - 状态标签（营业中/休息中）
+4. 点击跳转商家详情
+
+**商家详情页 (pages/Merchant.jsx)：**
+1. 商家头部：大图 Banner + Logo + 名称 + 评分 + 公告
+2. 左侧分类导航（固定）：按商品分类切换
+3. 右侧商品列表：
+   - 商品图片 + 名称 + 描述 + 价格
+   - 加号按钮 → 添加到购物车
+   - 已有数量的显示数量调节器（+/-）
+4. 底部购物车浮层：
+   - 展开显示购物车商品详情
+   - 合计金额
+   - 去结算按钮（灰色不可用 → 达到起送价变橙色）
+
+**购物车浮层：**
+- 从底部弹出
+- 按商家分组展示商品
+- 每个商品：图片 + 名称 + 单价 + 数量调节
+- 清空购物车按钮
+- 结算：跳转确认订单页
+
+**确认订单页 (pages/Checkout.jsx)：**
+1. 收货地址 + 手机号
+2. 订单商品列表（只读）
+3. 配送备注输入框
+4. 支付方式选择（微信/支付宝/到付）
+5. 金额明细：商品小计 + 配送费 + 总计
+6. 提交订单按钮
+
+**订单列表页 (pages/Orders.jsx)：**
+1. 顶部 Tab：全部 / 待接单 / 制作中 / 配送中 / 已完成
+2. 订单卡片：
+   - 商家名称 + Logo
+   - 商品名（只显示前 2 个 + 等 N 件商品）
+   - 金额
+   - 订单状态（带颜色标签）
+   - 状态进度条（制作中 → 配送中 → 已完成）
+3. 点击查看订单详情
+
+**订单详情页 (pages/OrderDetail.jsx)：**
+1. 订单状态大进度条（4 步：待接单 → 制作中 → 配送中 → 已完成）
+2. 订单编号 + 下单时间
+3. 商品明细列表
+4. 收货信息
+5. 金额明细
+6. 取消订单按钮（仅待接单状态可取消）
+
+**个人中心 (pages/Profile.jsx)：**
+1. 用户头像 + 昵称 + 手机号
+2. 订单入口：我的订单
+3. 收货地址管理
+4. 设置：修改密码、退出登录
+```
+
+### 第三步：生成商家端（接单台）
+
+```markdown
+请帮我生成商家端的前端页面。
+
+商家端是桌面优先，但也要能手机访问（PWA 风格）。
+
+**订单台 (pages/Dashboard.jsx)：**
+1. 顶部数据卡片：今日订单数 / 今日营收 / 待处理订单
+2. 订单分组列（类似 Trello 看板）：
+   - 待接单 | 制作中 | 配送中 | 已完成
+   - 每个订单卡片：订单号、商品清单、金额、下单时间
+   - 点击订单展开详情
+   - 待接单的卡片有「接单」「拒单」按钮
+   - 制作中有「开始配送」按钮
+   - 配送中有「完成配送」按钮
+3. 新订单声音提醒 + 浮层通知
+4. 实时更新（轮询或 WebSocket）
+
+**商品管理 (pages/Products.jsx)：**
+1. 商品列表表格：图片 / 名称 / 分类 / 价格 / 库存 / 状态 / 操作
+2. 上架/下架开关
+3. 编辑商品弹窗
+4. 新增商品按钮
+5. 商品分类管理
+
+**数据看板 (pages/Stats.jsx)：**
+1. 今日营收（大号数字）
+2. 近 7 日营收趋势折线图
+3. 热销商品排行（条形图）
+4. 订单时段分布
+5. 可以用 Chart.js 或简单的 CSS 图表
+
+**商家设置 (pages/Settings.jsx)：**
+1. 店铺信息编辑（名称、Logo、公告、起送价、配送费等）
+2. 营业时间设置
+3. 营业/休息切换按钮
+```
+
+### 第四步：生成管理后台
+
+```markdown
+请帮我生成管理后台页面。
+
+**登录页 (pages/AdminLogin.jsx)：**
+- 管理员专用登录（角色校验）
+
+**概览页 (pages/AdminDashboard.jsx)：**
+1. 数据卡片：总用户数 / 总商家数 / 今日订单数 / 今日营收
+2. 近 30 天订单趋势图
+3. 最近订单列表
+
+**商家管理 (pages/AdminMerchants.jsx)：**
+1. 商家列表表格：ID / 名称 / 联系人 / 状态 / 注册时间 / 操作
+2. 审核操作：通过 / 拒绝 / 冻结
+3. 搜索 + 筛选
+
+**订单监管 (pages/AdminOrders.jsx)：**
+1. 所有订单列表
+2. 可按商家/状态/日期筛选
+3. 可手动修改订单状态（异常处理）
+```
 
 ---
 
-## 阶段 5：SEO + 营销
+## 阶段 7：实时订单推送（WebSocket）
 
-- **SEO**：商家和商品页 SSR，本地搜索优化
-- **营销**：校园地推 + 首单优惠 + 邀请有礼
-- **推广**：在校园贴吧、微信群、小红书本地号推广
+### 做什么
+
+用 Socket.io 实现实时订单状态更新。
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我在外卖系统中集成 Socket.io 实现实时订单推送。
+
+**后端 (app.js)：**
+```javascript
+const http = require('http');
+const { Server } = require('socket.io');
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: '*' }
+});
+
+// 用户加入自己的房间
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    socket.userId = decoded.userId;
+    socket.role = decoded.role;
+    next();
+  } catch (err) {
+    next(new Error('Unauthorized'));
+  }
+});
+
+io.on('connection', (socket) => {
+  // 用户加入个人房间（接收自己的订单通知）
+  socket.join(`user:${socket.userId}`);
+  
+  // 商家加入商家房间（接收新订单通知）
+  if (socket.role === 'merchant') {
+    socket.join(`merchant:${socket.merchantId}`);
+  }
+});
+
+// 订单状态更新时推送
+function notifyOrderUpdate(orderId, status, userId, merchantId) {
+  io.to(`user:${userId}`).emit('orderUpdate', { orderId, status });
+  io.to(`merchant:${merchantId}`).emit('orderUpdate', { orderId, status });
+}
+```
+
+**前端集成：**
+- 用户下单后，加入 Socket.io 房间
+- 监听 orderUpdate 事件
+- 收到更新后自动刷新订单状态
+- 商家端新订单时播放提示音
+- 断线自动重连
+
+**提示音：** 使用 Web Audio API 播放简单的「叮咚」声。
+```
+
+---
+
+## 阶段 8：测试
+
+### 做什么
+
+检查外卖系统能否正常运行。
+
+### 检查清单
+
+```markdown
+请帮我检查外卖系统是否完整。逐项确认：
+
+用户端测试：
+- [ ] 商家列表是否正常加载
+- [ ] 分类筛选是否工作
+- [ ] 商家详情页商品是否正确显示
+- [ ] 加购物车 + 数量调节是否正常
+- [ ] 购物车展开/收起是否正常
+- [ ] 确认订单页信息是否正确
+- [ ] 提交订单是否成功
+- [ ] 订单状态是否实时更新
+- [ ] 取消订单是否正常
+- [ ] 注册/登录是否正常
+
+商家端测试：
+- [ ] 新订单是否实时出现
+- [ ] 接单/拒单是否正常
+- [ ] 订单状态流转是否正常
+- [ ] 商品上架/下架是否正常
+- [ ] 数据看板数字是否准确
+
+管理后台测试：
+- [ ] 商家审核是否正常
+- [ ] 订单监管是否正常
+- [ ] 统计数据是否准确
+
+压力测试：
+- [ ] 多个用户同时下单是否正常
+- [ ] 购物车并发是否冲突
+```
+
+### 常见问题及修复
+
+| 问题 | 修复方法 |
+|------|----------|
+| WebSocket 连接失败 | 检查 CORS 配置和 Nginx 的 WebSocket 代理设置 |
+| 订单状态不同步 | 确认 Redis Pub/Sub 或 Socket.io 的事件触发逻辑 |
+| 金额计算错误 | 所有金额计算在服务端执行，前端只做展示 |
+| 购物车丢失 | Redis 故障时从 MySQL 恢复数据 |
+| 商家拒单后用户没收到通知 | 确认 Socket.io 的房间绑定和事件分发 |
+
+---
+
+## 阶段 9：部署上线
+
+### 做什么
+
+把外卖系统部署到云服务器。
+
+> 🚀 **Skill**：`devops-deployment`
+
+### 部署架构
+
+```
+用户 → 域名 → Nginx（反向代理）
+                ├── /api/* → Node.js (端口 3001)
+                ├── /socket.io/* → Node.js (WebSocket)
+                ├── /admin/* → 管理后台静态文件
+                └── /merchant/* → 商家端静态文件
+                            MySQL (端口 3306)
+                            Redis (端口 6379)
+```
+
+### 部署步骤
+
+```markdown
+请帮我把外卖系统部署到阿里云/腾讯云服务器。
+
+步骤：
+1. 购买云服务器（2核2G 够用，选 Ubuntu 22.04）
+
+2. 服务器初始设置：
+   - SSH 登录服务器
+   - 安装 Node.js、MySQL、Redis、Nginx
+   - 配置 MySQL 数据库和用户
+   - 配置 Redis
+
+3. 后端部署：
+   - 在服务器上 git clone 代码
+   - npm install
+   - 配置 .env 文件（数据库连接、JWT 密钥等）
+   - 使用 PM2 管理进程：pm2 start app.js --name campus-api
+
+4. 前端部署：
+   - 本地构建：npm run build
+   - 将 dist 目录上传到服务器
+   - 配置 Nginx 指向静态文件
+
+5. Nginx 配置：
+   ```nginx
+   server {
+     listen 80;
+     server_name 你的域名或IP;
+     
+     # API 反向代理
+     location /api/ {
+       proxy_pass http://localhost:3001;
+     }
+     
+     # WebSocket
+     location /socket.io/ {
+       proxy_pass http://localhost:3001;
+       proxy_http_version 1.1;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection "upgrade";
+     }
+     
+     # 用户端
+     location / {
+       root /var/www/campus-eats-user/dist;
+       try_files $uri $uri/ /index.html;
+     }
+     
+     # 商家端
+     location /merchant/ {
+       alias /var/www/campus-eats-merchant/dist/;
+       try_files $uri $uri/ /index.html;
+     }
+   }
+   ```
+
+6. 配置 HTTPS（SSL 证书）：
+   - 安装 Certbot：snap install certbot
+   - 申请证书：certbot --nginx -d 你的域名
+
+7. 防火墙配置：
+   - 开放 80 (HTTP) 和 443 (HTTPS) 端口
+   - 关闭其他端口
+```
+
+> ⚠️ 学生认证后云服务器约 ¥10/月，建议使用 Ubuntu + Nginx + PM2 的组合，稳定且资源占用低。
+
+---
+
+## 完整项目文件清单
+
+```
+campus-delivery/
+├── server/                      # 后端
+│   ├── app.js
+│   ├── config/
+│   │   └── db.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── merchants.js
+│   │   ├── products.js
+│   │   ├── cart.js
+│   │   ├── orders.js
+│   │   └── admin.js
+│   ├── middleware/
+│   │   ├── auth.js
+│   │   └── role.js
+│   ├── models/                  # SQL 查询
+│   └── package.json
+│
+├── client-user/                 # 用户端（React）
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── Home.jsx
+│   │   │   ├── Merchant.jsx
+│   │   │   ├── Checkout.jsx
+│   │   │   ├── Orders.jsx
+│   │   │   ├── OrderDetail.jsx
+│   │   │   ├── Profile.jsx
+│   │   │   └── Login.jsx
+│   │   ├── components/
+│   │   │   ├── Nav.jsx
+│   │   │   ├── MerchantCard.jsx
+│   │   │   ├── ProductItem.jsx
+│   │   │   └── CartDrawer.jsx
+│   │   ├── stores/
+│   │   │   └── cartStore.js     # Zustand
+│   │   └── App.jsx
+│   └── package.json
+│
+├── client-merchant/             # 商家端（React）
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Products.jsx
+│   │   │   ├── Stats.jsx
+│   │   │   └── Settings.jsx
+│   │   └── App.jsx
+│   └── package.json
+│
+├── nginx.conf                   # Nginx 配置
+└── README.md
+```
+
+> 🎉 **恭喜！** 你已经用 Vibe Coding 做出了一个完整的校园外卖点餐系统。这个过程涉及三个客户端、一个后端、两个数据库、实时推送——但你还是只需要：
+> 1. 用自然语言描述功能
+> 2. 复制 AI 生成的代码
+> 3. 配置数据库
+> 4. 部署到云服务器
+>
+> 现在你可以邀请同学来使用了！先在校园里小范围推广试试。
+
+---
+
+## 进阶挑战
+
+做完了基础版？试试这些进阶功能：
+
+- [ ] 微信小程序版本（用户端迁移到小程序）
+- [ ] 智能配送调度（批量派单 + 配送路线规划）
+- [ ] 积分系统（下单攒积分，积分抵现金）
+- [ ] 商家营业报表（日/周/月导出 Excel）
+- [ ] 用户评论 + 评分（下单后可评价）
+- [ ] 拼单功能（多人一起点，分摊配送费）
+- [ ] 优惠券系统（满减 / 折扣 / 新用户券）
+- [ ] 骑手端（配送员接单 + 导航）
+- [ ] 多校区支持
+
+想实现哪个？直接把需求告诉 AI："请为我的外卖系统添加 [功能名]"

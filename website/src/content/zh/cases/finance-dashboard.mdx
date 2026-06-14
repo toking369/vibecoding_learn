@@ -1,9 +1,9 @@
 ---
 title: '个人财务仪表盘'
-description: '从零搭建一个个人财务管理工具——记账、分类统计、可视化图表'
-emoji: '📊'
+description: '贯穿全流程的真实案例——从零搭建个人财务管理工具，记账、分类统计、可视化图表'
 section: 'cases'
 order: 8
+emoji: '📊'
 difficulty: '进阶'
 category: 'SaaS 工具'
 tech_type: '全栈+可视化'
@@ -21,12 +21,14 @@ estimated_hours: 7
 
 **人物**：小杨，上班族，想做一个工具追踪自己的收支
 **目标**：记账 + 分类统计 + 可视化图表
-**用时**：约 7 小时
-**最终成果**：一个带图表的个人财务仪表盘
+**用时**：约 7 小时（从零到上线）
+**最终成果**：一个带图表的个人财务仪表盘，部署在 Vercel
 
 ---
 
 ## 用到的 Skills 一览
+
+开始前，先安装本案例会用到的所有 Skill：
 
 ```bash
 # 前端
@@ -39,13 +41,73 @@ npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y
 npx skills add yonatangross/orchestkit@devops-deployment -g -y
 ```
 
+> 💡 **提示**：以上命令在终端执行，`-g` 表示全局安装，`-y` 表示自动确认。如果某条报错，不影响其他 skill 的使用。
+
 ---
 
-## 阶段 1：技术选型分析
+## 阶段 0：准备工作
+
+### 需要注册的账号
+
+| 平台 | 用途 | 费用 |
+|------|------|------|
+| [GitHub](https://github.com) | 存放代码 | 免费 |
+| [Vercel](https://vercel.com) | 部署网站 | 免费 |
+| [MongoDB Atlas](https://mongodb.com/atlas) | 数据库 | 免费（512MB） |
+
+### 需要安装的工具
+
+| 工具 | 用途 |
+|------|------|
+| VS Code | 写代码的编辑器 |
+| Node.js | 本地开发环境 |
+
+> ✅ 全部注册安装完大约需要 15 分钟。
+
+---
+
+## 阶段 1：产品定义（写 PRD）
+
+### 做什么
+
+让 AI 帮你写一份 PRD，明确财务工具的功能。
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我写一份产品需求文档（PRD），项目是「我的账本——个人财务仪表盘」。
+
+我是一个上班族，想用 AI 帮我做一个个人记账和财务分析工具。
+
+核心功能：
+1. 快速记账：输入金额、分类、备注即可记录一笔账
+2. 分类管理：预置分类（餐饮、交通、购物、娱乐等），可自定义
+3. 仪表盘：月度收支概览、分类占比饼图、收支趋势折线图
+4. 账单列表：按时间查看所有账单，支持筛选和搜索
+5. 预算管理：为每个分类设置月度预算，超支提醒
+6. 多设备同步：登录后数据云端同步
+
+设计风格要简洁清爽，参考记账类 App 的交互。
+```
+
+### 得到的结果
+
+AI 会生成完整的 PRD，包含功能优先级、页面结构、数据模型。
+
+---
+
+## 阶段 2：技术选型分析
 
 ### 为什么选 MongoDB？
 
 财务数据结构灵活——每笔交易可能有不同的字段（餐饮有餐厅名、购物有商品名）。MongoDB 的文档模型天然适合。
+
+| 特性 | MongoDB | PostgreSQL | 适合方 |
+|------|---------|-----------|-------|
+| 文档灵活性 | ✅ 不同交易可含不同字段 | ❌ 需要预定义列 | MongoDB |
+| 聚合统计 | ✅ 内置聚合管道 | ✅ 窗口函数 | 持平 |
+| 免费额度 | 512MB | 500MB | 持平 |
+| 查询语法 | JSON 格式 | SQL | 各有所长 |
 
 ### 为什么选 Chart.js？
 
@@ -59,22 +121,96 @@ npx skills add yonatangross/orchestkit@devops-deployment -g -y
 
 ---
 
-## 阶段 2：数据库构建
+## 阶段 3：设计与原型
 
-MongoDB 集合结构（一个文档示例）：
+### 做什么
+
+确定仪表盘的视觉风格。
+
+> 🎨 **Skill**：`ui-ux-pro-max`
+
+### 复制这段提示词给 AI
+
+```markdown
+请为我的个人财务仪表盘推荐设计风格。
+
+品牌名：我的账本
+目标用户：年轻上班族
+风格关键词：清爽、数据感、整洁、移动优先
+
+需要页面/视图：
+1. 仪表盘首页：月度收支概览（卡片形式）+ 分类饼图 + 趋势折线图 + 最近交易列表
+2. 记账页面：表单（金额、分类、日期、备注、类型收入/支出）
+3. 账单列表：筛选 + 搜索 + 列表展示
+4. 统计页：更详细的数据分析（月度对比、分类分析）
+5. 预算管理：各分类预算设置 + 进度条
+6. 设置页：分类管理、账户设置
+
+配色建议：白色为主，绿色（收入）+ 红色（支出），蓝色作为品牌色。卡片式布局，大量留白。
+```
+
+---
+
+## 阶段 4：数据库构建（MongoDB）
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我设计一个个人财务仪表盘的 MongoDB 数据库。
+
+项目名称：我的账本
+数据库平台：MongoDB Atlas（NoSQL）
+
+业务需求：
+1. **记账**：记录每笔交易的金额、分类、日期、备注、类型（收入/支出）
+2. **分类管理**：预置分类（餐饮、交通、购物、娱乐等），可自定义
+3. **标签系统**：每笔交易可加多个标签（如"外卖"、"工作日"），不同类型交易可用不同字段
+4. **预算管理**：为每个分类设置月度预算，超支提醒
+5. **多用户**：不同用户的数据完全隔离
+6. **统计查询**：需要按分类汇总、月度趋势等聚合查询
+
+请帮我设计：
+1. 所有集合（Collection）的文档结构
+2. 每个文档包含的字段、字段类型和示例值
+3. 适合聚合统计的字段设计
+4. 需要创建的索引（如 userId + date 复合索引）
+5. MongoDB Atlas 的配置步骤（创建集群、数据库用户、网络白名单）
+
+注意：金额用 Number 类型，日期用 ISODate 格式，分类数据用嵌入式文档或独立集合。
+```
+
+### 得到的结果
+
+AI 会生成完整的集合结构和索引设计。以下是推荐设计：
+
+### 数据库集合结构
 
 ```json
 // transactions 集合
 {
   "_id": ObjectId("..."),
   "userId": "user_123",
-  "type": "expense",
+  "type": "expense",           // "income" | "expense"
   "amount": 128.00,
   "category": "餐饮",
-  "tags": ["午餐", "外卖"],
+  "subcategory": "午餐",
+  "tags": ["外卖", "工作日"],
   "note": "沙县小吃",
   "date": "2026-06-14",
+  "paymentMethod": "微信支付",
   "createdAt": ISODate("...")
+}
+
+// categories 集合
+{
+  "_id": ObjectId("..."),
+  "userId": "user_123",
+  "name": "餐饮",
+  "type": "expense",           // "income" | "expense"
+  "icon": "🍔",
+  "color": "#FF6B6B",
+  "budget": 2000,
+  "order": 1
 }
 
 // budgets 集合
@@ -83,37 +219,406 @@ MongoDB 集合结构（一个文档示例）：
   "userId": "user_123",
   "category": "餐饮",
   "monthlyLimit": 2000,
-  "month": "2026-06"
+  "month": "2026-06",
+  "notifyWhenExceed": true
 }
+```
+
+### 在 MongoDB Atlas 中创建
+
+1. 登录 [MongoDB Atlas](https://mongodb.com/atlas)
+2. 创建免费集群（Shared Cluster）
+3. 创建数据库 `finance-dashboard`
+4. 创建集合 `transactions`、`categories`、`budgets`
+5. 在 **Network Access** 中添加 `0.0.0.0/0`（允许所有 IP）
+6. 在 **Database Access** 创建数据库用户
+7. 获取连接字符串（MongoDB URI）
+
+---
+
+## 阶段 5：后端搭建（API Routes）
+
+### 做什么
+
+用 Next.js API Routes 搭建后端接口。
+
+> 💻 **Skill**：`tailwindcss-v4`
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我在 Next.js 项目中创建以下 API 路由。
+
+项目使用 Next.js App Router，已安装 mongoose、next-auth。
+
+**MongoDB 连接 (lib/mongodb.js)：**
+```javascript
+import mongoose from 'mongoose';
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+let cached = global.mongoose;
+if (!cached) cached = global.mongoose = { conn: null };
+
+export async function connectDB() {
+  if (cached.conn) return cached.conn;
+  cached.conn = await mongoose.connect(MONGODB_URI);
+  return cached.conn;
+}
+```
+
+**数据模型 (lib/models)：**
+- Transaction：userId, type, amount(Number), category, subcategory, tags([String]), note, date, paymentMethod
+- Category：userId, name, type, icon, color, budget, order
+- Budget：userId, category, monthlyLimit, month, notifyWhenExceed
+
+**API 路由：**
+
+1. `GET /api/transactions` — 获取交易列表
+   - 支持筛选：?type=expense&category=餐饮&startDate=&endDate=
+   - 支持分页：?page=1&limit=20
+   - 支持排序：?sort=date_desc
+   - 需要认证，只返回当前用户的数据
+
+2. `POST /api/transactions` — 新增交易
+   - 接收：{'{type, amount, category, note, date}'}
+   - 验证必填字段
+   - 自动更新关联的 budget 使用量
+
+3. `DELETE /api/transactions/:id` — 删除交易
+   - 只能删除自己的交易
+
+4. `PUT /api/transactions/:id` — 编辑交易
+
+5. `GET /api/stats/monthly` — 月度统计
+   - 参数：?month=2026-06
+   - 返回：总收入、总支出、各分类汇总、每日趋势
+
+6. `GET /api/stats/trend` — 趋势数据
+   - 参数：?months=6
+   - 返回：近 N 个月的收支趋势数据
+
+7. `GET /api/categories` — 获取分类列表
+   - 返回预置分类 + 用户自定义分类
+
+8. `PUT /api/budgets` — 设置预算
+   - 接收：{'{category, monthlyLimit, month}'}
+
+所有路由需包含：错误处理、认证检查、输入验证。
 ```
 
 ---
 
-## 阶段 3：API 设计
+## 阶段 6：前端开发（核心）
 
-| 端点 | 功能 |
-|------|------|
-| `GET /api/transactions` | 获取交易列表（支持分页 + 筛选） |
-| `POST /api/transactions` | 新增交易 |
-| `DELETE /api/transactions/:id` | 删除交易 |
-| `GET /api/stats/monthly` | 月度统计（按分类汇总） |
-| `GET /api/stats/trend` | 趋势数据（用于折线图） |
+### 做什么
+
+用 Next.js 搭建前端页面。
+
+### 第一步：创建项目
+
+```bash
+npx create-next-app@latest my-ledger --typescript --tailwind
+cd my-ledger
+npm install mongoose next-auth chart.js react-chartjs-2 date-fns
+```
+
+### 第二步：生成仪表盘首页
+
+```markdown
+请帮我生成财务仪表盘的首页 (app/page.tsx)。
+
+这是一个个人记账工具的仪表盘，用于概览财务状况。
+
+**页面布局（从上到下）：**
+1. 顶部导航栏：Logo「我的账本」+ 导航 + 用户头像
+2. 月度切换器：上个月 ← 2026年6月 → 下个月
+3. 收支概览卡片（3 张并排）：
+   - 💰 本月收入：¥8,500
+   - 💸 本月支出：¥5,230
+   - 📊 结余：¥3,270（绿色正数，红色负数）
+4. 图表区域（两栏布局，桌面）：
+   - 左：支出分类饼图（Chart.js Doughnut）
+     - 显示各大分类占比
+     - 点击分类可下钻查看明细
+   - 右：月度收支趋势折线图（Chart.js Line）
+     - 近 6 个月收入和支出趋势
+5. 最近交易列表（5-10 条）：
+   - 每条：分类图标 + 分类名 + 备注 + 金额（红/绿）
+   - 点击跳转到账单详情
+   - 「查看全部」链接
+6. 预算进度条（底部卡片）：
+   - 每个分类的预算使用进度
+   - 超支时显示红色警告
+
+要求：响应式（移动端单栏）、加载骨架屏、数据从 API 获取。
+```
+
+### 第三步：生成记账表单
+
+```markdown
+请帮我生成记账页面/弹窗 (app/record/page.tsx 或 components/RecordModal.tsx)。
+
+**记账表单：**
+1. 类型切换：收入 / 支出（两个大按钮 Tab）
+2. 金额输入：大号数字键盘友好输入框，自动显示格式化（¥1,280.00）
+3. 分类选择：网格显示分类图标（每行 4 个）
+   - 支出分类：餐饮 🍔 / 交通 🚗 / 购物 🛍️ / 娱乐 🎬 / 住房 🏠 / 医疗 🏥 / 教育 📚 / 其他
+   - 收入分类：工资 💼 / 兼职 💻 / 投资 📈 / 红包 🧧 / 其他
+   - 已选分类高亮
+4. 日期选择：默认今天，可修改
+5. 备注输入：可选，placeholder "添加备注..."
+6. 支付方式（可选）：微信支付 / 支付宝 / 银行卡 / 现金
+7. 保存按钮：大号渐变按钮
+
+**交互要求：**
+- 输入金额时显示数字键盘（移动端优化）
+- 选择分类后有选中动效
+- 保存成功后显示 Toast 提示 + 自动关闭
+- 支持快速记账：保存后清空表单但保留分类选择，方便连续记账
+```
+
+### 第四步：生成统计和预算页面
+
+```markdown
+请帮我生成统计页面 (app/statistics/page.tsx) 和预算管理页面 (app/budgets/page.tsx)。
+
+**统计页面：**
+1. 年份/月份选择器
+2. 月度对比卡片：
+   - 本月 vs 上月：支出变化百分比（上升红色↓ / 下降绿色↓）
+3. 支出分类排行（条形图，Chart.js Bar）：
+   - 按支出金额从高到低排序
+   - 显示每个分类的金额和占比
+4. 每日支出趋势（柱状图）：
+   - 显示当月每日支出
+   - 周末自动标色
+5. 支出日历视图：
+   - 日历格子上显示每日支出总额
+   - 颜色深浅表示金额大小
+
+**预算管理页面：**
+1. 本月总预算进度：大号环形进度条
+2. 各分类预算卡片：
+   - 分类名 + 图标
+   - 已用/预算金额
+   - 进度条（颜色按比例变化：绿 → 黄 → 红）
+   - 超支时显示「超支 ¥xxx」
+   - 编辑按钮（修改预算金额）
+3. 添加预算按钮
+4. 预算使用建议（根据历史数据推荐预算金额）
+
+使用 React 组件 + Chart.js，数据从 /api 获取。
+```
+
+### 第五步：生成账单列表和设置
+
+```markdown
+请帮我生成账单列表页面 (app/transactions/page.tsx) 和设置页面 (app/settings/page.tsx)。
+
+**账单列表页：**
+1. 顶部筛选栏：
+   - 全部/收入/支出 切换
+   - 日期范围选择
+   - 分类筛选（下拉多选）
+   - 搜索框（搜索备注）
+2. 按日期分组的交易列表：
+   - 日期标题（今天 / 昨天 / 6月10日 周一）
+   - 每条：分类图标 + 分类 + 备注 + 金额 + 删除按钮
+   - 左滑显示删除（移动端）
+3. 底部：总计行（筛选后的总收入和总支出）
+4. 下拉加载更多（分页）
+
+**设置页面：**
+1. 分类管理：
+   - 显示所有分类（收入/支出分开）
+   - 拖拽排序
+   - 添加自定义分类
+   - 编辑/删除分类
+2. 账户设置：
+   - 修改昵称
+   - 修改密码
+   - 导出数据（CSV 下载）
+   - 删除账户
+3. 主题设置：浅色/深色/跟随系统
+4. 货币单位设置（¥ / $）
+
+使用 Next.js App Router 和 Server/Client 组件。
+```
 
 ---
 
-## 阶段 4：可视化图表
+## 阶段 7：测试
 
-### 首页看板展示
+### 做什么
 
-- 饼图：本月支出分类占比
-- 折线图：近 6 月收支趋势
-- 环形图：预算使用进度
-- 表格：最近 10 笔交易
+检查财务仪表盘能否正常运行。
+
+### 检查清单
+
+```markdown
+请帮我检查财务仪表盘是否完整。逐项确认：
+
+核心功能测试：
+- [ ] 快速记账：收入/支出能否正常保存
+- [ ] 记账后仪表盘数据是否自动更新
+- [ ] 分类饼图是否正确显示各分类占比
+- [ ] 趋势折线图是否正确显示月度变化
+- [ ] 交易列表是否正常加载和分页
+- [ ] 筛选条件（类型/分类/日期）是否生效
+- [ ] 搜索功能是否正常
+- [ ] 预算设置是否正确保存
+- [ ] 预算进度条是否实时更新
+- [ ] 超支提醒是否正常
+- [ ] 删除/编辑交易是否正常
+- [ ] 用户登录/注册是否正常
+
+数据准确性测试：
+- [ ] 月度统计总和是否等于各分类之和
+- [ ] 结余 = 收入 - 支出 是否正确
+- [ ] 不同月份之间数据是否隔离
+```
+### 常见问题及修复
+
+| 问题 | 修复方法 |
+|------|----------|
+| 图表不显示 | 检查 chart.js 是否正确注册组件（registerables） |
+| 数据不同步 | 添加记账后 refetch 或使用 SWR/React Query |
+| MongoDB 连接慢 | 使用连接池，检查网络延迟 |
+| 金额显示异常 | 确保数据库中存数字类型，前端使用 toFixed(2) |
+| 分类重复 | 添加唯一索引或查重逻辑 |
 
 ---
 
-## 阶段 5：部署 + SEO + 营销
+## 阶段 8：部署上线
 
-- **部署**：Vercel + MongoDB Atlas
-- **SEO**：不需要（工具型应用，登录后使用）
-- **营销**：在知乎/小红书发「我做了个记账工具」帖子，免费使用吸引用户，后续考虑 Pro 版本
+### 做什么
+
+把财务仪表盘部署到生产环境。
+
+> 🚀 **Skill**：`devops-deployment`
+
+### 部署步骤
+
+1. **代码推送到 GitHub**
+2. **Vercel 部署**：
+   - 导入仓库
+   - 设置环境变量：
+     ```
+     MONGODB_URI=你的MongoDB连接串
+     NEXTAUTH_SECRET=任意字符串
+     NEXTAUTH_URL=https://你的域名
+     ```
+3. **MongoDB Atlas**：
+   - 确保 Network Access 允许 Vercel IP 或所有 IP（`0.0.0.0/0`）
+   - 建议启用 IP 白名单（Vercel 的 IP 范围会变化）
+
+---
+
+## 阶段 9：文案优化
+
+### 做什么
+
+用 AI 优化应用的文案和引导。
+
+> ✍️ **Skill**：不需要额外 skill
+
+### 文案优化提示词
+
+```markdown
+请帮我优化财务记账工具的文案。
+
+需要优化的内容：
+1. **空状态文案**：
+   - 还没有记账：「开始记录你的第一笔账」
+   - 暂无搜索结果：「没有找到匹配的账单」
+   - 暂无预算：「为你的支出设置预算」
+
+2. **分类名称**：提供一套更友好的中文分类命名方案（支出 8-10 个，收入 4-5 个）
+
+3. **鼓励文案**：
+   - 连续记账 7 天：「🎉 连续记账 7 天！你已经养成了理财好习惯」
+   - 本月支出比上月减少：「👏 本月支出比上月减少了 15%，继续加油！」
+   - 预算控制良好：「✅ 你的餐饮预算执行得很好」
+
+风格要求：温暖、鼓励、不 judgemental（不评判用户的消费习惯）
+```
+
+---
+
+## 完整项目文件清单
+
+```
+my-ledger/
+├── app/
+│   ├── page.tsx                 # 仪表盘首页
+│   ├── layout.tsx               # 根布局
+│   ├── transactions/
+│   │   └── page.tsx             # 账单列表
+│   ├── record/
+│   │   └── page.tsx             # 记账页
+│   ├── statistics/
+│   │   └── page.tsx             # 统计页
+│   ├── budgets/
+│   │   └── page.tsx             # 预算管理
+│   ├── settings/
+│   │   └── page.tsx             # 设置
+│   └── api/
+│       ├── transactions/
+│       │   ├── route.ts         # GET（列表）/ POST（新增）
+│       │   └── [id]/
+│       │       └── route.ts     # PUT/DELETE
+│       ├── stats/
+│       │   ├── monthly/route.ts # 月度统计
+│       │   └── trend/route.ts   # 趋势数据
+│       ├── categories/
+│       │   └── route.ts         # 分类 CRUD
+│       ├── budgets/
+│       │   └── route.ts         # 预算 CRUD
+│       └── auth/
+│           └── [...nextauth]/
+│               └── route.ts     # NextAuth 配置
+├── components/
+│   ├── Dashboard.tsx            # 仪表盘组合
+│   ├── TransactionForm.tsx      # 记账表单
+│   ├── PieChart.tsx             # 饼图
+│   ├── LineChart.tsx            # 折线图
+│   ├── BarChart.tsx             # 条形图
+│   ├── BudgetProgress.tsx       # 预算进度条
+│   ├── TransactionList.tsx      # 交易列表
+│   └── Nav.tsx                  # 导航栏
+├── lib/
+│   ├── mongodb.js               # MongoDB 连接
+│   └── models/
+│       ├── Transaction.js
+│       ├── Category.js
+│       └── Budget.js
+├── .env.local
+└── package.json
+```
+
+> 🎉 **恭喜！** 你已经用 Vibe Coding 做出了一个完整的个人财务仪表盘。整个过程你只需要：
+> 1. 描述记账需求
+> 2. 配置 MongoDB 数据库
+> 3. 让 AI 生成所有页面
+> 4. 部署上线
+>
+> 现在你可以开始记账了——坚持记账 21 天，养成理财好习惯！
+
+---
+
+## 进阶挑战
+
+做完了基础版？试试这些进阶功能：
+
+- [ ] CSV/Excel 导入导出（批量导入银行流水）
+- [ ] 账单拍照识别（OCR 识别小票自动录入）
+- [ ] 定期账单（每月房租/订阅自动记录）
+- [ ] 多币种支持 + 汇率自动换算
+- [ ] 账单分享（夫妻/家庭共同记账）
+- [ ] 财务报告月报（PDF 生成）
+- [ ] 智能分类（AI 根据备注自动匹配分类）
+- [ ] 投资追踪（股票/基金市值导入）
+- [ ] 财务目标（存钱目标 + 进度追踪）
+
+想实现哪个？直接把需求告诉 AI："请为我的账本添加 [功能名]"

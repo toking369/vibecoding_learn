@@ -1,9 +1,9 @@
 ---
 title: '手作饰品小店'
-description: '从零搭建一个手作饰品在线商店——商品管理、购物车、在线支付'
-emoji: '🛒'
+description: '贯穿全流程的真实案例——从零做一个手作饰品在线商店，含购物车和在线支付'
 section: 'cases'
 order: 4
+emoji: '🛒'
 difficulty: '进阶'
 category: '电商'
 tech_type: '全栈'
@@ -21,12 +21,14 @@ estimated_hours: 8
 
 **人物**：小美，手工饰品创作者，想在网上卖自己的作品
 **目标**：一个带购物车和在线支付的小型电商网站
-**用时**：约 8 小时
+**用时**：约 8 小时（从零到上线）
 **最终成果**：一个全栈电商小站，支持 Stripe 支付，部署在 Vercel
 
 ---
 
 ## 用到的 Skills 一览
+
+开始前，先安装本案例会用到的所有 Skill：
 
 ```bash
 # 前端
@@ -39,19 +41,65 @@ npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y
 npx skills add yonatangross/orchestkit@devops-deployment -g -y
 ```
 
+> 💡 **提示**：以上命令在终端执行，`-g` 表示全局安装，`-y` 表示自动确认。如果某条报错，不影响其他 skill 的使用。
+
 ---
 
 ## 阶段 0：准备工作
 
-（GitHub + Vercel 账号 + VS Code + Node.js）
+### 需要注册的账号
 
-额外注册：
-- [Stripe](https://stripe.com) — 支付处理
-- [Supabase](https://supabase.com) — 数据库 + 用户认证
+| 平台 | 用途 | 费用 |
+|------|------|------|
+| [GitHub](https://github.com) | 存放代码 | 免费 |
+| [Vercel](https://vercel.com) | 部署网站 | 免费 |
+| [Stripe](https://stripe.com) | 支付处理 | 免费（按交易扣费） |
+| [Supabase](https://supabase.com) | 数据库 + 用户认证 | 免费（500MB） |
+
+### 需要安装的工具
+
+| 工具 | 用途 |
+|------|------|
+| VS Code | 写代码的编辑器 |
+| Node.js | 本地开发环境 |
+
+> ✅ 全部注册安装完大约需要 20 分钟。
 
 ---
 
-## 阶段 1：技术选型分析
+## 阶段 1：产品定义（写 PRD）
+
+### 做什么
+
+让 AI 帮你写一份 PRD，把电商需求理清楚。
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我写一份产品需求文档（PRD），项目是「小美手作」。
+
+我是一个手工饰品创作者，想用 AI 帮我搭建一个在线商店。
+
+我的商品是手工制作的耳环、手链、项链，价格在 50-300 元之间。
+
+网站需要：
+1. 首页 — 商品展示 + 品牌故事介绍
+2. 商品列表页 — 按分类展示，支持筛选
+3. 商品详情页 — 多图展示 + 描述 + 加入购物车
+4. 购物车 — 增删改商品 + 结算
+5. 结账 — Stripe 支付流程
+6. 订单历史 — 用户查看自己的订单
+
+目标用户是 18-35 岁女性，喜欢文艺、独特的手工饰品。
+```
+
+### 得到的结果
+
+AI 会生成完整的 PRD，包含功能优先级、页面流程、数据库需求等。
+
+---
+
+## 阶段 2：技术选型分析
 
 ### 项目技术选型
 
@@ -75,9 +123,76 @@ npx skills add yonatangross/orchestkit@devops-deployment -g -y
 
 ---
 
-## 阶段 2：数据库构建
+## 阶段 3：设计与原型
 
-### 表结构
+### 做什么
+
+确定电商网站的视觉风格和页面布局。
+
+> 🎨 **Skill**：`ui-ux-pro-max`
+
+### 复制这段提示词给 AI
+
+```markdown
+请为我的手工饰品电商网站推荐设计风格。
+
+品牌名：小美手作
+商品类型：手工耳环、手链、项链
+目标用户：18-35 岁女性，文艺、独特
+
+风格要求：
+- 关键词：温暖、文艺、手作感、女性化
+- 配色：暖色调推荐（米白、玫瑰金、浅粉）
+- 参考风格：类似 Etsy、Pinkoi 等手工平台
+
+需要页面：
+1. 首页：商品瀑布流 + 品牌故事 + 分类入口
+2. 商品列表：网格展示，筛选项（分类/价格/材质）
+3. 商品详情：大图 + 缩略图、商品描述、加入购物车按钮
+4. 购物车：商品列表 + 数量调节 + 总计 + 结算按钮
+5. 结账页面：地址填写 + Stripe 支付
+6. 个人中心：订单列表 + 个人信息
+```
+
+---
+
+## 阶段 4：数据库构建
+
+### 做什么
+
+设计电商网站的数据库表结构，包括商品、订单、用户等核心表。
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我设计一个手工饰品电商网站的数据库。
+
+项目名称：小美手作
+数据库平台：Supabase（PostgreSQL）
+
+业务需求：
+1. **商品管理**：手工饰品有名称、描述、价格、分类、材质、库存数量
+2. **用户认证**：用户注册登录（使用 Supabase Auth）
+3. **购物车**：用户添加商品到购物车，可调整数量
+4. **订单系统**：用户下单后生成订单，包含多个商品
+5. **支付集成**：使用 Stripe 支付，记录支付 ID
+6. **订单状态**：待付款、已付款、制作中、已发货、已完成
+
+请帮我设计：
+1. 所有表的完整 SQL 建表语句
+2. 表之间的外键关系
+3. 合适的字段类型和约束
+4. Row Level Security (RLS) 策略
+5. 插入几条模拟数据的 SQL
+
+注意：金额字段使用整数（单位：分）避免浮点数精度问题。
+```
+
+### 得到的结果
+
+AI 会生成完整的建表 SQL、关系图和权限策略。以下是推荐的设计：
+
+在 Supabase Dashboard 的 **SQL Editor** 中执行以下 SQL：
 
 ```sql
 -- 商品表
@@ -87,6 +202,8 @@ CREATE TABLE products (
   description TEXT,
   price INTEGER NOT NULL,  -- 单位：分，避免浮点误差
   image_url TEXT,
+  category TEXT,
+  material TEXT,
   stock INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -98,6 +215,9 @@ CREATE TABLE orders (
   status TEXT DEFAULT 'pending',
   total INTEGER NOT NULL,
   stripe_payment_id TEXT,
+  shipping_name TEXT,
+  shipping_address TEXT,
+  shipping_phone TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -111,6 +231,20 @@ CREATE TABLE order_items (
 );
 ```
 
+### 插入模拟数据
+
+```sql
+INSERT INTO products (name, description, price, category, material, stock)
+VALUES
+  ('莫奈花园耳环', '灵感来自莫奈的花园，用树脂和干花手工制作', 12800, '耳环', '树脂', 10),
+  ('月光石手链', '天然月光石搭配14K金配件', 25600, '手链', '天然石', 5),
+  ('秋叶项链', '手工掐丝珐琅工艺，秋叶造型', 18800, '项链', '珐琅', 8),
+  ('珍珠贝母耳钉', '天然淡水珍珠搭配贝母', 15800, '耳环', '珍珠', 15),
+  ('编织手链', '手工蜡绳编织，可调节长度', 6800, '手链', '蜡绳', 20);
+```
+
+> 💡 价格存为「分」（整数）是为了避免浮点数精度问题。前端显示时除以 100 即可。
+
 ### RLS 策略
 
 ```sql
@@ -121,44 +255,389 @@ CREATE POLICY "Products are public" ON products
 -- 用户只能看自己的订单
 CREATE POLICY "Users see own orders" ON orders
   FOR SELECT USING (auth.uid() = user_id);
+
+-- 用户只能创建自己的订单
+CREATE POLICY "Users create own orders" ON orders
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
 ```
 
 ---
 
-## 阶段 3：后端搭建
+## 阶段 5：后端搭建（API Routes）
 
-### API 设计
+### 做什么
 
-| 端点 | 方法 | 功能 |
-|------|------|------|
-| `/api/products` | GET | 获取商品列表 |
-| `/api/products/[id]` | GET | 获取商品详情 |
-| `/api/checkout` | POST | 创建 Stripe 支付 Session |
-| `/api/webhook` | POST | Stripe 支付回调（更新订单状态） |
+用 Next.js API Routes 搭建后端接口。
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我在 Next.js 项目中创建以下 API 路由：
+
+1. `GET /api/products` — 获取商品列表
+   - 支持分类筛选 ?category=耳环
+   - 支持排序 ?sort=price_asc / price_desc
+   - 返回 JSON 数组
+
+2. `GET /api/products/[id]` — 获取单个商品详情
+
+3. `POST /api/checkout` — 创建 Stripe 支付 Session
+   - 接收：{ cartItems: [{ productId, quantity }], shippingInfo: { name, address, phone } }
+   - 验证用户登录状态
+   - 创建 Stripe Checkout Session
+   - 返回 session.url
+
+4. `POST /api/webhook` — Stripe 支付回调
+   - 验证 Stripe 签名
+   - 支付成功后更新订单状态为 'paid'
+   - 扣减商品库存
+
+5. `GET /api/orders` — 获取当前用户的订单列表
+   - 需要用户认证
+   - 返回订单列表含订单项
+
+所有路由需要：
+- 错误处理（try-catch）
+- 用户认证中间件（除了 webhook 和 products）
+- 验证输入参数
+- 返回适当的 HTTP 状态码
+```
+
+> ⚠️ Webhook 路由需要使用 Stripe CLI 在本地测试，或在部署后用 Stripe Dashboard 配置。
 
 ---
 
-## 阶段 4：部署方案
+## 阶段 6：前端开发（核心）
 
-- **前端**：Vercel（Next.js 原生支持）
-- **数据库**：Supabase（托管 PostgreSQL）
-- **支付**：Stripe（配置 Webhook 指向 Vercel 域名）
-- **域名**：绑定自定义域名
+### 做什么
+
+用 Next.js 搭建前台页面。
+
+> 💻 **Skill**：`tailwindcss-v4`
+
+### 第一步：创建项目
+
+```bash
+# 在终端执行
+npx create-next-app@latest xiaomei-handmade --typescript --tailwind
+cd xiaomei-handmade
+npm install @supabase/supabase-js @supabase/ssr @stripe/react-stripe-js @stripe/stripe-js
+```
+
+### 第二步：生成首页 + 商品列表
+
+```markdown
+请帮我生成手工饰品电商的首页和商品列表页。
+
+项目使用 Next.js App Router（app/ 目录），已安装 Tailwind CSS、Supabase SDK。
+
+**首页 (app/page.tsx)：**
+1. Hero 区域：大图背景 + 品牌名「小美手作」+ 副标题「每一件都是独一无二的手工温度」
+2. 分类入口卡片：耳环 / 手链 / 项链，带对应商品图片
+3. 精选商品展示：4-8 个商品卡片网格
+   - 每张卡片：商品图片 + 名称 + 价格 + 材质标签
+   - 悬停有上浮效果
+   - 点击跳转商品详情
+4. 品牌故事区域：简短文字介绍手工理念
+5. 页脚：品牌信息 + 社交媒体 + 版权
+
+**商品列表页 (app/products/page.tsx)：**
+1. 左侧筛选栏：分类（全部/耳环/手链/项链）+ 材质筛选 + 价格范围
+2. 右侧商品网格（3 列）
+3. 排序下拉：默认 / 价格从低到高 / 价格从高到低
+
+数据从 Supabase 获取（已建好 products 表）。
+
+要求：响应式设计、加载骨架屏、中文注释。
+```
+
+### 第三步：生成商品详情页
+
+```markdown
+请帮我在 Next.js 中创建商品详情页 (app/products/[id]/page.tsx)。
+
+包含：
+1. 商品大图展示（左侧，响应式）
+2. 缩略图列表（点击切换主图）
+3. 商品信息（右侧）：
+   - 商品名称
+   - 价格
+   - 材质标签
+   - 商品描述（多行）
+   - 库存数量
+   - 数量选择器（+/- 按钮）
+   - 「加入购物车」按钮
+4. 底部：同类别推荐商品
+
+交互功能：
+- 点击加入购物车时显示 Toast 提示
+- 数量不能超过库存
+- 图片缩放查看效果
+```
+
+### 第四步：生成购物车
+
+```markdown
+请帮我在 Next.js 中实现购物车功能。
+
+购物车使用本地存储 (localStorage) 持久化。
+
+**购物车数据结构：**
+```typescript
+interface CartItem {
+  productId: number;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+}
+```
+
+**购物车侧边栏 (app/components/CartDrawer.tsx)：**
+1. 从右侧滑入的抽屉式购物车
+2. 显示商品列表：图片 + 名称 + 单价 + 数量调节（+/-）+ 删除按钮
+3. 底部：总计金额 + 「去结算」按钮
+4. 空购物车显示「购物车是空的」
+
+**购物车逻辑 (app/lib/cart.ts)：**
+- addToCart(product, quantity)
+- removeFromCart(productId)
+- updateQuantity(productId, quantity)
+- getCartTotal()
+- clearCart()
+
+实现响应式设计。
+```
+
+### 第五步：生成结账 + 支付流程
+
+```markdown
+请帮我在 Next.js 中实现结账页面 (app/checkout/page.tsx) 和 Stripe 支付集成。
+
+**结账页面：**
+1. 分两步：填写信息 → 支付
+2. 第一步：收货信息表单
+   - 姓名（必填）
+   - 手机号（必填）
+   - 地址（必填）
+   - 备注（选填）
+3. 第二步：订单摘要（商品列表 + 总价）+ Stripe 支付按钮
+4. 使用 @stripe/react-stripe-js 的 Elements 包裹
+5. 点击支付后调用 /api/checkout 创建 Stripe Session，跳转到 Stripe 结账页
+
+**支付成功页面 (app/checkout/success/page.tsx)：**
+1. 显示成功图标 + 感谢信息
+2. 订单编号
+3. 「查看订单」和「继续购物」按钮
+
+**Stripe 配置：**
+1. 在项目根目录创建 .env.local：
+   ```
+   NEXT_PUBLIC_STRIPE_KEY=pk_test_你的密钥
+   STRIPE_SECRET_KEY=sk_test_你的密钥
+   NEXT_PUBLIC_SUPABASE_URL=你的URL
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=你的密钥
+   ```
+2. 在 app/layout.tsx 中初始化 Supabase 客户端
+3. 在 app/providers.tsx 中提供 Stripe Elements Provider
+```
+
+> ⚠️ Stripe 密钥在 Stripe Dashboard 的 **Developers → API keys** 中获取。测试环境用 `sk_test_` 开头的密钥。
+
+### 第六步：生成订单历史和个人中心
+
+```markdown
+请帮我在 Next.js 中创建订单历史和个人中心页面。
+
+**订单列表页 (app/orders/page.tsx)：**
+1. 从 Supabase 查询当前用户的订单
+2. 每张订单卡片：订单编号 / 商品数量 / 总价 / 状态 / 日期
+3. 点击订单展开显示商品明细
+4. 空状态：还没有订单 + 「去购物」按钮
+5. 需要登录才能访问（未登录时跳转到登录页）
+
+**个人中心 (app/profile/page.tsx)：**
+1. 用户头像 + 昵称（从 Supabase Auth 获取）
+2. 个人信息编辑（姓名、手机号）
+3. 快捷入口：我的订单、收货地址
+4. 退出登录按钮
+```
 
 ---
 
-## 阶段 5：SEO 优化
+## 阶段 7：测试
 
-- 每个商品独立详情页，SEO 友好
-- OG 图片：商品图 + 价格 + 名称
-- 结构化数据（Product Schema）
-- Sitemap 自动包含所有商品页
+### 做什么
+
+检查电商网站能否正常运行。
+
+> 🧪 **Skill**：`javascript-testing`
+
+### 检查清单
+
+```markdown
+请帮我检查电商网站是否完整。逐项确认：
+
+功能测试：
+- [ ] 首页商品列表是否正常加载
+- [ ] 商品分类筛选是否工作
+- [ ] 商品详情页是否正常展示
+- [ ] 加入购物车是否成功
+- [ ] 购物车数量调节 + 删除是否正常
+- [ ] 购物车数据刷新后是否保留（localStorage）
+- [ ] 结账表单验证是否生效
+- [ ] Stripe 支付流程是否正常
+- [ ] 支付成功页面是否跳转
+- [ ] 订单历史是否正确显示
+- [ ] 用户登录/注册是否正常
+
+响应式测试：
+- [ ] 桌面、平板、手机显示是否正常
+
+错误场景：
+- [ ] 库存不足时能否正确处理
+- [ ] 未登录访问结账是否跳转到登录页
+- [ ] 空购物车点击结算是否提示
+```
+
+### 常见问题及修复
+
+| 问题 | 修复方法 |
+|------|----------|
+| Supabase 查询报 401 | 检查 RLS 策略和 anon key 配置 |
+| Stripe 支付失败 | 在 Stripe Dashboard 检查 Webhook 签名和事件日志 |
+| 购物车数据丢失 | 确保 `localStorage.setItem` 在每次更新时都调用 |
+| 图片加载慢 | 使用 Next.js 的 `next/image` 组件自动优化 |
+| 部署后 API 报 500 | 在 Vercel 检查环境变量是否正确设置 |
 
 ---
 
-## 阶段 6：文案 & 营销
+## 阶段 8：部署上线
 
-- 商品描述写「故事」而非「参数」：这件耳环的灵感来源？
-- 小红书 + 抖音发布制作过程短视频，引流到网站
-- 首单优惠码（Stripe Coupon 功能）
-- 邮件订阅上新通知（Supabase 存订阅用户）
+### 做什么
+
+把电商网站部署到生产环境。
+
+> 🚀 **Skill**：`devops-deployment`
+
+### 部署步骤
+
+1. 把代码推送到 GitHub
+2. 在 Vercel 导入仓库
+3. 在 Vercel 项目设置中添加环境变量（Stripe 密钥、Supabase URL 等）
+4. 在 Stripe Dashboard 配置 Webhook 指向 Vercel 域名
+5. 绑定自定义域名（可选）
+
+### 模拟测试支付
+
+Stripe 提供测试卡号：
+
+| 卡号 | 结果 |
+|------|------|
+| `4242 4242 4242 4242` | 支付成功 |
+| `4000 0000 0000 0002` | 支付被拒 |
+| `4000 0025 0000 3155` | 需要 3D 验证 |
+
+> 测试完成后，切换到 **Stripe Dashboard → Developers → 模式**，从"测试"切换到"生产"才能接受真实付款。
+
+---
+
+## 阶段 9：文案优化
+
+### 做什么
+
+用 AI 优化商品描述和营销文案。
+
+> ✍️ **Skill**：不需要额外 skill
+
+### 商品描述优化
+
+```markdown
+请帮我优化手工饰品的商品描述。我的商品是手工制作的耳环、手链、项链，价格 50-300 元。
+
+需要优化的方向：
+1. 每条商品描述包含「灵感来源」——说说这件饰品背后的故事
+2. 描述要唤起情感而非只是列参数
+3. 包含佩戴场景建议（约会、上班、聚会等）
+4. 加上保养提示
+
+请用「你」的第二人称，温暖亲切的语气。提供 3 个示例。
+```
+
+### 品牌故事
+
+```markdown
+请帮我的手工饰品品牌写品牌故事。品牌名「小美手作」。
+
+我（小美）原本是平面设计师，3 年前开始自学手工饰品制作，现在全职做手工饰品。
+
+品牌核心理念：每件饰品都是独一无二的手工温度。
+
+请写：
+1. 首页品牌故事（100 字以内，适合展示在首页）
+2. 关于我页面完整故事（300 字以内）
+3. 品牌 Slogan（3 个备选）
+```
+
+---
+
+## 完整项目文件清单
+
+```
+xiaomei-handmade/
+├── app/
+│   ├── page.tsx                 # 首页
+│   ├── layout.tsx               # 根布局 + Supabase/Stripe Provider
+│   ├── products/
+│   │   ├── page.tsx             # 商品列表
+│   │   └── [id]/
+│   │       └── page.tsx         # 商品详情
+│   ├── checkout/
+│   │   ├── page.tsx             # 结账
+│   │   └── success/
+│   │       └── page.tsx         # 支付成功
+│   ├── orders/
+│   │   └── page.tsx             # 订单列表
+│   └── profile/
+│       └── page.tsx             # 个人中心
+├── components/
+│   ├── Nav.tsx                  # 导航栏（含购物车图标 + 数量徽标）
+│   ├── Footer.tsx               # 页脚
+│   ├── ProductCard.tsx          # 商品卡片
+│   ├── CartDrawer.tsx           # 购物车侧边栏
+│   └── Toast.tsx                # 提示组件
+├── lib/
+│   ├── supabase.ts              # Supabase 客户端
+│   ├── cart.ts                  # 购物车逻辑
+│   └── stripe.ts                # Stripe 配置
+├── types/
+│   └── index.ts                 # TypeScript 类型
+├── .env.local                   # 环境变量
+└── package.json
+```
+
+> 🎉 **恭喜！** 你已经用 Vibe Coding 做出了一个带在线支付的电商网站。整个过程你不需要手写代码，只需要：
+> 1. 用自然语言告诉 AI 商品信息
+> 2. 配置 Supabase 数据库
+> 3. 配置 Stripe 支付
+> 4. 部署到 Vercel
+>
+> 现在你可以开始在网上卖自己的手工饰品了！
+
+---
+
+## 进阶挑战
+
+做完了基础版？试试这些进阶功能：
+
+- [ ] 商品评价系统（购买后可评价）
+- [ ] 收藏/心愿单功能
+- [ ] 优惠券和折扣码（Stripe Coupon）
+- [ ] 库存不足邮件提醒
+- [ ] 多商品图片上传（管理员）
+- [ ] 订单物流追踪
+- [ ] 微信小程序同步
+- [ ] 推荐系统（购买了 A 的人也购买了 B）
+- [ ] 会员积分体系
+
+想实现哪个？直接把需求告诉 AI："请为我的电商网站添加 [功能名]"

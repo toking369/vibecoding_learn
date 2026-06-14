@@ -1,9 +1,9 @@
 ---
 title: 'AI 壁纸生成器'
-description: '从零搭建一个 AI 壁纸生成网站——输入描述即可生成独一无二的壁纸'
-emoji: '🤖'
+description: '贯穿全流程的真实案例——从零做一个 AI 壁纸生成网站，输入描述即可生成独一无二的壁纸'
 section: 'cases'
 order: 6
+emoji: '🤖'
 difficulty: '高阶'
 category: 'AI 工具'
 tech_type: 'AI+全栈'
@@ -21,12 +21,14 @@ estimated_hours: 10
 
 **人物**：小王，AI 爱好者，想做一个能赚钱的 AI 工具
 **目标**：用户输入文字描述，AI 生成壁纸，可付费下载高清版
-**用时**：约 10 小时
+**用时**：约 10 小时（从零到上线）
 **最终成果**：一个 AI 壁纸生成 + 画廊网站，支持付费下载
 
 ---
 
 ## 用到的 Skills 一览
+
+开始前，先安装本案例会用到的所有 Skill：
 
 ```bash
 # 前端
@@ -39,18 +41,62 @@ npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y
 npx skills add yonatangross/orchestkit@devops-deployment -g -y
 ```
 
+> 💡 **提示**：以上命令在终端执行，`-g` 表示全局安装，`-y` 表示自动确认。如果某条报错，不影响其他 skill 的使用。
+
 ---
 
 ## 阶段 0：准备工作
 
-额外注册：
-- [Replicate](https://replicate.com) — AI 模型 API，注册送免费额度
-- [Supabase](https://supabase.com) — 数据库 + 认证
-- [Stripe](https://stripe.com) — 支付
+### 需要注册的账号
+
+| 平台 | 用途 | 费用 |
+|------|------|------|
+| [GitHub](https://github.com) | 存放代码 | 免费 |
+| [Vercel](https://vercel.com) | 部署网站 | 免费 |
+| [Replicate](https://replicate.com) | AI 模型 API | 注册送 $5 额度 |
+| [Supabase](https://supabase.com) | 数据库 + 认证 | 免费 |
+| [Stripe](https://stripe.com) | 支付处理 | 免费 |
+
+### 需要安装的工具
+
+| 工具 | 用途 |
+|------|------|
+| VS Code | 写代码的编辑器 |
+| Node.js | 本地开发环境 |
+
+> ✅ 全部注册安装完大约需要 20 分钟。
 
 ---
 
-## 阶段 1：技术选型分析
+## 阶段 1：产品定义（写 PRD）
+
+### 做什么
+
+让 AI 帮你写一份 PRD，明确 AI 壁纸生成器的功能。
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我写一份产品需求文档（PRD），项目是「AI 壁纸工坊」。
+
+我想做一个 AI 壁纸生成网站：
+
+1. 用户在输入框中用文字描述想要的壁纸（如 "夕阳下的海滩，暖色调，极简风格"）
+2. AI 根据描述生成 4 张壁纸预览（低分辨率 + 水印）
+3. 用户选择喜欢的，付费下载高清无水印版（$1.99/张）
+4. 生成的壁纸默认展示在公共画廊中，吸引更多用户
+5. 登录用户每天有 3 次免费生成机会
+
+目标用户：喜欢个性化壁纸的年轻人、设计师、手机壁纸爱好者。
+```
+
+### 得到的结果
+
+AI 会生成完整的 PRD，包含商业模式、用户流程、功能优先级。
+
+---
+
+## 阶段 2：技术选型分析
 
 ### 项目技术选型
 
@@ -72,7 +118,73 @@ npx skills add yonatangross/orchestkit@devops-deployment -g -y
 
 ---
 
-## 阶段 2：数据库构建
+## 阶段 3：设计与原型
+
+### 做什么
+
+确定 AI 壁纸生成器的视觉风格。
+
+> 🎨 **Skill**：`ui-ux-pro-max`
+
+### 复制这段提示词给 AI
+
+```markdown
+请为我的 AI 壁纸生成器推荐设计风格。
+
+品牌名：AI 壁纸工坊
+目标用户：年轻人、壁纸爱好者、设计师
+风格关键词：科技感、创意、未来感、视觉冲击
+
+需要页面：
+1. 首页：中央输入框 + 生成按钮 + 下方展示最近生成的壁纸
+2. 生成结果页：4 张预览图（带水印）+ 选择下载
+3. 公共画廊：用户生成的壁纸瀑布流
+4. 壁纸详情页：大图 + 提示词 + 作者 + 下载按钮
+5. 个人中心：我的生成记录 + 我的下载
+6. 定价页：免费 vs Pro 对比
+
+配色建议：深色科技风（深蓝/紫色渐变）+ 霓虹点缀色，卡片发光边框效果
+```
+
+---
+
+## 阶段 4：数据库构建
+
+### 做什么
+
+设计壁纸生成器的数据库表结构，包括生成记录、付费下载、用户额度等。
+
+### 复制这段提示词给 AI
+
+```markdown
+请帮我设计一个 AI 壁纸生成器的数据库。
+
+项目名称：AI 壁纸工坊
+数据库平台：Supabase（PostgreSQL）
+
+业务需求：
+1. **壁纸生成**：用户输入提示词，AI 生成壁纸，记录生成结果（原图、缩略图、水印图）
+2. **画廊展示**：生成的壁纸默认公开，展示在画廊中
+3. **点赞功能**：用户可点赞喜欢的壁纸
+4. **付费下载**：用户可付费下载高清原图（$1.99/张），使用 Stripe 支付
+5. **每日额度**：登录用户每天可免费生成 3 次
+6. **用户认证**：使用 Supabase Auth
+
+请帮我设计：
+1. 所有表的完整 SQL 建表语句
+2. 字段类型和约束（NOT NULL、DEFAULT、UNIQUE 等）
+3. 表之间的外键关系
+4. Row Level Security (RLS) 策略
+5. 每日使用额度的计数逻辑
+
+注意：金额字段使用整数（单位：分），壁纸图片 URL 用 TEXT 类型存储。
+```
+
+### 得到的结果
+
+AI 会生成完整的建表 SQL、RLS 策略和使用额度逻辑。以下是推荐设计：
+
+在 Supabase Dashboard 的 **SQL Editor** 中执行：
 
 ```sql
 -- 壁纸生成记录
@@ -80,10 +192,15 @@ CREATE TABLE wallpapers (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   user_id UUID REFERENCES auth.users,
   prompt TEXT NOT NULL,
-  image_url TEXT NOT NULL,
-  thumbnail_url TEXT,
-  is_public BOOLEAN DEFAULT true,
-  is_purchased BOOLEAN DEFAULT false,
+  image_url TEXT NOT NULL,          -- 高清图（付费用户可下载）
+  thumbnail_url TEXT NOT NULL,      -- 预览缩略图
+  watermark_url TEXT NOT NULL,      -- 带水印预览图
+  width INTEGER DEFAULT 1920,
+  height INTEGER DEFAULT 1080,
+  model TEXT DEFAULT 'stable-diffusion',
+  is_public BOOLEAN DEFAULT true,   -- 是否在画廊展示
+  likes_count INTEGER DEFAULT 0,
+  downloads_count INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -93,57 +210,438 @@ CREATE TABLE purchases (
   user_id UUID REFERENCES auth.users,
   wallpaper_id BIGINT REFERENCES wallpapers,
   stripe_payment_id TEXT,
-  amount INTEGER NOT NULL,
+  amount INTEGER NOT NULL,          -- 单位：分
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- 用户每日使用额度
+CREATE TABLE user_daily_usage (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id UUID REFERENCES auth.users,
+  date DATE DEFAULT CURRENT_DATE,
+  generate_count INTEGER DEFAULT 0,
+  UNIQUE(user_id, date)
+);
+
+-- 喜欢记录
+CREATE TABLE likes (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id UUID REFERENCES auth.users,
+  wallpaper_id BIGINT REFERENCES wallpapers,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, wallpaper_id)
+);
+```
+
+### RLS 策略
+
+```sql
+-- 壁纸公开可读
+CREATE POLICY "Wallpapers public read" ON wallpapers
+  FOR SELECT USING (true);
+
+-- 用户可创建自己的壁纸
+CREATE POLICY "Users create own wallpapers" ON wallpapers
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- 点赞记录：登录用户可读，本人可创建
+CREATE POLICY "Likes read" ON likes
+  FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Likes insert" ON likes
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Likes delete" ON likes
+  FOR DELETE USING (auth.uid() = user_id);
 ```
 
 ---
 
-## 阶段 3：后端搭建
+## 阶段 5：后端搭建（API Routes）
 
-### API 设计
+### 做什么
 
-| 端点 | 功能 |
-|------|------|
-| `POST /api/generate` | 调用 Replicate 生成壁纸 |
-| `GET /api/gallery` | 获取公开壁纸列表 |
-| `POST /api/download` | 创建 Stripe 支付 Session |
+用 Next.js API Routes 搭建后端接口。
 
-### 调用 Replicate（仅需 3 行代码）
+### 复制这段提示词给 AI
 
+```markdown
+请帮我在 Next.js 项目中创建以下 API 路由。
+
+项目使用 Next.js App Router，已安装 Supabase SDK、Replicate、Stripe SDK。
+
+**1. POST /api/generate — 调用 AI 生成壁纸**
+
+接收：{ prompt: string, style?: string, width?: number, height?: number }
+逻辑：
+1. 验证用户登录状态
+2. 检查用户今天的生成次数（从 user_daily_usage 表）
+3. 未登录用户或超限用户返回错误提示
+4. 调用 Replicate 的 Stable Diffusion 模型
+5. 将生成的图片保存到 Supabase Storage
+6. 创建 wallpapers 记录
+7. 更新用户今日使用次数 + 1
+8. 返回生成的壁纸信息（ID、缩略图URL、水印URL）
+
+调用 Replicate 代码：
 ```javascript
 import Replicate from 'replicate';
 const replicate = new Replicate({ auth: process.env.REPLICATE_API_KEY });
+
 const output = await replicate.run(
-  "stability-ai/stable-diffusion:db21e45d3f7023abc2a46ab38e6d9b5c6b4b9b5f5c5b5c5b5c5b5c5b5c5b5c5",
-  { input: { prompt: userPrompt } }
+  "stability-ai/stable-diffusion-3.5-medium",  // 或使用最新模型
+  {
+    input: {
+      prompt: userPrompt,
+      width: width || 1920,
+      height: height || 1080,
+      num_outputs: 1,
+    }
+  }
 );
-// output 就是生成的图片 URL
+// output 是生成的图片 URL 数组
+```
+
+**2. GET /api/gallery — 获取公共画廊**
+
+支持参数：
+- ?page=1&limit=20（分页）
+- ?sort=latest|popular（排序）
+- ?search=关键词（搜索提示词）
+
+**3. POST /api/download — 创建付费下载**
+
+接收：`{ wallpaperId: number }`
+逻辑：
+1. 验证用户登录
+2. 检查壁纸是否存在
+3. 创建 Stripe PaymentIntent 或 Checkout Session
+4. 返回支付链接
+5. 支付成功后更新 purchases 表 + 更新 downloads_count
+
+**4. POST /api/webhook — Stripe 支付回调**
+
+1. 验证 Stripe 签名
+2. 支付成功后：更新 purchases 状态
+3. 向用户发送下载链接（可选：通过邮件）
+
+所有路由需要：错误处理、输入验证、合适的 HTTP 状态码。
 ```
 
 ---
 
-## 阶段 4：部署方案
+## 阶段 6：前端开发（核心）
 
-- **前端 + API**：Vercel
-- **数据库 + 存储**：Supabase
-- **AI 模型**：Replicate（外部 API）
-- **支付**：Stripe Webhook → Vercel
+### 做什么
+
+用 Next.js 搭建前端页面。
+
+> 💻 **Skill**：`tailwindcss-v4`
+
+### 第一步：创建项目
+
+```bash
+npx create-next-app@latest ai-wallpaper --typescript --tailwind
+cd ai-wallpaper
+npm install @supabase/supabase-js @supabase/ssr @stripe/react-stripe-js @stripe/stripe-js replicate
+```
+
+### 第二步：生成首页（核心生成界面）
+
+```markdown
+请帮我生成 AI 壁纸生成器的首页 (app/page.tsx)。
+
+这是一个 AI 壁纸生成工具，风格为深色科技风。
+
+**首页布局：**
+1. 顶部导航栏：Logo「AI 壁纸工坊」+ 导航（首页 / 画廊 / 定价 / 登录）
+2. Hero 区域（页面核心）：
+   - 标题「输入你的想象，AI 为你生成壁纸」
+   - 副标题「描述你想要的画面，AI 即刻生成专属壁纸」
+   - 中央输入框：大号圆角输入框 + 占位提示词（如 "夕阳下的海滩，暖色调，极简风格"）
+   - 风格选择器（可选）：横向标签（默认 / 极简 / 插画 / 写实 / 赛博朋克 / 水彩）
+   - 尺寸选择器（可选）：手机壁纸 / 桌面壁纸 / 平板壁纸
+   - 大幅「✨ 生成」按钮（渐变背景）
+3. 生成结果区域（生成后显示）：
+   - 4 张预览图网格（2×2）
+   - 每张下方显示：缩略图 + 水印标记 + 「下载高清版」按钮
+   - 加载中显示动态生成动画（闪烁骨架或进度条）
+   - 生成失败显示错误提示 + 重试按钮
+4. 热门壁纸展示（底部）：6 张最近生成的壁纸
+5. 页脚：版权信息
+
+交互要求：
+- 输入框有打字动画占位文本（轮换不同提示词示例）
+- 生成过程中显示实时进度（调用 Replicate 的 API 轮询）
+- 生成完成后有音效或动画反馈
+- 响应式设计
+```
+
+### 第三步：生成公共画廊页
+
+```markdown
+请帮我生成公共画廊页面 (app/gallery/page.tsx)。
+
+**功能：**
+1. 壁纸瀑布流布局（Masonry，类似 Pinterest）
+2. 每张壁纸卡片：
+   - 图片（懒加载）
+   - 悬停显示提示词 + 作者
+   - ❤️ 点赞按钮 + 点赞数
+   - ⬇️ 下载次数
+3. 顶部搜索框：搜索提示词
+4. 排序切换：最新 / 最热
+5. 无限滚动加载（滚动到底部自动加载下一页）
+6. 点击壁纸跳转到详情页
+7. 加载态使用骨架屏
+
+数据从 /api/gallery 接口获取。
+```
+
+### 第四步：生成壁纸详情页
+
+```markdown
+请帮我生成壁纸详情页面 (app/wallpaper/[id]/page.tsx)。
+
+**页面布局：**
+1. 左侧：壁纸大图展示（可缩放查看细节）
+2. 右侧信息：
+   - 生成提示词（完整显示）
+   - 作者信息（头像 + 名称）
+   - 生成时间
+   - 尺寸（1920×1080）
+   - ❤️ 点赞按钮 + 数量
+   - ⬇️ 下载次数
+3. 下载按钮：
+   - 未登录：提示登录
+   - 已登录但未付费：显示「¥1.99 下载高清原图」按钮
+   - 已付费：直接下载按钮
+4. 底部：类似风格推荐（使用相同提示词关键词的其他壁纸）
+
+**付费弹窗 (Stripe Checkout)：**
+- 点击付费后加载 Stripe Checkout
+- 支付成功后自动下载
+- 支付失败显示重试按钮
+```
+
+### 第五步：生成定价页和个人中心
+
+```markdown
+请帮我生成定价页面 (app/pricing/page.tsx) 和个人中心 (app/profile/page.tsx)。
+
+**定价页：**
+1. 两张定价卡片对比：
+   - 免费计划：$0 — 每日 3 次生成，带水印预览
+   - Pro 计划：$9.99/月 — 无限生成，无水印，优先队列
+2. 功能对比表格
+3. 选择 Stripe 订阅（Pro 计划）
+
+**个人中心：**
+1. 用户信息（头像、昵称、邮箱）
+2. 使用统计：今日生成次数 / 本月生成总数 / 已下载数
+3. 选项卡：
+   - 我的生成记录：历史壁纸列表
+   - 我的下载：已付费购买的壁纸
+   - 我的喜欢：点过赞的壁纸
+4. 订阅管理（如果有 Pro 订阅）
+```
 
 ---
 
-## 阶段 5：SEO 优化
+## 阶段 7：测试
 
-- 壁纸画廊页 SSR（每个壁纸独立 URL）
-- 结构化数据（CreativeWork Schema）
-- 图片懒加载 + WebP 格式
+### 做什么
+
+检查 AI 壁纸生成器能否正常运行。
+
+### 检查清单
+
+```markdown
+请帮我检查 AI 壁纸生成器是否完整。逐项确认：
+
+功能测试：
+- [ ] 首页输入框和生成按钮是否正常
+- [ ] AI 生成是否能成功返回图片
+- [ ] 生成进度提示是否正常显示
+- [ ] 图片水印是否正确显示
+- [ ] 画廊壁纸列表是否正常加载
+- [ ] 无限滚动是否触发
+- [ ] 搜索功能是否工作
+- [ ] 点赞功能是否正常
+- [ ] 壁纸详情页是否正常
+- [ ] Stripe 支付流程是否正常
+- [ ] 支付成功后是否能下载高清原图
+- [ ] 每日使用额度是否正确计数
+- [ ] 用户登录/注册是否正常
+
+错误场景：
+- [ ] 输入空提示词是否拦截
+- [ ] 网络错误时是否友好提示
+- [ ] 额度用完后是否提示升级
+- [ ] 支付失败后是否能重试
+```
+
+### 常见问题及修复
+
+| 问题 | 修复方法 |
+|------|----------|
+| AI 生成超时 | 设置 API 超时时间到 60 秒以上，Replicate 生成可能需要 30 秒 |
+| Stripe 支付成功但未解锁 | 检查 Webhook 的签名验证和数据库更新逻辑 |
+| 图片加载慢 | 使用 Next.js 的 `next/image` 自动优化，缩略图用 WebP 格式 |
+| 生成配额不更新 | 检查 `user_daily_usage` 表的更新逻辑和 RLS 策略 |
+| 水印被绕过 | 确保 API 返回高清图前验证支付状态，水印在服务端叠加 |
 
 ---
 
-## 阶段 6：文案 & 营销
+## 阶段 8：部署上线
 
-- 免费版：生成低分辨率带水印
-- 付费版：$1.99 下载高清无水印
-- 小红书/抖音发「AI 生成壁纸」短视频引流
-- 每日免费额度机制（登录用户每天 3 次免费生成）
+### 做什么
+
+把 AI 壁纸生成器部署到生产环境。
+
+> 🚀 **Skill**：`devops-deployment`
+
+### 部署步骤
+
+1. **Vercel 部署**：
+   - 推送代码到 GitHub
+   - 在 Vercel 导入仓库
+   - 设置所有环境变量（Replicate、Stripe、Supabase）
+
+2. **Stripe 配置**：
+   - 在 Stripe Dashboard 创建产品和价格（壁纸下载 + Pro 订阅）
+   - 配置 Webhook 指向 `https://你的域名/api/webhook`
+   - 选择监听事件：`checkout.session.completed`
+
+3. **Supabase 配置**：
+   - 确保 Storage 权限正确（公开读取壁纸，仅认证用户可上传）
+   - 在 Authentication 设置中添加 Vercel 域名到授权域名列表
+
+4. **Replicate 配置**：
+   - 在 Replicate Dashboard 查看 API 使用量
+   - 设置用量告警，防止意外超支
+
+### 成本预估
+
+| 资源 | 预估月费 | 备注 |
+|------|---------|------|
+| Vercel Hobby | 免费 | 100GB 带宽/月 |
+| Supabase Free | 免费 | 500MB 数据库 |
+| Replicate | $5-20 | 按使用量，每张图约 $0.01 |
+| Stripe | 免费 | 每笔交易 2.9% + $0.30 |
+| 总计 | $5-20/月 | 取决于生成量 |
+
+> 💡 建议在 Replicate 设置每月预算上限（如 $20），防止意外高额账单。
+
+---
+
+## 阶段 9：文案优化
+
+### 做什么
+
+用 AI 优化网站文案，提高付费转化率。
+
+> ✍️ **Skill**：不需要额外 skill
+
+### 营销文案优化
+
+```markdown
+请帮我的 AI 壁纸生成器优化以下文案：
+
+1. **首页标题和副标题**：提供 3 个方案
+   - 当前：输入你的想象，AI 为你生成壁纸
+   - 目标：吸引用户尝试 + 强调免费
+
+2. **CTA 按钮文案**：
+   - 生成按钮：3 个方案（如「✨ 开始创作」）
+   - 下载按钮：不同状态（免费/付费/已购买）
+
+3. **提示词占位示例**：10 个能激发灵感的示例
+   - 风格多样：极简、自然、科幻、卡通、抽象
+
+4. **定价页文案**：
+   - 免费 vs Pro 的描述方式
+   - 让用户觉得 Pro 很值得
+
+5. **SEO 标题和描述**：首页 + 画廊 + 壁纸详情页
+```
+
+### 用户引导
+
+```markdown
+请为我设计新用户的引导流程（Onboarding）。
+
+内容：
+1. 首次访问时的引导浮层（3 步：输入提示词 → 生成 → 下载）
+2. 引导文案要简短有趣
+3. 每一步用高亮 + 箭头指向对应的 UI 元素
+4. 提供「跳过引导」和「重新查看」选项
+```
+
+---
+
+## 完整项目文件清单
+
+```
+ai-wallpaper/
+├── app/
+│   ├── page.tsx                 # 首页（生成器核心）
+│   ├── layout.tsx               # 根布局
+│   ├── gallery/
+│   │   └── page.tsx             # 公共画廊
+│   ├── wallpaper/
+│   │   └── [id]/
+│   │       └── page.tsx         # 壁纸详情
+│   ├── pricing/
+│   │   └── page.tsx             # 定价页
+│   ├── profile/
+│   │   └── page.tsx             # 个人中心
+│   └── api/
+│       ├── generate/
+│       │   └── route.ts         # AI 生成接口
+│       ├── gallery/
+│       │   └── route.ts         # 画廊数据
+│       ├── download/
+│       │   └── route.ts         # 下载接口
+│       └── webhook/
+│           └── route.ts         # Stripe 回调
+├── components/
+│   ├── Nav.tsx                  # 导航
+│   ├── PromptInput.tsx          # 提示词输入框
+│   ├── StyleSelector.tsx        # 风格选择
+│   ├── WallpaperCard.tsx        # 壁纸卡片
+│   ├── MasonryGrid.tsx          # 瀑布流布局
+│   ├── PurchaseModal.tsx        # 付费弹窗
+│   └── AuthButtons.tsx          # 登录按钮
+├── lib/
+│   ├── supabase.ts              # Supabase 客户端
+│   ├── replicate.ts             # Replicate 客户端
+│   └── stripe.ts                # Stripe 客户端
+├── .env.local
+├── tailwind.config.ts
+└── package.json
+```
+
+> 🎉 **恭喜！** 你已经用 Vibe Coding 做出了一个完整的 AI 壁纸生成器。整个过程你只需要：
+> 1. 描述你想要的功能
+> 2. 配置 AI、数据库、支付服务
+> 3. 复制 AI 生成的代码
+> 4. 部署上线
+>
+> 现在你的网站可以开始赚钱了——每张壁纸 $1.99，每天 3 次免费额度驱动用户付费。
+
+---
+
+## 进阶挑战
+
+做完了基础版？试试这些进阶功能：
+
+- [ ] 多模型选择（Stable Diffusion / DALL-E / Midjourney 风格）
+- [ ] 批量生成（一次生成 8 张预览）
+- [ ] AI 图片放大（提高分辨率到 4K）
+- [ ] 图片编辑（扩展/修复/重绘特定区域）
+- [ ] 生成历史自动保存到 Supabase
+- [ ] 分享到社交媒体的一键功能
+- [ ] 用户投稿排行榜（每周最多下载的壁纸）
+- [ ] AI 风格迁移（上传图片 → AI 转换风格）
+- [ ] 团队版（企业用户管理后台）
+
+想实现哪个？直接把需求告诉 AI："请为我的壁纸生成器添加 [功能名]"
