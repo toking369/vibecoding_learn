@@ -1,0 +1,67 @@
+---
+// src/pages/cases/index.astro
+// Case study listing page — card grid with multi-dimension filtering
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CaseCard from '@components/ui/CaseCard.astro';
+import CaseFilter from '@components/interactive/CaseFilter.astro';
+import { getCollection } from 'astro:content';
+
+const allCases = await getCollection('cases');
+const sorted = allCases.sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="案例库" description="从入门到高阶，9 个真实项目带你实战 Vibe Coding——选择适合你的项目开始学习">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    <!-- Header -->
+    <div class="mb-10">
+      <h1 class="text-3xl lg:text-4xl font-bold mb-2">
+        <span class="gradient-text">案例库</span>
+      </h1>
+      <p class="text-[var(--color-text-secondary)] text-lg">
+        从入门到高阶，9 个真实项目带你实战 Vibe Coding。选择适合你的项目开始学习。
+      </p>
+    </div>
+
+    <!-- Filter bar -->
+    <CaseFilter cases={sorted.map(c => ({ slug: c.id, difficulty: c.data.difficulty, category: c.data.category, tech_type: c.data.tech_type }))} />
+
+    <!-- Empty state -->
+    <div id="filter-empty-state" class="hidden text-center py-16">
+      <div class="text-4xl mb-4">🔍</div>
+      <p class="text-[var(--color-text-secondary)]">没有找到匹配的项目，试试调整筛选条件</p>
+    </div>
+
+    <!-- Card grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+      {sorted.map((doc, i) => {
+        const d = doc.data;
+        // Cast to access extended frontmatter fields
+        const data = d as Record<string, any>;
+        return (
+          <div
+            data-case-card
+            data-difficulty={data.difficulty || ''}
+            data-category={data.category || ''}
+            data-tech-type={data.tech_type || ''}
+          >
+            <CaseCard
+              title={data.title}
+              description={data.description || ''}
+              emoji={data.emoji || '📁'}
+              slug={doc.id.split('/').pop() || doc.id}
+              difficulty={(data.difficulty as '入门' | '进阶' | '高阶') || '入门'}
+              category={data.category || ''}
+              tech_type={data.tech_type || ''}
+              frontend={data.frontend || ''}
+              database={data.database || ''}
+              backend={data.backend || ''}
+              deploy={data.deploy || ''}
+              estimated_hours={data.estimated_hours || 1}
+              index={i}
+            />
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>
