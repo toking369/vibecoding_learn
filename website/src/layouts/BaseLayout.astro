@@ -24,6 +24,11 @@ const currentPath = Astro.url.pathname;
     <title>{title} | Vibe Coding 建站指南</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0F172A" />
+    <link rel="canonical" href={Astro.url} />
+    <meta property="og:title" content={`${title} | Vibe Coding 建站指南`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
