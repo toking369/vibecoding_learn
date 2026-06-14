@@ -1,0 +1,121 @@
+---
+title: '程序员的博客'
+description: '从零搭建一个个人技术博客——支持 CMS 内容管理、评论系统、SEO 优化'
+emoji: '📝'
+section: 'cases'
+order: 2
+difficulty: '入门'
+category: '内容站'
+tech_type: '前端+CMS'
+frontend: 'Astro + Tailwind CSS'
+database: '无（CMS 托管）'
+backend: 'Decap CMS（Git-based）'
+ai_api: '无'
+payment: '无'
+auth: '无'
+deploy: 'Vercel'
+estimated_hours: 3
+---
+
+## 项目概览
+
+**人物**：小林，前端爱好者，想把技术笔记整理成博客分享出去
+**目标**：做一个支持 Markdown 写作、有评论功能的个人博客
+**用时**：约 3 小时
+**最终成果**：一个带 CMS 的响应式博客网站，部署在 Vercel
+
+---
+
+## 用到的 Skills 一览
+
+```bash
+# 前端开发
+npx skills add busirocket/agents-skills@busirocket-tailwindcss-v4 -g -y
+
+# 部署
+npx skills add yonatangross/orchestkit@devops-deployment -g -y
+```
+
+---
+
+## 阶段 0：准备工作
+
+### 需要注册的账号
+
+| 平台 | 用途 | 费用 |
+|------|------|------|
+| GitHub | 存放代码 + 作为 CMS 后端 | 免费 |
+| Vercel | 部署网站 | 免费 |
+
+### 需要安装的工具
+
+| 工具 | 用途 |
+|------|------|
+| VS Code | 写代码的编辑器 |
+| Node.js | 本地开发环境 |
+
+---
+
+## 阶段 1：技术选型分析
+
+### 为什么选 Astro？
+
+| 方案 | 类型 | 优点 | 缺点 |
+|------|------|------|------|
+| Astro | 静态站点生成器 | 零 JS 默认、Markdown 原生支持、速度快 | 生态较新 |
+| Next.js | React 全栈框架 | 生态丰富 | 复杂度高 |
+| Hugo | Go 静态生成 | 极快 | 模板语法冷门 |
+
+**选择 Astro**：博客是内容型网站，Astro 对 Markdown/MDX 有一等支持，自带 Content Collections，零 JS 开销最适合博客。
+
+### 为什么选 Decap CMS？
+
+Decap CMS（原 Netlify CMS）是 Git-based CMS，编辑直接在 GitHub 仓库中提交 Markdown 文件——不需要额外数据库，对新手零成本。
+
+---
+
+## 阶段 2：前端开发
+
+### 博客结构
+
+```
+src/content/blog/     ← MDX 文章存放在这里
+src/pages/blog/       ← 列表页 + 文章页路由
+src/components/       ← BlogCard, TagCloud, 评论组件
+```
+
+### 关键功能
+
+- 文章列表页（按日期倒序）
+- 标签分类 + 标签云
+- RSS/Atom 订阅
+- 评论系统接入（Giscus——基于 GitHub Discussions，免费无广告）
+
+### SEO 设置
+
+在 `astro.config.mjs` 中配置 sitemap 插件，每篇文章自动生成。
+
+---
+
+## 阶段 3：部署方案
+
+- **平台**：Vercel（免费 Hobby 计划）
+- **CI/CD**：连接 GitHub 仓库，推送 main 分支自动部署
+- **域名**：Vercel 提供 `.vercel.app` 免费域名，也可绑定自定义域名
+
+---
+
+## 阶段 4：SEO 优化
+
+- 每篇文章 frontmatter 包含 `title`、`description`、`tags`
+- 自动生成 `sitemap.xml`
+- 使用语义化 HTML 结构（`<article>`、`<time>`、`<nav>`）
+- RSS Feed 方便搜索引擎抓取
+
+---
+
+## 阶段 5：文案 & 营销
+
+- 文章开头用「一句话总结」抓住读者
+- 代码块保持简洁，附带实际运行结果
+- 在掘金、SegmentFault 等平台同步发布，末尾加原文链接
