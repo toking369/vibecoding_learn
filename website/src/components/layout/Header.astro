@@ -21,7 +21,7 @@ const { currentPath = '' } = Astro.props;
         {NAV_ITEMS.map((item) => (
           <a
             href={item.href}
-            class="text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors relative after:absolute after:bottom-[-1.65rem] after:left-0 after:w-full after:h-0.5 after:bg-[var(--color-accent)] after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
+            class="text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors pb-0.5 border-b-2 border-transparent hover:border-[var(--color-accent)] transition-[border-color] duration-200"
           >
             {item.label}
           </a>
