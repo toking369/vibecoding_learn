@@ -1,0 +1,32 @@
+---
+// website/src/components/content/PromptCard.astro
+// A card for showing good/bad prompt examples in MDX content.
+
+export interface Props {
+  type?: 'good' | 'bad';
+  label?: string;
+}
+
+const { type = 'good', label } = Astro.props;
+
+const bgColor = type === 'good'
+  ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800'
+  : 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800';
+
+const headerBg = type === 'good'
+  ? 'bg-emerald-100 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200'
+  : 'bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200';
+
+const icon = type === 'good' ? '✅' : '❌';
+const defaultLabel = type === 'good' ? '好的示例' : '不好的示例';
+const title = label || defaultLabel;
+---
+
+<div class={`my-4 rounded-xl border overflow-hidden ${bgColor}`}>
+  <div class={`px-4 py-2 text-xs font-semibold border-b ${headerBg}`}>
+    {icon} {title}
+  </div>
+  <div class="p-4 text-sm">
+    <slot />
+  </div>
+</div>

@@ -1,0 +1,34 @@
+---
+// website/src/components/content/Admonition.astro
+// Info/warning/tip/danger callout boxes for MDX content.
+
+export interface Props {
+  type?: 'info' | 'warning' | 'tip' | 'danger';
+  title?: string;
+}
+
+const { type = 'info', title } = Astro.props;
+
+const config = {
+  info: { icon: '💡', bg: 'bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800' },
+  warning: { icon: '⚠️', bg: 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800' },
+  tip: { icon: '💎', bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800' },
+  danger: { icon: '🚫', bg: 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800' },
+};
+
+const { icon, bg } = config[type];
+const defaultTitles = { info: '提示', warning: '注意', tip: '技巧', danger: '警告' };
+const displayTitle = title || defaultTitles[type];
+---
+
+<div class={`my-4 rounded-xl border ${bg} p-4`}>
+  <div class="flex gap-3">
+    <span class="text-lg leading-none shrink-0 mt-0.5">{icon}</span>
+    <div>
+      <div class="font-semibold text-sm mb-1">{displayTitle}</div>
+      <div class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>
