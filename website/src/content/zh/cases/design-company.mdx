@@ -1,0 +1,144 @@
+---
+title: '设计公司官网'
+description: '从零搭建一个设计公司品牌官网——响应式、作品展示、联系表单'
+emoji: '🏢'
+section: 'cases'
+order: 3
+difficulty: '入门'
+category: '企业官网'
+tech_type: '前端+轻后端'
+frontend: 'Astro + Tailwind CSS'
+database: 'Supabase（表单数据）'
+backend: 'Supabase Edge Functions'
+ai_api: '无'
+payment: '无'
+auth: '无'
+deploy: 'Vercel'
+estimated_hours: 4
+---
+
+## 项目概览
+
+**人物**：小张，开了一家设计工作室，需要一个官网展示作品
+**目标**：一个 5 页的响应式官网 + 联系表单
+**用时**：约 4 小时
+**最终成果**：一个专业的公司官网，部署在 Vercel
+
+---
+
+## 用到的 Skills 一览
+
+```bash
+# 设计
+npx skills add nexu-io/open-design@ui-ux-pro-max -g -y
+
+# 前端
+npx skills add busirocket/agents-skills@busirocket-tailwindcss-v4 -g -y
+
+# 后端
+npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y
+
+# 部署
+npx skills add yonatangross/orchestkit@devops-deployment -g -y
+```
+
+---
+
+## 阶段 0：准备工作
+
+（同摄影集——GitHub + Vercel 账号，VS Code + Node.js）
+
+额外注册：[Supabase](https://supabase.com) — 用于存储表单提交数据，免费额度足够。
+
+---
+
+## 阶段 1：技术选型分析
+
+### 前端选型
+
+| 方案 | 适合场景 |
+|------|---------|
+| Astro | 内容型官网，SEO 友好 |
+| Next.js | 需要更多交互时 |
+| 纯 HTML/CSS | 过于原始，维护成本高 |
+
+**选择 Astro**：官网以展示为主，交互少，Astro 零 JS 的策略让页面加载极快，对 SEO 最友好。
+
+### 数据库选择
+
+为什么选 Supabase 而不是其他？
+
+| 方案 | 费用 | 复杂度 | 适合 |
+|------|------|--------|------|
+| Supabase | 免费（500MB） | 低 | 联系表单、轻量数据 |
+| MongoDB Atlas | 免费（512MB） | 中 | 文档型数据 |
+| MySQL | 需自建 | 高 | 复杂关系型 |
+| Google Sheets API | 免费 | 低 | 极简方案 |
+
+**选择 Supabase**：可视化建表、PostgreSQL 底层、免费额度充足、有 JS SDK 一行代码搞定数据写入。
+
+---
+
+## 阶段 2：数据库构建（联系表单）
+
+Supabase 中建表 `contacts`：
+
+```sql
+CREATE TABLE contacts (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  company TEXT,
+  message TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+建好表后，在 Supabase Dashboard 的 **SQL Editor** 中执行即可，不需要写后端代码。
+
+---
+
+## 阶段 3：前端开发
+
+### 页面结构
+
+- 首页（Hero + 服务介绍 + 作品精选 + 联系 CTA）
+- 作品集（网格展示）
+- 关于我们（团队介绍）
+- 服务（服务项目详情）
+- 联系（表单）
+
+### 联系表单对接
+
+在 Astro 页面中使用原生 JS 提交表单到 Supabase：
+
+```javascript
+const { data, error } = await supabase
+  .from('contacts')
+  .insert([{ name, email, company, message }]);
+```
+
+---
+
+## 阶段 4：部署方案
+
+- Vercel + GitHub 自动部署
+- Supabase 托管数据库，无需额外服务器
+- 绑定自定义域名
+
+---
+
+## 阶段 5：SEO 优化
+
+- 每个页面独立 TDK（title/description/keywords）
+- 结构化数据（LocalBusiness Schema）
+- OG 标签（分享到微信/社交媒体时展示卡片）
+- 图片加 `alt` 属性
+
+---
+
+## 阶段 6：文案 & 营销
+
+- 首页用「你设计，我们建」类短句抓住注意力
+- 作品集每个项目写背景故事而非只放图片
+- 在站酷、小红书发布设计过程帖引流
