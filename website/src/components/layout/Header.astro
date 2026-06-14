@@ -1,5 +1,6 @@
 ---
 import { SITE_TITLE, NAV_ITEMS } from '@lib/constants';
+import SearchDialog from '@components/interactive/SearchDialog.tsx';
 
 export interface Props {
   currentPath?: string;
@@ -41,6 +42,7 @@ const { currentPath = '' } = Astro.props;
       </div>
     </div>
   </div>
+  <SearchDialog client:load />
 </header>
 
 <script>
