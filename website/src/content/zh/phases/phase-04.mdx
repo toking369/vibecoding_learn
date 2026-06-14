@@ -53,6 +53,56 @@ npx skills add mindrally/skills@fastapi-python -g -y
 | aj-geddes/useful-ai-prompts@nodejs-express-server | Node.js + Express 后端 | `npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y` |
 | mindrally/skills@fastapi-python | Python FastAPI 后端 | `npx skills add mindrally/skills@fastapi-python -g -y` |
 
-## 🎯 练习
+## 📋 更多提示词模板
+
+**提示词 1：用 Supabase 创建数据库**
+
+```text
+我是一个完全不会编程的小白，想用 AI 帮我建站。
+
+我在 Supabase（supabase.com）注册了免费账号，想给我的网站加一个数据库。
+
+我的网站类型：[博客 / 电商 / 作品集 / 社交平台]
+
+我需要存储的数据：
+- [数据类型 A：如"文章：标题、正文、发布时间、分类"]
+- [数据类型 B：如"用户：用户名、邮箱、注册时间"]
+- [数据类型 C：如"评论：文章ID、用户名、内容、时间"]
+
+请帮我在 Supabase 中：
+1. 教我如何在 Supabase 控制台创建数据表
+2. 给出每张表的 SQL 建表语句（我可以在 Supabase SQL 编辑器中运行）
+3. 每个字段的类型和约束说明
+4. 教我怎么用 Supabase 的 API 在前端中读取和写入数据
+5. 给出 JavaScript 示例代码（使用 Supabase JS 客户端库）
+
+我是一个小白，请每一步都告诉我具体在哪里点击、输入什么。
+```
+
+**提示词 2：用户注册和登录系统**
+
+```text
+我是一个完全不会编程的小白，想用 AI 帮我建站。
+
+我想给我的网站加一个用户注册和登录功能。
+
+我的前端技术：[纯 HTML + CSS + JS / Astro / Next.js]
+我希望用 Supabase 来实现（我已经注册了免费账号）。
+
+请帮我实现：
+1. 注册页面（signup.html）：用户名、邮箱、密码、确认密码
+2. 登录页面（login.html）：邮箱、密码
+3. 注册成功后自动登录并跳转到个人中心
+4. 登录后导航栏显示用户名和"退出"按钮
+5. 未登录时访问某些页面自动跳转到登录页
+
+具体要求：
+- 用 Supabase Auth 处理用户认证
+- 用 JavaScript 实现前后端交互
+- 密码强度要求：至少 8 位，包含字母和数字
+- 注册时验证邮箱格式
+- 登录失败时显示友好的错误提示
+
+请输出完整的 HTML + CSS + JavaScript 代码，包含所有页面。
 
 **任务**：用 Formspree 给网站加上联系表单，然后自己测试提交一次。

@@ -1,53 +1,117 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 
+function d(purpose: string, usage: string, scenario: string) {
+  return { purpose, usage, scenario };
+}
+
 const skills = [
-  { category: '📄 产品文档', items: [
-    { name: 'create-prd', install: 'npx skills add phuryn/pm-skills@create-prd -g -y', desc: '创建完整 PRD' },
-    { name: 'docs-writing', install: 'npx skills add mblode/agent-skills@docs-writing -g -y', desc: '文档写作辅助' },
+  { category: '📄 产品与创意', items: [
+    { name: 'create-prd', install: 'npx skills add phuryn/pm-skills@create-prd -g -y', desc: d('AI 引导你一步步写出完整的 PRD', '执行后按提示输入项目信息', '启动新项目时快速产出需求文档') },
+    { name: 'brainstorm-ideas-existing', install: 'npx skills add anthropics/skills@brainstorm-ideas-existing -g -y', desc: d('对已有产品进行多视角头脑风暴', '从 PM/设计师/工程师视角分析', '产品迭代、功能优化方向探索') },
+    { name: 'brainstorm-ideas-new', install: 'npx skills add anthropics/skills@brainstorm-ideas-new -g -y', desc: d('对新产品的创意进行多视角发散', '从 PM/设计师/工程师视角提出方案', '新项目立项、产品方向探索') },
+    { name: 'skill-creator', install: 'npx skills add anthropics/skills@skill-creator -g -y', desc: d('把常用工作流封装成可复用的 Skill', '执行后按模板创建自己的 Skill 文件', '团队内部工具、重复性任务标准化') },
   ]},
-  { category: '🎨 设计', items: [
-    { name: 'ui-ux-pro-max', install: 'npx skills add nexu-io/open-design@ui-ux-pro-max -g -y', desc: 'UI/UX 设计专家' },
+  { category: '🎨 设计与 UI/UX', items: [
+    { name: 'ui-ux-pro-max', install: 'npx skills add nexu-io/open-design@ui-ux-pro-max -g -y', desc: d('AI 设计专家，生成高保真 UI 设计稿', '描述页面需求，输出设计稿和标注', 'Web/移动端界面设计、原型制作') },
+    { name: 'frontend-design', install: 'npx skills add anthropics/skills@frontend-design -g -y', desc: d('前端组件设计模式，避免千篇一律的 AI 风', '描述要做的组件，给出方案和代码', 'React/Vue 组件设计、页面布局') },
+    { name: 'brand-guidelines', install: 'npx skills add anthropics/skills@brand-guidelines -g -y', desc: d('创建品牌视觉规范（颜色、字体、Logo）', '描述品牌调性，生成规范文档', '品牌设计、视觉统一') },
+    { name: 'theme-factory', install: 'npx skills add anthropics/skills@theme-factory -g -y', desc: d('10+ 预置主题和自定义主题生成', '选择主题模板或描述想要的风格', '快速换肤、暗色模式、多主题支持') },
+    { name: 'canvas-design', install: 'npx skills add anthropics/skills@canvas-design -g -y', desc: d('生成高质量海报、封面、信息图（PNG/PDF）', '描述设计需求，直接输出成品', '社交媒体配图、活动海报、报告封面') },
+    { name: 'algorithmic-art', install: 'npx skills add anthropics/skills@algorithmic-art -g -y', desc: d('p5.js 算法艺术生成', '描述视觉效果，生成交互式画布代码', '创意编程、数据艺术、生成式视觉') },
   ]},
   { category: '💻 前端开发', items: [
-    { name: 'tailwindcss-v4', install: 'npx skills add busirocket/agents-skills@busirocket-tailwindcss-v4 -g -y', desc: 'Tailwind CSS v4 专家' },
-    { name: 'react-nextjs-patterns', install: 'npx skills add duyet/claude-plugins@react-nextjs-patterns -g -y', desc: 'React/Next.js 模式' },
+    { name: 'next-best-practices', install: 'npx skills add vercel-labs/next-skills@next-best-practices -g -y', desc: d('Vercel 官方 Next.js 最佳实践', '自动生效，在对话中提供规范建议', 'RSC 边界、数据获取、路由设计') },
+    { name: 'next-cache-components', install: 'npx skills add vercel-labs/next-skills@next-cache-components -g -y', desc: d('Next.js 16 缓存组件和 PPR 指南', '输入 /next-cache-components 查看', 'use cache、cacheLife()、PPR 优化') },
+    { name: 'next-upgrade', install: 'npx skills add vercel-labs/next-skills@next-upgrade -g -y', desc: d('辅助 Next.js 大版本升级', '输入 /next-upgrade 查看迁移步骤', 'Next 14→15/16，处理 breaking changes') },
+    { name: 'web-artifacts-builder', install: 'npx skills add anthropics/skills@web-artifacts-builder -g -y', desc: d('React + Tailwind + shadcn/ui 快速构建', '描述组件功能，生成完整交互代码', '表单、仪表盘、数据可视化面板') },
+    { name: 'html-ppt', install: 'npx skills add anthropics/skills@html-ppt -g -y', desc: d('HTML 演示文稿制作', '描述演示主题，生成 HTML 幻灯片', '技术分享、培训课件、在线演示') },
   ]},
   { category: '⚙️ 后端开发', items: [
-    { name: 'nodejs-express', install: 'npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y', desc: 'Node.js + Express' },
-    { name: 'fastapi-python', install: 'npx skills add mindrally/skills@fastapi-python -g -y', desc: 'FastAPI 后端开发' },
+    { name: 'mysql-patterns', install: 'npx skills add sanjay3290/ai-skills --skill mysql -g -y', desc: d('MySQL 数据库设计模式', '描述数据关系，给出表结构和索引建议', '电商订单、用户权限、查询优化') },
+    { name: 'sql-queries', install: 'npx skills add phuryn/pm-skills -g -y', desc: d('自然语言描述生成 SQL 查询', '用中文描述你要查什么，输出 SQL', '数据分析报表、联表查询、迁移') },
+    { name: 'bailian-cli', install: 'npm install -g bailian-cli && npx skills add modelstudioai/cli -g -y', desc: d('阿里云百炼大模型平台 CLI', '安装后用 bl 命令调用通义模型', '调用千问、模型训练、AI 部署') },
+    { name: 'langchain-dependencies', install: 'npx skills add langchain-ai/langchain-skills -g -y', desc: d('LangChain 依赖管理与版本', '描述项目，输出正确的包依赖配置', '新项目初始化、依赖升级') },
+    { name: 'langchain-middleware', install: 'npx skills add langchain-ai/langchain-skills -g -y', desc: d('LangChain 中间件开发', '描述中间件需求，生成自定义中间件', '人机审批、日志记录、输出结构化') },
+    { name: 'langchain-rag', install: 'npx skills add langchain-ai/langchain-skills -g -y', desc: d('RAG 检索增强生成系统构建', '描述知识库和数据源，生成 RAG 管道', '文档问答、知识库搜索、企业 AI') },
+    { name: 'langgraph-cli', install: 'npx skills add langchain-ai/langgraph-skills -g -y', desc: d('LangGraph CLI 项目脚手架', '输入 /langgraph-cli 查看命令', '项目初始化、构建、部署 LangGraph') },
+    { name: 'langgraph-persistence', install: 'npx skills add langchain-ai/langgraph-skills -g -y', desc: d('LangGraph 状态持久化', '描述持久化需求，配置存储后端', '跨会话记忆、对话历史、状态恢复') },
+    { name: 'langgraph-human-in-the-loop', install: 'npx skills add langchain-ai/langgraph-skills -g -y', desc: d('LangGraph 人机协作模式', '描述审批流程，生成人机交互节点', '人工审核、暂停恢复、异常处理') },
+  ]},
+  { category: '🤖 AI 与 Agent', items: [
+    { name: 'claude-api', install: 'npx skills add anthropics/skills@claude-api -g -y', desc: d('Claude API 完整参考', '询问 API 问题，Skill 给出最新信息', 'API 选型、Token 计算、Streaming') },
+    { name: 'use-ai-sdk', install: 'npx skills add anthropics/skills@use-ai-sdk -g -y', desc: d('Vercel AI SDK 使用指南', '描述 AI 功能，生成 SDK 调用代码', 'AI 聊天、流式输出、工具调用') },
+    { name: 'mcp-builder', install: 'npx skills add anthropics/skills@mcp-builder -g -y', desc: d('构建 MCP（Model Context Protocol）服务', '描述数据源，生成 MCP Server 代码', '数据库连接、API 集成、自定义工具') },
+    { name: 'swarm', install: 'npx skills add anthropics/skills@swarm -g -y', desc: d('多智能体协作编排框架', '描述任务分解，生成多 Agent 方案', '复杂任务拆解、多步骤工作流') },
+    { name: 'develop-ai-functions-example', install: 'npx skills add anthropics/skills@develop-ai-functions-example -g -y', desc: d('AI 函数（Function Calling）开发示例', '描述工具函数需求，给出定义和调用', '自定义工具、API 集成、结构化输出') },
+    { name: 'langchain-fundamentals', install: 'npx skills add langchain-ai/langchain-skills -g -y', desc: d('LangChain 框架基础使用', '描述链/代理需求，输出代码', 'LLM 应用、RAG 管道、Agent') },
+    { name: 'langgraph-fundamentals', install: 'npx skills add langchain-ai/langgraph-skills -g -y', desc: d('LangGraph 状态图构建', '描述状态流转，生成 Graph 定义', '多步骤流程、人机协作、状态机') },
+    { name: 'deep-agents-core', install: 'npx skills add anthropics/skills@deep-agents-core -g -y', desc: d('Deep Agents 核心框架', '创建 Agent 应用时自动调用', 'Agent 应用开发、Harness 配置') },
+    { name: 'deep-agents-memory', install: 'npx skills add anthropics/skills@deep-agents-memory -g -y', desc: d('Deep Agents 记忆与持久化', '描述记忆需求，配置存储方案', '跨会话记忆、文件系统访问、状态管理') },
+    { name: 'deep-agents-orchestration', install: 'npx skills add anthropics/skills@deep-agents-orchestration -g -y', desc: d('Deep Agents 子任务编排', '描述任务分解，生成子 Agent 方案', '多 Agent 协作、任务规划、人工审批') },
+    { name: 'framework-selection', install: 'npx skills add anthropics/skills@framework-selection -g -y', desc: d('LangChain/LangGraph/Deep Agents 框架选型', '描述项目需求，推荐最合适的框架', 'AI 项目启动前的技术选型') },
+    { name: 'managed-deep-agents', install: 'npx skills add anthropics/skills@managed-deep-agents -g -y', desc: d('托管式 Deep Agents 运维', '描述 Agent 部署需求，生成配置', 'LangSmith 集成、生产运维、监控') },
   ]},
   { category: '🧪 测试', items: [
-    { name: 'webapp-testing', install: '系统内置', desc: 'Web 应用测试' },
-    { name: 'javascript-testing', install: 'npx skills add wshobson/agents@javascript-testing-patterns -g -y', desc: 'JS 测试模式' },
+    { name: 'webapp-testing', install: 'npx skills add anthropics/skills@webapp-testing -g -y', desc: d('Playwright 端到端测试', '描述要测试的功能，自动编写并运行', '表单验证、页面交互、截图对比') },
+    { name: 'capture-api-response-test-fixture', install: 'npx skills add anthropics/skills@capture-api-response-test-fixture -g -y', desc: d('捕获 API 响应作为测试固件', '运行 API 调用并自动保存响应', 'API 测试、Mock 数据、回归测试') },
   ]},
-  { category: '🚀 部署', items: [
-    { name: 'devops-deployment', install: 'npx skills add yonatangross/orchestkit@devops-deployment -g -y', desc: 'DevOps 部署专家' },
+  { category: '🚀 部署与运维', items: [
+    { name: 'update-provider-models', install: 'npx skills add anthropics/skills@update-provider-models -g -y', desc: d('更新 AI SDK 各厂商模型列表', '添加新模型或移除下架模型', 'AI SDK 模型版本更新') },
+  ]},
+  { category: '📊 文档与办公', items: [
+    { name: 'docx', install: 'npx skills add anthropics/skills@docx -g -y', desc: d('创建和编辑 Word 文档', '描述文档内容，生成 .docx 文件', '合同、报告、简历、提案书') },
+    { name: 'pptx', install: 'npx skills add anthropics/skills@pptx -g -y', desc: d('生成 PowerPoint 演示文稿', '描述主题，生成含图表的 PPT', '融资路演、项目汇报、教学课件') },
+    { name: 'xlsx', install: 'npx skills add anthropics/skills@xlsx -g -y', desc: d('处理 Excel 电子表格', '描述数据结构，生成公式和图表', '财务报表、数据分析、排期表') },
+    { name: 'pdf', install: 'npx skills add anthropics/skills@pdf -g -y', desc: d('PDF 生成与编辑', '描述内容，输出 PDF 文件', '合同打印、电子书、表单导出') },
+    { name: 'adr-skill', install: 'npx skills add anthropics/skills@adr-skill -g -y', desc: d('架构决策记录（ADR）', '描述决策背景，生成 ADR 文档', '技术选型记录、架构评审、交接') },
+    { name: 'doc-coauthoring', install: 'npx skills add anthropics/skills@doc-coauthoring -g -y', desc: d('文档协作编写', '描述文档需求，AI 引导完成内容', '多人协作、技术文档、需求文档') },
+    { name: 'internal-comms', install: 'npx skills add anthropics/skills@internal-comms -g -y', desc: d('企业内部通讯文档写作', '描述沟通场景，生成正式通知或邮件', '团队公告、周报、会议纪要') },
+    { name: 'slack-gif-creator', install: 'npx skills add anthropics/skills@slack-gif-creator -g -y', desc: d('Slack 用 GIF 动图制作', '描述动图内容，生成优化后的 GIF', '团队氛围、Slack 回复、趣味通知') },
+  ]},
+  { category: '🔧 其他 Skill', items: [
+    { name: 'add-function-examples', install: 'npx skills add anthropics/skills@add-function-examples -g -y', desc: d('为 AI SDK 添加新的函数调用示例', '描述要测试的 API 功能，生成示例', 'SDK 功能测试、集成示例') },
+    { name: 'add-provider-package', install: 'npx skills add anthropics/skills@add-provider-package -g -y', desc: d('为 AI SDK 添加新厂商包', '描述厂商 API，生成 provider 代码', '集成新 AI 服务商') },
+    { name: 'list-npm-package-content', install: 'npx skills add anthropics/skills@list-npm-package-content -g -y', desc: d('列出 npm 包发布前的文件清单', '指定包名或路径，预览发布内容', '发包前检查文件结构') },
+    { name: 'major-version-mode', install: 'npx skills add anthropics/skills@major-version-mode -g -y', desc: d('AI SDK 大版本升级上下文', '切换到新版 SDK 开发模式', 'SDK 主版本迁移、Breaking Changes 适配') },
+    { name: 'find-skills', install: 'npx skills add anthropics/skills@find-skills -g -y', desc: d('查找和发现新的 AI Skills', '输入关键词搜索 Skills 仓库', '发现新 Skill、按需安装') },
   ]},
 ];
 ---
 
 <BaseLayout title="Skills 索引" description="所有可用的 AI Skills，按类别整理，支持一键安装">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-    <h1 class="text-3xl lg:text-4xl font-bold mb-2">Skills 索引</h1>
-    <p class="text-[var(--color-text-secondary)] mb-10">所有在本指南中出现的 AI Skills，按类别整理，支持一键安装。</p>
+  <div class="flex max-w-7xl mx-auto relative">
+    <!-- Main content -->
+    <main class="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-12 lg:py-16 max-w-3xl mx-auto">
+      <h1 class="text-3xl lg:text-4xl font-bold mb-2">Skills 索引</h1>
+      <p class="text-[var(--color-text-secondary)] mb-10">所有 AI Skills，按类别整理。点击 📋 复制安装命令。</p>
 
-    {skills.map((category, ci) => (
-      <div class="mb-10 reveal" style={`transition-delay: ${ci * 80}ms`}>
-        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-          <span>{category.category}</span>
-        </h2>
+      {skills.map((category, ci) => (
+        <div class="mb-10 reveal" style={`transition-delay: ${ci * 80}ms`}>
+          <h2 id={`skill-cat-${ci}`} class="text-xl font-bold mb-4 flex items-center gap-2">
+            <span>{category.category}</span>
+            <span class="text-sm font-normal text-[var(--color-text-muted)]">({category.items.length})</span>
+          </h2>
         <div class="space-y-3">
           {category.items.map((skill) => (
             <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/20 hover:shadow-md transition-all duration-200">
               <div class="flex items-start justify-between gap-4">
                 <div>
                   <h3 class="font-semibold text-[var(--color-text)]">{skill.name}</h3>
-                  <p class="text-sm text-[var(--color-text-secondary)] mt-0.5">{skill.desc}</p>
+                  <div class="mt-1.5 space-y-1 text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                    <div><span class="inline-block w-12 text-xs font-semibold text-[var(--color-accent)] shrink-0">作用：</span>{skill.desc.purpose}</div>
+                    <div><span class="inline-block w-12 text-xs font-semibold text-[var(--color-accent)] shrink-0">用法：</span>{skill.desc.usage}</div>
+                    <div><span class="inline-block w-12 text-xs font-semibold text-[var(--color-accent)] shrink-0">场景：</span>{skill.desc.scenario}</div>
+                  </div>
                 </div>
               </div>
-              <div class="mt-2">
-                <code class="text-xs px-2 py-1 rounded bg-[var(--color-bg-secondary)] text-[var(--color-text)] block overflow-x-auto font-mono">{skill.install}</code>
+              <div class="mt-3 flex items-center gap-2">
+                <code class="text-xs px-3 py-1.5 rounded-lg bg-[var(--color-bg-secondary)] text-[var(--color-text)] flex-1 overflow-x-auto font-mono">{skill.install}</code>
+                <button
+                  class="skill-copy-btn flex-shrink-0 w-7 h-7 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-xs hover:bg-[var(--color-accent)] hover:text-white hover:border-[var(--color-accent)] transition-all duration-200 flex items-center justify-center"
+                  data-copy={skill.install}
+                  title="复制安装命令"
+                >📋</button>
               </div>
             </div>
           ))}
@@ -57,8 +121,54 @@ const skills = [
 
     <div class="mt-10 reveal p-5 rounded-xl bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-bg)] border border-[var(--color-border)]">
       <h2 class="font-semibold mb-2 flex items-center gap-2">🔍 查找更多 Skills</h2>
-      <code class="text-sm px-2 py-1 rounded bg-[var(--color-surface)] border border-[var(--color-border)] inline-block">npx skills find [关键词]</code>
-      <p class="text-sm text-[var(--color-text-secondary)] mt-2">例如：npx skills find "react"、npx skills find "database"</p>
+      <code class="text-sm px-3 py-1.5 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] inline-block font-mono">npx skills find [关键词]</code>
+      <p class="text-sm text-[var(--color-text-secondary)] mt-2">例如：<code class="text-xs px-1.5 py-0.5 rounded bg-[var(--color-bg-secondary)] font-mono">npx skills find "react"</code>、<code class="text-xs px-1.5 py-0.5 rounded bg-[var(--color-bg-secondary)] font-mono">npx skills find "database"</code></p>
     </div>
+    </main>
+
+    <!-- Right-side TOC (desktop only) -->
+    <aside id="page-toc" class="hidden xl:block w-56 shrink-0 sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto py-8 pr-4" aria-label="页面导航">
+      <div class="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">分类导航</div>
+      <nav class="space-y-1">
+        {skills.map((category, ci) => (
+          <a href={`#skill-cat-${ci}`} class="block text-xs py-1 px-2 rounded text-[var(--color-text-muted)] hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/5 transition-colors duration-150">{category.category.replace(/\(\d+\)/, '').trim()}</a>
+        ))}
+      </nav>
+    </aside>
   </div>
 </BaseLayout>
+
+<script>
+  // Copy button handler
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.skill-copy-btn');
+    if (!btn) return;
+
+    const text = btn.getAttribute('data-copy');
+    if (!text) return;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅';
+      btn.style.background = 'var(--color-success, #10B981)';
+      btn.style.color = 'white';
+      btn.style.borderColor = 'var(--color-success, #10B981)';
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 1500);
+    }).catch(() => {
+      // Fallback: select text
+      const codeEl = btn.parentElement?.querySelector('code');
+      if (codeEl) {
+        const range = document.createRange();
+        range.selectNodeContents(codeEl);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+    });
+  });
+</script>

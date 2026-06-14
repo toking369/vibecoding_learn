@@ -54,6 +54,54 @@ npx skills add busirocket/agents-skills@busirocket-tailwindcss-v4 -g -y
 | busirocket/agents-skills@busirocket-tailwindcss-v4 | `npx skills add busirocket/agents-skills@busirocket-tailwindcss-v4 -g -y` |
 | duyet/claude-plugins@react-nextjs-patterns | `npx skills add duyet/claude-plugins@react-nextjs-patterns -g -y` |
 
-## 🎯 练习
+## 📋 更多提示词模板
+
+**提示词 1：优化页面加载速度**
+
+```text
+我是一个完全不会编程的小白。
+
+下面是我网站的 HTML 代码，请帮我优化页面加载速度。
+
+[请粘贴你的 HTML 代码]
+
+我的网站主要问题是：[描述你观察到的性能问题，如"图片加载慢"或"页面白屏时间长"]
+
+请帮我做以下优化：
+1. 图片优化：添加 loading="lazy" 懒加载、压缩建议
+2. CSS 优化：合并多个 CSS 文件、移除未使用的样式
+3. JavaScript 优化：把 JS 放到页面底部、使用 defer 或 async
+4. 添加资源预加载（preload）关键资源
+5. 建议对哪些资源使用 CDN
+
+对于每项优化，请给出具体代码修改。输出优化后的完整 HTML 文件。
+```
+
+**提示词 2：添加导航栏和页脚**
+
+```text
+我是一个完全不会编程的小白。
+
+请帮我给我的网站添加一个专业的导航栏和页脚。
+
+我的网站信息：
+- 网站类型：[你的网站类型]
+- 现有页面：[首页 / 关于 / 作品集 / 联系方式]
+- 整体配色：主色 [色码]、辅色 [色码]
+- 当前是否有导航栏：[有但不好看 / 还没有]
+
+导航栏要求：
+1. 固定在页面顶部，滚动时保持可见（sticky）
+2. 包含所有页面的链接，当前页面高亮
+3. 在手机上显示为汉堡菜单（点击展开）
+4. 背景半透明毛玻璃效果
+5. Logo 放在左侧，导航链接在右侧
+
+页脚要求：
+1. 包含版权信息（© 2026 你的网站名）
+2. 包含社交媒体图标占位（微博、微信、GitHub）
+3. 简洁、与整体风格一致
+
+请直接输出完整的导航栏和页脚 HTML+CSS 代码，并告诉我如何在现有页面中集成。
 
 **任务**：让 AI 创建一个包含 4 个页面的完整网站项目。所有页面间可以互相跳转。在浏览器中预览并确认每个页面都能正常显示。

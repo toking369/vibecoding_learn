@@ -1,37 +1,582 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
+
+interface PromptItem {
+  title: string;
+  desc: string;
+  text: string;
+}
+
+interface PromptCategory {
+  icon: string;
+  title: string;
+  subtitle: string;
+  items: PromptItem[];
+}
+
+const prompts: PromptCategory[] = [
+  {
+    icon: '📋', title: '项目启动', subtitle: '写需求文档、确定设计方向',
+    items: [
+      {
+        title: '写一份完整的 PRD（产品需求文档）',
+        desc: '把你的想法变成 AI 能理解的"设计蓝图"。这是建站最重要的一步，PRD 越详细，AI 一次做对的概率越高。',
+        text: `请帮我写一份产品需求文档（PRD）。
+
+我的背景：我是一个完全不会编程的小白，想用 AI 帮我建站。
+
+项目信息：
+- 网站名称：[填写你的网站名称]
+- 网站类型：[个人博客 / 摄影作品集 / 电商小店 / 企业官网 / 在线教育 / 其他]
+- 核心用途：[用一句话说明网站要做什么]
+- 目标用户：[谁会来看或使用这个网站？描述他们的年龄、需求]
+
+我希望包含的功能：
+1. [功能 A：例如"首页大图全屏展示"]
+2. [功能 B：例如"作品集页面带分类筛选"]
+3. [功能 C：例如"联系表单，访客可以留言"]
+4. [功能 D]
+5. [功能 E]
+
+设计风格偏好：[简洁 / 科技感 / 温馨 / 复古 / 创意 / 极简]
+参考颜色：[如果有喜欢的颜色请填写，没有就留空]
+参考网站：[如果有参考网站链接请填写，没有就留空]
+
+请按标准的 PRD 结构输出：摘要 → 背景与目标 → 目标用户 → 功能需求（按优先级） → 非功能需求（性能/安全/SEO） → 页面结构 → 发布计划。
+
+每个功能需求请写清楚"做什么"和"为什么做"，方便后续开发阶段使用。`,
+      },
+      {
+        title: '确定网站设计风格',
+        desc: '在动手开发之前先确定视觉方向。让 AI 推荐几套配色和风格方案，选最喜欢的再开工。',
+        text: `我是一个完全不会编程的小白，想用 AI 帮我建站。
+
+请为我的网站推荐 3 种不同的设计风格方案。
+
+我的网站信息：
+- 网站类型：[摄影作品集 / 个人博客 / 企业官网 / 电商]
+- 网站定位：[专业严肃 / 温暖亲切 / 创意个性 / 极简高效]
+- 目标用户：[谁会来看]
+
+每种方案请给出：
+1. 主色（十六进制色码）、辅色、文字颜色
+2. 适合的字体搭配（中英文各推荐一款）
+3. 一句话风格描述（如"温暖木质感，适合手工艺人"）
+4. 适合的参考风格关键词（如"日式简约、暖色调、柔和"）
+
+输出格式：
+---
+方案一：[名称]
+- 色彩：[色码]
+- 字体：[字体名]
+- 风格：[一句话]
+- 关键词：[标签]
+
+方案二：
+...
+
+方案三：
 ---
 
-<BaseLayout title="提示词模板速查" description="所有提示词模板汇总，直接复制使用">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-    <h1 class="text-3xl lg:text-4xl font-bold mb-2">提示词模板速查</h1>
-    <p class="text-[var(--color-text-secondary)] mb-10">所有提示词模板汇总，直接复制给 AI 使用。</p>
+最后请给我一个推荐方案，并说明为什么这个方案最适合我的网站类型。`,
+      },
+    ],
+  },
+  {
+    icon: '🏗️', title: '技术架构', subtitle: '技术选型、数据库设计、接口规划',
+    items: [
+      {
+        title: '前端页面结构与技术选型',
+        desc: '确定用什么前端技术搭建网站。选对技术栈能让你事半功倍，AI 也能给出更精准的代码。',
+        text: `我是一个完全不会编程的小白，想用 AI 帮我建站。
 
-    <div class="space-y-6">
-      <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/20 hover:shadow-md transition-all duration-200 reveal">
-        <h2 class="font-semibold mb-3 flex items-center gap-2">📋 写 PRD</h2>
-        <div class="p-3 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-light)] text-sm font-mono whitespace-pre-wrap leading-relaxed">请帮我写一份产品需求文档（PRD），项目是 [网站名称]。网站类型：[个人博客/作品集/电商] 主要用途：[描述核心目的] 目标用户：[谁会来看] 我希望包含的功能：1.[功能A] 2.[功能B]</div>
-      </div>
+请帮我做前端技术选型和页面结构设计。
 
-      <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/20 hover:shadow-md transition-all duration-200 reveal reveal-delay-1">
-        <h2 class="font-semibold mb-3 flex items-center gap-2">🎨 设计风格</h2>
-        <div class="p-3 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-light)] text-sm font-mono whitespace-pre-wrap leading-relaxed">请为我的 [网站类型] 推荐 3 种设计风格方案，每种方案给出：主色、辅色、适合的字体、风格描述。</div>
-      </div>
+项目背景：
+- 网站类型：[个人博客 / 企业官网 / 电商 / 作品集 / 在线工具]
+- 页面数量：[单页 / 3-5 页 / 10 页以上]
+- 是否需要登录功能：[是 / 否]
+- 是否需要后台管理：[是 / 否]
+- 目标用户量：[个人使用 / 百人级 / 千人级以上]
 
-      <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/20 hover:shadow-md transition-all duration-200 reveal reveal-delay-2">
-        <h2 class="font-semibold mb-3 flex items-center gap-2">💻 前端开发</h2>
-        <div class="p-3 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-light)] text-sm font-mono whitespace-pre-wrap leading-relaxed">请帮我创建一个多页面网站，包含 [页面列表]。所有页面使用同一个 CSS 文件，导航栏保持一致，使用响应式设计。</div>
-      </div>
+请从以下几个维度给我建议：
 
-      <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/20 hover:shadow-md transition-all duration-200 reveal reveal-delay-3">
-        <h2 class="font-semibold mb-3 flex items-center gap-2">🔧 修改意见</h2>
-        <div class="p-3 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-light)] text-sm font-mono whitespace-pre-wrap leading-relaxed">这个页面挺好的，但我想做几个调整：1.[修改A] 2.[修改B] 3.[修改C] 请直接输出修改后的完整代码。</div>
-      </div>
+1. 技术栈推荐
+   - 方案一：纯 HTML + CSS + JS（适合简单静态网站）
+   - 方案二：Astro（适合内容型网站，性能好）
+   - 方案三：Next.js / React（适合大型交互式网站）
+   - 每种方案给出优缺点、学习成本、适用场景
+   - 推荐我最适合的方案并说明理由
 
-      <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/20 hover:shadow-md transition-all duration-200 reveal reveal-delay-4">
-        <h2 class="font-semibold mb-3 flex items-center gap-2">🧪 代码审查</h2>
-        <div class="p-3 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-light)] text-sm font-mono whitespace-pre-wrap leading-relaxed">请帮我审查以下代码，检查：语法错误、链接是否有效、移动端适配、安全风险。</div>
-      </div>
+2. 页面结构规划
+   - 根据我的网站类型，建议包含哪些页面
+   - 每个页面的核心内容和功能
+   - 页面之间的导航关系
+
+3. CSS 方案建议
+   - 纯 CSS / Tailwind CSS / CSS Modules
+   - 每种对我的情况是否合适
+
+4. 文件组织结构
+   - 建议的项目文件夹结构
+   - 每个文件和文件夹的用途
+
+请根据我的背景（零基础小白）给出推荐，优先选择上手简单、AI 生成效果好的方案。`,
+      },
+      {
+        title: '数据库选型与表结构设计',
+        desc: '网站需要存储用户数据、文章内容或商品信息时，需要选择合适的数据库并设计数据结构。',
+        text: `我是一个完全不会编程的小白，想用 AI 帮我建站。
+
+请帮我选择数据库方案并设计数据表结构。
+
+项目信息：
+- 网站类型：[电商 / 博客 / 社交平台 / 在线教育 / 企业管理系统]
+- 需要存储的数据类型：
+  - [ ] 用户账号信息（用户名、密码、邮箱）
+  - [ ] 文章/内容（标题、正文、发布时间）
+  - [ ] 商品/产品信息（名称、价格、库存、分类）
+  - [ ] 用户评论/留言
+  - [ ] 订单记录
+  - [ ] 图片/文件上传
+  - [ ] 其他：[请描述]
+
+- 预计数据量：[少量（千级以内） / 中等（万级） / 大量（十万级以上）]
+- 是否需要即时同步：[是 / 否]
+
+请从以下几个维度给我建议：
+
+1. 数据库选型推荐
+   - SQLite（最简单，零配置，适合小项目）
+   - Supabase（免费 PostgreSQL，自带 API，无需自己搭后端）
+   - Firebase Firestore（NoSQL，前端直接调用）
+   - MySQL / PostgreSQL（传统关系型，适合大型项目）
+   - 每种方案的优缺点和适用场景，推荐方案及理由
+
+2. 数据表结构设计（以推荐方案为例）
+   - 需要创建哪些表
+   - 每张表的字段名、类型、约束
+   - 表之间的关联关系
+   - 索引建议
+
+3. 安全建议
+   - 密码存储方式（一定要用哈希加密）
+   - 防止 SQL 注入
+   - 数据访问权限控制
+
+请给出完整的建表 SQL 或 Schema，每张表写清楚字段说明。`,
+      },
+      {
+        title: '后端技术选型与 API 接口设计',
+        desc: '网站需要处理用户登录、数据查询、文件上传等操作时，需要后端服务和 API 接口来驱动。',
+        text: `我是一个完全不会编程的小白，想用 AI 帮我建站。
+
+请帮我选择后端技术方案并设计 API 接口。
+
+项目信息：
+- 网站类型：[你的网站类型]
+- 需要哪些后端功能：
+  - [ ] 用户注册和登录（邮箱+密码 / 第三方登录）
+  - [ ] 数据增删改查（CRUD）
+  - [ ] 文件/图片上传
+  - [ ] 搜索功能
+  - [ ] 支付集成（支付宝/微信）
+  - [ ] 发送邮件（验证码、通知）
+  - [ ] 管理后台
+  - [ ] 第三方 API 集成
+
+- 是否需要自己搭建服务器：[是 / 能用无服务器方案]
+- 预计用户量：[个人 / 小团队 / 公开运营]
+- 前端用什么技术：[纯 HTML / Astro / Next.js / React]
+
+请从以下几个维度给我建议：
+
+1. 后端方案推荐
+   - Supabase（数据库 + API + 认证一体，无需写后端，推荐）
+   - Next.js API Routes（前后端一体，适合小型项目）
+   - Node.js + Express（灵活但需要更多代码）
+   - Python + FastAPI（适合数据处理和 AI 功能）
+   - 每种方案的优缺点和适用场景，推荐方案及理由
+
+2. API 接口设计（以推荐方案为例）
+   - 需要哪些 API 接口（列出所有）
+   - 每个接口：请求方法、路径、请求参数、返回格式
+   - 哪些接口需要登录访问
+   - 示例代码：一个完整接口实现
+
+3. 认证方案
+   - JWT vs Session
+   - 注册/登录/登出接口设计
+   - Token 存储和刷新方式
+
+4. 部署方案
+   - 后端部署位置
+   - 前后端联调方式
+   - 环境变量配置
+
+请优先推荐零基础能搞定的方案，选择开箱即用的服务（如 Supabase）。`,
+      },
+    ],
+  },
+  {
+    icon: '💻', title: '开发构建', subtitle: '创建页面、修改功能、添加组件',
+    items: [
+      {
+        title: '创建多页面网站',
+        desc: '从零开始创建一个完整的网站，包含多个页面。所有页面共用导航栏和样式，一步到位。',
+        text: `我是一个完全不会编程的小白，想用 AI 帮我建站。
+
+请帮我创建一个多页面网站。
+
+基本信息：
+- 网站类型：[你的网站类型]
+- 整体风格：[你选定的风格描述]
+- 主色：[主色色码]　辅色：[辅色色码]
+
+需要包含的页面：
+1. index.html（首页）—— [描述首页要展示的内容]
+2. about.html（关于我们）—— [描述关于页面的内容]
+3. works.html（作品/服务）—— [描述作品或服务列表]
+4. contact.html（联系方式）—— [联系表单或联系信息]
+
+技术要求：
+1. 所有页面使用同一个 CSS 文件（styles.css）
+2. 导航栏在所有页面保持一致，当前页面高亮
+3. 导航栏包含：首页、关于、作品、联系方式
+4. 使用响应式设计，在手机和电脑上都显示良好
+5. 使用 flexbox 或 grid 布局，不要用表格布局
+6. 字体用系统字体或 Google Fonts（Noto Sans SC）
+7. 图片占位用 https://placehold.co/ 的占位图
+
+请直接输出所有文件的完整代码，每个文件用文件名注释分隔。`,
+      },
+      {
+        title: '修改现有页面',
+        desc: '在你的网站基础上做调整。粘贴当前代码 + 描述你想改的地方，AI 会输出修改后的完整代码。',
+        text: `我是一个完全不会编程的小白。
+
+下面是我现有页面的代码，我想在上面做一些修改。
+
+[请在这里粘贴你的完整 HTML 代码]
+如果代码很长，可以说"代码和之前一样，只输出修改后的部分"
+
+我想做的修改：
+1. [修改 A：例如"把导航栏的背景色改成深色"]
+2. [修改 B：例如"首页大图下面加一个'关于我们'的简短介绍区"]
+3. [修改 C：例如"联系方式页面加一个地图"]
+4. [修改 D：例如"在页面底部加一个回到顶部按钮"]
+
+修改要求：
+- 请保持原有的整体风格和配色
+- 每一处修改请用注释标注 <!-- 修改：说明 -->
+- 如果涉及新增样式，请在 CSS 中同样加注释
+- 只修改与我需求相关的部分，不要做额外改动
+- 请输出修改后的完整文件代码`,
+      },
+      {
+        title: '添加联系表单',
+        desc: '给你的网站加一个可用的联系表单，访客留言会发送到你的邮箱。使用 Formspree 免费服务。',
+        text: `我是一个完全不会编程的小白。
+
+我想给我的网站加一个联系表单，让访客可以给我留言。
+
+我已注册 Formspree 免费账号，我的 Formspree 表单 ID 是：[你的 Formspree ID]
+（如果还没有，请先访问 https://formspree.io 注册获取）
+
+请帮我在 contact.html 中实现：
+1. 一个完整的联系表单，包含：姓名输入框、邮箱输入框、留言内容文本框
+2. 表单提交后数据发送到 Formspree
+3. 提交成功后显示"感谢您的留言！我会尽快回复。"的提示
+4. 如果提交失败显示"发送失败，请稍后重试"的提示
+5. 表单样式与网站整体风格一致
+6. 输入框有合适的 placeholder 文字
+7. 必填字段有标记（*）
+8. 前端验证：姓名不能为空、邮箱格式正确、留言不能为空
+
+要求：
+- 不需要后端代码，纯前端 + Formspree 即可
+- 用 JavaScript 实现异步提交（防止页面刷新）
+- 提交按钮在发送时显示"发送中..."，防止重复提交
+
+请直接输出完整的 contact.html 代码。`,
+      },
+    ],
+  },
+  {
+    icon: '🧪', title: '测试与部署', subtitle: '审查代码、解决问题、上线发布',
+    items: [
+      {
+        title: '审查代码质量',
+        desc: '在发布之前让 AI 帮你检查一遍代码，找出潜在问题。适合刚写完一个页面或做完修改后使用。',
+        text: `我是一个完全不会编程的小白。
+
+请帮我审查下面这段 HTML/CSS/JS 代码，我是一个新手，请用通俗的语言解释问题。
+
+[请粘贴你要审查的完整代码]
+
+请检查以下几个方面：
+1. 有没有语法错误或拼写错误
+2. 有没有链接或图片路径打不开（404）
+3. 有没有移动端适配问题（在手机上显示是否正常）
+4. 有没有安全风险（例如直接在代码中暴露了 API Key 或密码）
+5. 页面加载性能有没有可以优化的地方（图片、CSS、JS）
+6. HTML 结构是否语义化（对 SEO 是否友好）
+7. 有没有浏览器兼容性问题
+
+发现问题后，对于每个问题请给出：
+- 问题描述（用大白话解释）
+- 影响（不修会怎样）
+- 修复后的代码片段
+
+最后请给一个总体评分（A/B/C/D）和一句话建议。`,
+      },
+      {
+        title: '诊断网站问题',
+        desc: '网站出错了不知道怎么修？把问题描述给 AI，让它帮你分析原因并给出修复方案。',
+        text: `我是一个完全不会编程的小白。
+
+我的网站出问题了，请帮我诊断和修复。
+
+我的网站信息：
+- 我在用什么工具建站：[AI 生成的纯 HTML 网站 / Astro / Next.js / 其他]
+- 部署平台：[Vercel / Netlify / 没有部署，在本地打开 / 其他]
+- 网站网址：[你的网站 URL，没有部署就写"本地"]
+
+问题描述：
+[请详细描述你遇到的问题，例如：]
+- "首页的图片加载不出来，显示小图标"
+- "导航菜单在手机上点不开"
+- "表单提交后页面刷新了，但没有成功"
+- "部署后页面显示 404"
+- "样式跟电脑上看到的不一样"
+
+出现问题的页面和操作步骤：
+1. [第一步做了什么]
+2. [然后发生了什么]
+3. [看到什么错误或异常]
+
+请告诉我：
+1. 最可能的原因是什么（用类比解释，让我能理解）
+2. 怎么修复（给一步一步的操作步骤）
+3. 如果修复不成功，接下来应该检查什么
+4. 以后怎么避免这种问题
+
+如果有错误信息或截图，请一并告诉我怎么获取。`,
+      },
+      {
+        title: '部署网站上线',
+        desc: '网站做好了，发布到互联网上让别人能访问。推荐用 Vercel，一键部署免费。',
+        text: `我是一个完全不会编程的小白，想把我做好的网站发布到互联网上。
+
+我已经做了的准备工作：
+- [ ] 已注册 GitHub 账号（github.com）
+- [ ] 已注册 Vercel 账号（vercel.com，用 GitHub 登录）
+- [ ] 网站文件在本地电脑上（HTML + CSS + JS）
+- [ ] 已安装 Git
+
+我的网站文件位置：[填写你的网站文件夹路径]
+
+请一步一步教我如何把网站部署上线，假设我完全不懂命令行。
+
+步骤请包括：
+1. 如何初始化 Git 仓库
+2. 如何把代码推送到 GitHub
+3. 如何在 Vercel 中关联 GitHub 仓库
+4. 如何自动部署
+5. 部署完成后如何访问我的网站（xxx.vercel.app）
+6. 以后修改了代码怎么更新网站
+
+每个步骤请给出：
+- 终端里要输入的完整命令（用代码块）
+- 命令是做什么的（用大白话解释）
+- 执行成功后应该看到什么输出
+
+不要跳过任何细节，把我当成完全不懂计算机的小白。`,
+      },
+    ],
+  },
+  {
+    icon: '📈', title: '运营增长', subtitle: 'SEO 优化、文案创作、数据分析',
+    items: [
+      {
+        title: 'SEO 优化：让网站被搜到',
+        desc: '让你的网站在百度/Google 中更容易被搜到。适合网站上线后做，不需要额外花钱。',
+        text: `我是一个完全不会编程的小白。
+
+请帮我优化我的网站，让它在搜索引擎（百度、Google）中更容易被搜到。
+
+我的网站信息：
+- 网站 URL：[你的网站地址]
+- 网站类型：[个人博客 / 摄影作品集 / 电商 / 企业官网]
+- 核心关键词：[你的目标搜索词，如"北京摄影服务""手作皮具"]
+- 主要目标地区：[全国 / 特定城市 / 海外]
+- 目前有没有被搜索引擎收录：[在百度/Google 搜"site:你的域名"看有没有结果]
+
+请帮我：
+1. 优化首页的标题（title）和描述（meta description），写 3 个方案供选择
+2. 优化每个页面的标题和描述
+3. 教我怎么生成 sitemap.xml 文件（网站地图）
+4. 教我怎么提交给百度搜索和 Google Search Console
+5. 建议做哪些内容更新来提升搜索排名
+
+每项优化请给出具体的代码示例，不要只说概念。我是一个小白，请给我可以直接复制粘贴的代码。`,
+      },
+      {
+        title: '网站文案创作',
+        desc: '好的文案让网站更有说服力。让 AI 帮你写首页标题、产品介绍、关于我们等文案。',
+        text: `我是一个完全不会编程的小白，想用 AI 帮我提升网站的文案质量。
+
+我的网站信息：
+- 网站类型：[个人博客 / 摄影作品集 / 电商 / 企业官网 / 作品展示]
+- 网站名称：[网站名称]
+- 品牌调性：[专业可靠 / 温暖亲切 / 创意个性 / 极简高级]
+- 目标用户：[描述谁会来看这个网站]
+- 核心卖点：[用一句话说清楚你的网站/产品有什么独特价值]
+
+请帮我写以下文案：
+
+1. 首页主标题和副标题（提供 3 个方案供我选择）
+   - 方案要包含不同的角度（如行动导向、情感共鸣、价值主张）
+
+2. 关于页面文案（200 字以内）
+   - 介绍我是谁、我做什么、我的理念
+   - 语气亲切但不随意，专业但不生硬
+
+3. 服务/产品介绍（每个功能一句话，不超过 5 条）
+   - 每条包含：功能名称 + 一句话说明
+
+4. 页脚版权信息和简洁的品牌口号
+
+5. 联系方式页面的简短引导语（50 字以内）
+
+风格要求：
+- 亲切、可信、不浮夸
+- 使用"你"而不是"您"（拉近距离）
+- 避免套话和空洞的形容词
+- 多写具体的内容，少写"优质""专业"这种通用词
+
+请直接输出文案内容，标注对应页面和位置。`,
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout title="提示词模板速查" description="50+ 提示词模板汇总，直接复制给 AI 使用">
+  <div class="flex max-w-7xl mx-auto relative">
+    <!-- Main content -->
+    <main class="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-12 lg:py-16 max-w-3xl mx-auto">
+      <!-- Header -->
+    <div class="text-center mb-12 reveal">
+      <h1 class="text-3xl lg:text-4xl font-bold mb-3">提示词模板速查</h1>
+      <p class="text-[var(--color-text-secondary)] text-lg">所有提示词模板汇总，可直接复制给 AI 使用。用前请把 <code class="text-xs px-1.5 py-0.5 rounded bg-[var(--color-bg-secondary)] font-mono">[方括号]</code> 内容替换成你的信息。</p>
     </div>
+
+    {prompts.map((cat, ci) => (
+      <section id={`prompt-cat-${ci}`} class="mb-12 reveal" style={`transition-delay: ${ci * 80}ms`}>
+        <!-- Category Header -->
+        <div class="flex items-center gap-3 mb-6 pb-3 border-b border-[var(--color-border)]">
+          <span class="text-2xl">{cat.icon}</span>
+          <div>
+            <h2 class="text-xl font-bold text-[var(--color-text)]">{cat.title}</h2>
+            <p class="text-sm text-[var(--color-text-muted)]">{cat.subtitle}</p>
+          </div>
+        </div>
+
+        <div class="space-y-5">
+          {cat.items.map((item, ii) => (
+            <div class="prompt-card p-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/20 hover:shadow-md transition-all duration-200">
+              <!-- Card header -->
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <div class="min-w-0">
+                  <h3 class="font-semibold text-[var(--color-text)] text-base">{item.title}</h3>
+                  <p class="text-sm text-[var(--color-text-secondary)] mt-0.5">{item.desc}</p>
+                </div>
+                <button
+                  class="prompt-copy-btn flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-xs font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-accent)] hover:text-white hover:border-[var(--color-accent)] transition-all duration-200"
+                  data-prompt-id={`prompt-${ci}-${ii}`}
+                >📋 复制</button>
+              </div>
+
+              <!-- Prompt content -->
+              <div
+                id={`prompt-${ci}-${ii}`}
+                class="p-4 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-light)] text-sm font-mono whitespace-pre-wrap leading-relaxed text-[var(--color-text-secondary)] select-all"
+              >{item.text}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <!-- Tip -->
+    <div class="mt-10 p-5 rounded-xl bg-gradient-to-br from-[var(--color-bg-secondary)] to-[var(--color-bg)] border border-[var(--color-border)] reveal">
+      <h2 class="font-semibold mb-2 flex items-center gap-2">💡 使用提示</h2>
+      <ul class="text-sm text-[var(--color-text-secondary)] space-y-1.5">
+        <li>• 把 <code class="text-xs px-1.5 py-0.5 rounded bg-[var(--color-surface)] font-mono">[方括号]</code> 内容替换成你的实际信息</li>
+        <li>• 在同一个 AI 对话中持续迭代，不要频繁开新对话</li>
+        <li>• 如果 AI 生成的结果不理想，补充更多细节重新提问</li>
+        <li>• 遇到问题直接截图发给 AI，比用文字描述高效得多</li>
+        <li>• 更多详细教程请参考 <a href="/phases/phase-01" class="text-[var(--color-accent)] hover:underline">全流程实战</a> 各阶段</li>
+      </ul>
+    </div>
+    </main>
+
+    <!-- Right-side TOC -->
+    <aside class="hidden xl:block w-56 shrink-0 sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto py-8 pr-4" aria-label="页面导航">
+      <div class="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">分类导航</div>
+      <nav class="space-y-1">
+        {prompts.map((cat, ci) => (
+          <a href={`#prompt-cat-${ci}`} class="block text-xs py-1 px-2 rounded text-[var(--color-text-muted)] hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/5 transition-colors duration-150">{cat.icon} {cat.title}</a>
+        ))}
+      </nav>
+    </aside>
   </div>
 </BaseLayout>
+
+<script>
+  (function() {
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✅ 已复制';
+        btn.style.background = 'var(--color-success, #10B981)';
+        btn.style.color = 'white';
+        btn.style.borderColor = 'var(--color-success, #10B981)';
+        setTimeout(() => {
+          btn.innerHTML = orig;
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }, 2000);
+      }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✅ 已复制';
+        setTimeout(() => { btn.innerHTML = orig; }, 2000);
+      });
+    }
+
+    // Event delegation for copy buttons
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.prompt-copy-btn');
+      if (!btn) return;
+
+      const promptId = btn.getAttribute('data-prompt-id');
+      if (!promptId) return;
+
+      const el = document.getElementById(promptId);
+      if (!el) return;
+
+      copyText(el.textContent || '', btn);
+    });
+  })();
+</script>
