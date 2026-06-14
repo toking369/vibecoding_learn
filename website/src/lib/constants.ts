@@ -5,6 +5,7 @@ export const NAV_ITEMS = [
   { label: '了解 Vibe Coding', href: '/intro/what-is-vibe-coding' },
   { label: '全流程实战', href: '/phases/phase-01' },
   { label: '案例库', href: '/cases' },
+  { label: '提示词速查', href: '/prompts' },
   { label: 'Skills 索引', href: '/skills' },
   { label: 'FAQ', href: '/faq' },
 ] as const;
