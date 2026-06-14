@@ -1,0 +1,131 @@
+---
+// src/components/interactive/CaseFilter.astro
+// Three-row filter bar with client-side filtering — pure JS, no framework
+
+interface CaseData {
+  slug: string;
+  difficulty: string;
+  category: string;
+  tech_type: string;
+}
+
+export interface Props {
+  cases: CaseData[];
+}
+
+const { cases } = Astro.props;
+
+// Extract unique values for each dimension, preserving order of appearance
+const difficulties = ['全部', ...new Set(cases.map(c => c.difficulty))] as string[];
+const categories = ['全部', ...new Set(cases.map(c => c.category))] as string[];
+const techTypes = ['全部', ...new Set(cases.map(c => c.tech_type))] as string[];
+
+const filterGroups = [
+  { id: 'difficulty', label: '难度', items: difficulties },
+  { id: 'category', label: '类型', items: categories },
+  { id: 'tech_type', label: '技术方向', items: techTypes },
+];
+---
+
+<div id="case-filter" class="mb-8 space-y-2">
+  {filterGroups.map((group) => (
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+      <span class="text-xs font-semibold text-[var(--color-text-muted)] whitespace-nowrap shrink-0 w-14">{group.label}</span>
+      <div class="flex gap-1.5" data-filter-group={group.id}>
+        {group.items.map((item, i) => (
+          <button
+            class="filter-btn text-xs px-3 py-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:border-[var(--color-accent)]/30 hover:text-[var(--color-accent)] transition-colors duration-150 whitespace-nowrap {i === 0 ? 'active' : ''}"
+            data-filter-group={group.id}
+            data-filter-value={item}
+          >{item}</button>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+
+<script>
+  (function initFilter() {
+    const container = document.getElementById('case-filter');
+    if (!container) return;
+
+    const cards = document.querySelectorAll('[data-case-card]');
+    // Map each card's data attributes
+    const cardData = [];
+    cards.forEach(el => {
+      cardData.push({
+        el,
+        difficulty: el.getAttribute('data-difficulty') || '',
+        category: el.getAttribute('data-category') || '',
+        tech_type: el.getAttribute('data-tech-type') || '',
+      });
+    });
+
+    // Active filters: '全部' means no filter for that group
+    const activeFilters = {
+      difficulty: '全部',
+      category: '全部',
+      tech_type: '全部',
+    };
+
+    function filterCards() {
+      cardData.forEach(({ el, difficulty, category, tech_type }) => {
+        const matchDifficulty = activeFilters.difficulty === '全部' || difficulty === activeFilters.difficulty;
+        const matchCategory = activeFilters.category === '全部' || category === activeFilters.category;
+        const matchTech = activeFilters.tech_type === '全部' || tech_type === activeFilters.tech_type;
+        el.classList.toggle('filter-hidden', !(matchDifficulty && matchCategory && matchTech));
+      });
+    }
+
+    // Click handlers for filter buttons
+    container.addEventListener('click', (e) => {
+      const btn = (e.target).closest('.filter-btn');
+      if (!btn) return;
+
+      const group = btn.getAttribute('data-filter-group');
+      const value = btn.getAttribute('data-filter-value');
+      if (!group || !value) return;
+
+      // Deactivate siblings, activate this one
+      const siblings = container.querySelectorAll(`[data-filter-group="${group}"] .filter-btn`);
+      siblings.forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+
+      activeFilters[group] = value;
+      filterCards();
+    });
+
+    // Show empty state if all hidden
+    const emptyState = document.getElementById('filter-empty-state');
+
+    function updateEmptyState() {
+      const visible = cardData.filter(d => !d.el.classList.contains('filter-hidden')).length;
+      if (emptyState) {
+        emptyState.classList.toggle('hidden', visible > 0);
+      }
+    }
+
+    const originalFilter = filterCards;
+    filterCards = function() {
+      originalFilter();
+      updateEmptyState();
+    };
+  })();
+</script>
+
+<style>
+  .filter-btn.active {
+    background: var(--color-accent);
+    color: white !important;
+    border-color: var(--color-accent) !important;
+  }
+  .dark .filter-btn.active {
+    background: var(--color-accent);
+    color: white !important;
+  }
+  .filter-hidden {
+    display: none !important;
+  }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+  .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
