@@ -12,11 +12,12 @@ export interface Props {
 }
 const { title, phase, description } = Astro.props;
 const { data } = phase;
+const currentPhaseSlug = phase.id.split('/').pop() ?? phase.id;
 ---
 
 <BaseLayout title={title} description={description || data.description}>
   <div class="flex max-w-7xl mx-auto">
-    <Sidebar class="hidden lg:block h-[calc(100vh-4rem)] sticky top-16" currentPhase={phase.id} />
+    <Sidebar class="hidden lg:block h-[calc(100vh-4rem)] sticky top-16" currentPhase={currentPhaseSlug} />
     <main class="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-8 lg:py-12 max-w-3xl mx-auto">
       <div class="flex items-center gap-3 mb-8 pb-8 border-b border-[var(--color-border)]">
         <span class="text-3xl">{data.icon}</span>
@@ -26,7 +27,7 @@ const { data } = phase;
           <p class="text-[var(--color-text-secondary)] mt-1">{data.description}</p>
         </div>
       </div>
-      <PhaseNav currentPhase={phase.id} currentNum={data.phase} />
+      <PhaseNav currentPhase={currentPhaseSlug} currentNum={data.phase} />
       <article class="prose prose-slate max-w-none mt-8
         prose-headings:text-[var(--color-primary)]
         prose-a:text-[var(--color-accent)] prose-a:no-underline hover:prose-a:text-[var(--color-accent-light)]
@@ -40,7 +41,7 @@ const { data } = phase;
       ">
         <slot />
       </article>
-      <PhaseNav currentPhase={phase.id} currentNum={data.phase} class="mt-12 pt-6 border-t border-[var(--color-border)]" />
+      <PhaseNav currentPhase={currentPhaseSlug} currentNum={data.phase} class="mt-12 pt-6 border-t border-[var(--color-border)]" />
     </main>
   </div>
 </BaseLayout>
