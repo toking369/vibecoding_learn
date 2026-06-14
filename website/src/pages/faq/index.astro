@@ -1,0 +1,46 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const faqs = [
+  { q: 'AI 生成的代码打开是空白的？', a: '检查是否保存为 .html 文件，用浏览器打开而不是用文本编辑器打开。' },
+  { q: '图片显示不出来？', a: '图片路径要用相对路径或在线链接。如果图片在本地，确保路径正确。' },
+  { q: '样式跟我想要的不一样？', a: '给 AI 更具体的描述，比如具体的颜色值、参考网站链接。' },
+  { q: '页面在手机上不好看？', a: '告诉 AI"加响应式设计，适配手机"。' },
+  { q: '代码太多看不懂？', a: '不需要看懂，只要能用就行。也可以让 AI 用大白话解释。' },
+  { q: 'AI 把我的代码改坏了？', a: '保留之前的版本，重新告诉 AI 你的需求。建议每次修改前备份。' },
+];
+---
+
+<BaseLayout title="FAQ / 常见问题" description="Vibe Coding 建站常见问题与解答">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-bold mb-2">常见问题</h1>
+    <p class="text-[var(--color-text-secondary)] mb-8">遇到问题先看看这里，能解决 90% 的情况。</p>
+
+    <div class="space-y-4">
+      {faqs.map((faq) => (
+        <details class="group p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] open:border-[var(--color-accent)] transition-colors">
+          <summary class="cursor-pointer font-medium text-[var(--color-text)] group-open:text-[var(--color-accent)] transition-colors">
+            {faq.q}
+          </summary>
+          <p class="mt-3 text-sm text-[var(--color-text-secondary)] leading-relaxed">{faq.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="mt-10 p-4 rounded-xl bg-[var(--color-bg-secondary)] border border-[var(--color-border)]">
+      <h2 class="font-semibold mb-2">🚫 十大避坑清单</h2>
+      <ol class="space-y-1.5 text-sm text-[var(--color-text-secondary)] list-decimal list-inside">
+        <li>先小后大：从一个页面开始</li>
+        <li>经常保存：每次改完把代码保存好</li>
+        <li>一次一个需求：不要一次性提 10 个修改</li>
+        <li>学会回退：改坏了就回到上一个版本</li>
+        <li>用浏览器检查：看 Console 有没有红字</li>
+        <li>善用截图：把问题截图发给 AI</li>
+        <li>注意隐私：不要放密码和密钥</li>
+        <li>备份大法：每次重大改动前复制一份</li>
+        <li>保持简单：能用一页解决的不要做五页</li>
+        <li>享受过程：这是创造，不是考试</li>
+      </ol>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,37 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="提示词模板速查" description="所有提示词模板汇总，直接复制使用">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-bold mb-2">提示词模板速查</h1>
+    <p class="text-[var(--color-text-secondary)] mb-8">所有提示词模板汇总，直接复制给 AI 使用。</p>
+
+    <div class="space-y-6">
+      <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+        <h2 class="font-semibold mb-3">📋 写 PRD</h2>
+        <div class="p-3 rounded-lg bg-[var(--color-bg-secondary)] text-sm font-mono whitespace-pre-wrap">请帮我写一份产品需求文档（PRD），项目是 [网站名称]。网站类型：[个人博客/作品集/电商] 主要用途：[描述核心目的] 目标用户：[谁会来看] 我希望包含的功能：1.[功能A] 2.[功能B]</div>
+      </div>
+
+      <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+        <h2 class="font-semibold mb-3">🎨 设计风格</h2>
+        <div class="p-3 rounded-lg bg-[var(--color-bg-secondary)] text-sm font-mono whitespace-pre-wrap">请为我的 [网站类型] 推荐 3 种设计风格方案，每种方案给出：主色、辅色、适合的字体、风格描述。</div>
+      </div>
+
+      <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+        <h2 class="font-semibold mb-3">💻 前端开发</h2>
+        <div class="p-3 rounded-lg bg-[var(--color-bg-secondary)] text-sm font-mono whitespace-pre-wrap">请帮我创建一个多页面网站，包含 [页面列表]。所有页面使用同一个 CSS 文件，导航栏保持一致，使用响应式设计。</div>
+      </div>
+
+      <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+        <h2 class="font-semibold mb-3">🔧 修改意见</h2>
+        <div class="p-3 rounded-lg bg-[var(--color-bg-secondary)] text-sm font-mono whitespace-pre-wrap">这个页面挺好的，但我想做几个调整：1.[修改A] 2.[修改B] 3.[修改C] 请直接输出修改后的完整代码。</div>
+      </div>
+
+      <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+        <h2 class="font-semibold mb-3">🧪 代码审查</h2>
+        <div class="p-3 rounded-lg bg-[var(--color-bg-secondary)] text-sm font-mono whitespace-pre-wrap">请帮我审查以下代码，检查：语法错误、链接是否有效、移动端适配、安全风险。</div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

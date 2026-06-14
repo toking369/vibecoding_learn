@@ -1,0 +1,40 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const exercises = [
+  { num: 0, title: '环境搭建', desc: '注册账号、安装工具、验证环境', time: '30 分钟', phase: 'phase-00' },
+  { num: 1, title: '写你的第一份 PRD', desc: '使用提示词模板让 AI 生成 PRD', time: '20 分钟', phase: 'phase-01' },
+  { num: 2, title: '设计你的首页', desc: '让 AI 生成 3 种设计风格方案', time: '20 分钟', phase: 'phase-02' },
+  { num: 3, title: '完成多页面网站', desc: '让 AI 创建一个 4 页完整网站', time: '60 分钟', phase: 'phase-03' },
+  { num: 4, title: '给网站加后端', desc: '用 Formspree 添加联系表单', time: '30 分钟', phase: 'phase-04' },
+  { num: 5, title: '全面检查网站', desc: '代码审查 + 检查清单', time: '20 分钟', phase: 'phase-05' },
+  { num: 6, title: '部署上线', desc: '部署到 Vercel 并分享', time: '15 分钟', phase: 'phase-06' },
+  { num: 7, title: '健康检查', desc: '做一次全面的网站健康检查', time: '15 分钟', phase: 'phase-07' },
+  { num: 8, title: 'SEO 优化', desc: '优化搜索引擎排名', time: '20 分钟', phase: 'phase-08' },
+  { num: 9, title: '重写文案', desc: '用 AI 优化网站文案', time: '15 分钟', phase: 'phase-09' },
+];
+---
+
+<BaseLayout title="交互式练习总览" description="所有练习任务汇总">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-bold mb-2">交互式练习总览</h1>
+    <p class="text-[var(--color-text-secondary)] mb-8">本指南共包含 10 个练习，建议按顺序完成。每天完成 1-2 个，一周走完全流程。</p>
+
+    <div class="space-y-3">
+      {exercises.map((ex) => (
+        <a href={`/phases/${ex.phase}`} class="block p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)] transition-colors group">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center text-sm font-bold text-[var(--color-accent)]">{ex.num}</span>
+              <div>
+                <h3 class="font-semibold group-hover:text-[var(--color-accent)] transition-colors">{ex.title}</h3>
+                <p class="text-sm text-[var(--color-text-secondary)]">{ex.desc}</p>
+              </div>
+            </div>
+            <span class="text-xs text-[var(--color-text-muted)] whitespace-nowrap">{ex.time}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

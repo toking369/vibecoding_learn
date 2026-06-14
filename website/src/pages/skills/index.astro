@@ -1,0 +1,62 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const skills = [
+  { category: '📄 产品文档', items: [
+    { name: 'create-prd', install: 'npx skills add phuryn/pm-skills@create-prd -g -y', desc: '创建完整 PRD' },
+    { name: 'docs-writing', install: 'npx skills add mblode/agent-skills@docs-writing -g -y', desc: '文档写作辅助' },
+  ]},
+  { category: '🎨 设计', items: [
+    { name: 'ui-ux-pro-max', install: 'npx skills add nexu-io/open-design@ui-ux-pro-max -g -y', desc: 'UI/UX 设计专家' },
+  ]},
+  { category: '💻 前端开发', items: [
+    { name: 'tailwindcss-v4', install: 'npx skills add busirocket/agents-skills@busirocket-tailwindcss-v4 -g -y', desc: 'Tailwind CSS v4 专家' },
+    { name: 'react-nextjs-patterns', install: 'npx skills add duyet/claude-plugins@react-nextjs-patterns -g -y', desc: 'React/Next.js 模式' },
+  ]},
+  { category: '⚙️ 后端开发', items: [
+    { name: 'nodejs-express', install: 'npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y', desc: 'Node.js + Express' },
+    { name: 'fastapi-python', install: 'npx skills add mindrally/skills@fastapi-python -g -y', desc: 'FastAPI 后端开发' },
+  ]},
+  { category: '🧪 测试', items: [
+    { name: 'webapp-testing', install: '系统内置', desc: 'Web 应用测试' },
+    { name: 'javascript-testing', install: 'npx skills add wshobson/agents@javascript-testing-patterns -g -y', desc: 'JS 测试模式' },
+  ]},
+  { category: '🚀 部署', items: [
+    { name: 'devops-deployment', install: 'npx skills add yonatangross/orchestkit@devops-deployment -g -y', desc: 'DevOps 部署专家' },
+  ]},
+];
+---
+
+<BaseLayout title="Skills 索引" description="所有可用的 AI Skills，按类别整理，支持一键安装">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-bold mb-2">Skills 索引</h1>
+    <p class="text-[var(--color-text-secondary)] mb-8">所有在本指南中出现的 AI Skills，按类别整理，支持一键安装。</p>
+
+    {skills.map((category) => (
+      <div class="mb-10">
+        <h2 class="text-xl font-bold mb-4">{category.category}</h2>
+        <div class="space-y-3">
+          {category.items.map((skill) => (
+            <div class="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h3 class="font-semibold text-[var(--color-text)]">{skill.name}</h3>
+                  <p class="text-sm text-[var(--color-text-secondary)] mt-0.5">{skill.desc}</p>
+                </div>
+              </div>
+              <div class="mt-2">
+                <code class="text-xs px-2 py-1 rounded bg-[var(--color-bg-secondary)] text-[var(--color-text)] block overflow-x-auto">{skill.install}</code>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+
+    <div class="mt-8 p-4 rounded-xl bg-[var(--color-bg-secondary)] border border-[var(--color-border)]">
+      <h2 class="font-semibold mb-2">🔍 查找更多 Skills</h2>
+      <code class="text-sm">npx skills find [关键词]</code>
+      <p class="text-sm text-[var(--color-text-secondary)] mt-2">例如：npx skills find "react"、npx skills find "database"</p>
+    </div>
+  </div>
+</BaseLayout>
