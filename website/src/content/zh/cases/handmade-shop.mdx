@@ -1,0 +1,164 @@
+---
+title: '手作饰品小店'
+description: '从零搭建一个手作饰品在线商店——商品管理、购物车、在线支付'
+emoji: '🛒'
+section: 'cases'
+order: 4
+difficulty: '进阶'
+category: '电商'
+tech_type: '全栈'
+frontend: 'Next.js + Tailwind CSS'
+database: 'Supabase（PostgreSQL）'
+backend: 'Next.js API Routes'
+ai_api: '无'
+payment: 'Stripe'
+auth: 'Supabase Auth'
+deploy: 'Vercel'
+estimated_hours: 8
+---
+
+## 项目概览
+
+**人物**：小美，手工饰品创作者，想在网上卖自己的作品
+**目标**：一个带购物车和在线支付的小型电商网站
+**用时**：约 8 小时
+**最终成果**：一个全栈电商小站，支持 Stripe 支付，部署在 Vercel
+
+---
+
+## 用到的 Skills 一览
+
+```bash
+# 前端
+npx skills add busirocket/agents-skills@busirocket-tailwindcss-v4 -g -y
+
+# 后端
+npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y
+
+# 部署
+npx skills add yonatangross/orchestkit@devops-deployment -g -y
+```
+
+---
+
+## 阶段 0：准备工作
+
+（GitHub + Vercel 账号 + VS Code + Node.js）
+
+额外注册：
+- [Stripe](https://stripe.com) — 支付处理
+- [Supabase](https://supabase.com) — 数据库 + 用户认证
+
+---
+
+## 阶段 1：技术选型分析
+
+### 项目技术选型
+
+| 方案 | 前端 | 后端 | 数据库 | 支付 | 推荐指数 |
+|------|------|------|--------|------|---------|
+| A | Next.js | API Routes | Supabase PostgreSQL | Stripe | ⭐⭐⭐⭐⭐ |
+| B | React | Express + Node | MongoDB | 微信支付 | ⭐⭐⭐ |
+| C | Astro | Astro DB | Turso | LemonSqueezy | ⭐⭐⭐ |
+
+**推荐方案 A**：Next.js API Routes 让前后端在一个项目中完成，减少部署复杂度。Supabase 提供数据库 + 认证二合一。Stripe 有成熟的 React SDK（`@stripe/react-stripe-js`），新手友好。
+
+### 数据库选择
+
+| 数据库 | 优点 | 缺点 |
+|--------|------|------|
+| Supabase (PostgreSQL) | 免费额度充足、可视化、实时订阅 | 存储有限（500MB） |
+| MongoDB Atlas | 文档灵活 | 关系查询不便 |
+| 自建 MySQL | 完全控制 | 需要服务器 |
+
+**选择 Supabase**：电商需要关系型数据（商品→订单→用户），PostgreSQL 天然适合。Supabase 的 Row Level Security 让前端可以直接安全查询数据库。
+
+---
+
+## 阶段 2：数据库构建
+
+### 表结构
+
+```sql
+-- 商品表
+CREATE TABLE products (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT,
+  price INTEGER NOT NULL,  -- 单位：分，避免浮点误差
+  image_url TEXT,
+  stock INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 订单表
+CREATE TABLE orders (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id UUID REFERENCES auth.users,
+  status TEXT DEFAULT 'pending',
+  total INTEGER NOT NULL,
+  stripe_payment_id TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 订单项表
+CREATE TABLE order_items (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  order_id BIGINT REFERENCES orders,
+  product_id BIGINT REFERENCES products,
+  quantity INTEGER NOT NULL,
+  price INTEGER NOT NULL
+);
+```
+
+### RLS 策略
+
+```sql
+-- 商品表公开可读
+CREATE POLICY "Products are public" ON products
+  FOR SELECT USING (true);
+
+-- 用户只能看自己的订单
+CREATE POLICY "Users see own orders" ON orders
+  FOR SELECT USING (auth.uid() = user_id);
+```
+
+---
+
+## 阶段 3：后端搭建
+
+### API 设计
+
+| 端点 | 方法 | 功能 |
+|------|------|------|
+| `/api/products` | GET | 获取商品列表 |
+| `/api/products/[id]` | GET | 获取商品详情 |
+| `/api/checkout` | POST | 创建 Stripe 支付 Session |
+| `/api/webhook` | POST | Stripe 支付回调（更新订单状态） |
+
+---
+
+## 阶段 4：部署方案
+
+- **前端**：Vercel（Next.js 原生支持）
+- **数据库**：Supabase（托管 PostgreSQL）
+- **支付**：Stripe（配置 Webhook 指向 Vercel 域名）
+- **域名**：绑定自定义域名
+
+---
+
+## 阶段 5：SEO 优化
+
+- 每个商品独立详情页，SEO 友好
+- OG 图片：商品图 + 价格 + 名称
+- 结构化数据（Product Schema）
+- Sitemap 自动包含所有商品页
+
+---
+
+## 阶段 6：文案 & 营销
+
+- 商品描述写「故事」而非「参数」：这件耳环的灵感来源？
+- 小红书 + 抖音发布制作过程短视频，引流到网站
+- 首单优惠码（Stripe Coupon 功能）
+- 邮件订阅上新通知（Supabase 存订阅用户）
