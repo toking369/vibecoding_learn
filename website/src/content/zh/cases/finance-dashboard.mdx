@@ -1,0 +1,119 @@
+---
+title: '个人财务仪表盘'
+description: '从零搭建一个个人财务管理工具——记账、分类统计、可视化图表'
+emoji: '📊'
+section: 'cases'
+order: 8
+difficulty: '进阶'
+category: 'SaaS 工具'
+tech_type: '全栈+可视化'
+frontend: 'Next.js + Tailwind CSS + Chart.js'
+database: 'MongoDB Atlas'
+backend: 'Next.js API Routes'
+ai_api: '无'
+payment: '无'
+auth: 'NextAuth.js'
+deploy: 'Vercel'
+estimated_hours: 7
+---
+
+## 项目概览
+
+**人物**：小杨，上班族，想做一个工具追踪自己的收支
+**目标**：记账 + 分类统计 + 可视化图表
+**用时**：约 7 小时
+**最终成果**：一个带图表的个人财务仪表盘
+
+---
+
+## 用到的 Skills 一览
+
+```bash
+# 前端
+npx skills add busirocket/agents-skills@busirocket-tailwindcss-v4 -g -y
+
+# 后端
+npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y
+
+# 部署
+npx skills add yonatangross/orchestkit@devops-deployment -g -y
+```
+
+---
+
+## 阶段 1：技术选型分析
+
+### 为什么选 MongoDB？
+
+财务数据结构灵活——每笔交易可能有不同的字段（餐饮有餐厅名、购物有商品名）。MongoDB 的文档模型天然适合。
+
+### 为什么选 Chart.js？
+
+| 库 | 复杂度 | 可定制性 | 包大小 |
+|----|--------|---------|--------|
+| Chart.js | 低 | 高 | 60KB |
+| D3.js | 高 | 极高 | 250KB |
+| Recharts | 中 | 中 | 100KB |
+
+对新手来说，Chart.js 的配置最简单直观。
+
+---
+
+## 阶段 2：数据库构建
+
+MongoDB 集合结构（一个文档示例）：
+
+```json
+// transactions 集合
+{
+  "_id": ObjectId("..."),
+  "userId": "user_123",
+  "type": "expense",
+  "amount": 128.00,
+  "category": "餐饮",
+  "tags": ["午餐", "外卖"],
+  "note": "沙县小吃",
+  "date": "2026-06-14",
+  "createdAt": ISODate("...")
+}
+
+// budgets 集合
+{
+  "_id": ObjectId("..."),
+  "userId": "user_123",
+  "category": "餐饮",
+  "monthlyLimit": 2000,
+  "month": "2026-06"
+}
+```
+
+---
+
+## 阶段 3：API 设计
+
+| 端点 | 功能 |
+|------|------|
+| `GET /api/transactions` | 获取交易列表（支持分页 + 筛选） |
+| `POST /api/transactions` | 新增交易 |
+| `DELETE /api/transactions/:id` | 删除交易 |
+| `GET /api/stats/monthly` | 月度统计（按分类汇总） |
+| `GET /api/stats/trend` | 趋势数据（用于折线图） |
+
+---
+
+## 阶段 4：可视化图表
+
+### 首页看板展示
+
+- 饼图：本月支出分类占比
+- 折线图：近 6 月收支趋势
+- 环形图：预算使用进度
+- 表格：最近 10 笔交易
+
+---
+
+## 阶段 5：部署 + SEO + 营销
+
+- **部署**：Vercel + MongoDB Atlas
+- **SEO**：不需要（工具型应用，登录后使用）
+- **营销**：在知乎/小红书发「我做了个记账工具」帖子，免费使用吸引用户，后续考虑 Pro 版本
