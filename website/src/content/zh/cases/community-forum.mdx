@@ -1,0 +1,190 @@
+---
+title: '城市活动社区'
+description: '从零搭建一个同城活动社区——用户认证、活动发布、报名参与、评论互动'
+emoji: '🗺️'
+section: 'cases'
+order: 5
+difficulty: '高阶'
+category: '社区'
+tech_type: '全栈+认证'
+frontend: 'React + Tailwind CSS'
+database: 'Firebase Firestore'
+backend: 'Firebase Cloud Functions'
+ai_api: '无'
+payment: '无'
+auth: 'Firebase Auth'
+deploy: 'Vercel'
+estimated_hours: 10
+---
+
+## 项目概览
+
+**人物**：小陈，社区运营者，想做一个本地的活动发布和报名平台
+**目标**：用户可注册登录、发布活动、报名参加、评论互动
+**用时**：约 10 小时
+**最终成果**：一个带实时数据的小型社区平台
+
+---
+
+## 用到的 Skills 一览
+
+```bash
+# 前端
+npx skills add busirocket/agents-skills@busirocket-tailwindcss-v4 -g -y
+
+# 后端
+npx skills add aj-geddes/useful-ai-prompts@nodejs-express-server -g -y
+
+# 测试
+npx skills add wshobson/agents@javascript-testing-patterns -g -y
+
+# 部署
+npx skills add yonatangross/orchestkit@devops-deployment -g -y
+```
+
+---
+
+## 阶段 0：准备工作
+
+额外注册：[Firebase](https://firebase.google.com) — 提供 Auth + Firestore + Cloud Functions
+
+---
+
+## 阶段 1：技术选型分析
+
+### 为什么选 Firebase？
+
+| 方案 | 数据库 | 认证 | 实时 | 费用 |
+|------|--------|------|------|------|
+| Firebase | Firestore | ✅ 内置 | ✅ 实时监听 | 免费额度大 |
+| Supabase | PostgreSQL | ✅ 内置 | ✅ 实时 | 免费 500MB |
+| 自建 | 需要自建 | 需要集成 | 需要 WebSocket | 费用高 |
+
+**选择 Firebase**：社区需要实时功能（新活动、评论即时显示），Firestore 的 `onSnapshot` 一行代码实现实时订阅，对新手最友好。
+
+### 数据库选择
+
+Firestore 是 NoSQL 文档数据库，适合社区这种数据结构灵活的场景：
+
+```
+集合: users/{uid}        ← 用户资料
+集合: events/{id}        ← 活动帖
+  子集合: comments/{id}  ← 评论
+集合: registrations/{id} ← 报名记录
+```
+
+---
+
+## 阶段 2：数据库构建（Firestore 控制台创建）
+
+### 集合结构
+
+```
+users/{uid}
+  ├── name: string
+  ├── avatar: string
+  └── bio: string
+
+events/{eventId}
+  ├── title: string
+  ├── description: string
+  ├── date: timestamp
+  ├── location: string
+  ├── maxParticipants: number
+  ├── organizerId: string
+  ├── createdAt: timestamp
+  └── status: 'upcoming' | 'ongoing' | 'ended'
+
+events/{eventId}/comments/{commentId}
+  ├── userId: string
+  ├── content: string
+  └── createdAt: timestamp
+
+registrations/{regId}
+  ├── eventId: string
+  ├── userId: string
+  └── createdAt: timestamp
+```
+
+### 安全规则（Firestore Rules）
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /events/{eventId}/comments/{commentId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+    }
+    match /registrations/{regId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+    }
+    match /users/{uid} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
+```
+
+---
+
+## 阶段 3：后端搭建
+
+Firebase Cloud Functions 处理后台逻辑：
+
+| 函数 | 触发 | 功能 |
+|------|------|------|
+| `onNewRegistration` | Firestore 写入 | 报名数超限时自动拒绝 |
+| `onEventComplete` | 定时触发 | 活动结束后自动更新状态 |
+
+---
+
+## 阶段 4：前端开发
+
+### 页面结构
+
+- 首页：活动列表（按日期排序，实时更新）
+- 活动详情：介绍 + 评论 + 报名按钮
+- 发布活动：表单页面
+- 个人中心：我的活动 + 我的报名
+
+### 实时数据
+
+```javascript
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+
+const q = query(collection(db, 'events'), orderBy('date'));
+onSnapshot(q, (snapshot) => {
+  // 自动更新 UI
+});
+```
+
+---
+
+## 阶段 5：部署方案
+
+- **前端**：Vercel
+- **后端/数据库**：Firebase（无需额外服务器）
+- **认证**：Firebase Auth，支持邮箱 + Google 登录
+
+---
+
+## 阶段 6：SEO 优化
+
+- 活动详情页 SSR（使用 Next.js 或 Firestore SSR）
+- 每个活动独立 URL
+- Open Graph 标签（分享到微信群时展示活动信息）
+
+---
+
+## 阶段 7：文案 & 营销
+
+- 本地社群运营：微信群 + 公众号引流
+- 活动海报自动生成（Canvas API）
+- 推荐算法：根据用户报名历史推荐类似活动
