@@ -8,6 +8,28 @@ import { getCollection } from 'astro:content';
 
 const allCases = await getCollection('cases');
 const sorted = allCases.sort((a, b) => a.data.order - b.data.order);
+// Prepare card data in frontmatter to avoid type assertions in template expressions
+const prepared = sorted.map((doc, i) => {
+  const d = doc.data as Record<string, any>;
+  return {
+    title: d.title,
+    description: d.description || '',
+    emoji: d.emoji || '📁',
+    slug: doc.id.split('/').pop() || doc.id,
+    difficulty: (d.difficulty as '入门' | '进阶' | '高阶') || '入门',
+    category: d.category || '',
+    tech_type: d.tech_type || '',
+    frontend: d.frontend || '',
+    database: d.database || '',
+    backend: d.backend || '',
+    deploy: d.deploy || '',
+    estimated_hours: d.estimated_hours || 1,
+    index: i,
+    rawDifficulty: d.difficulty || '',
+    rawCategory: d.category || '',
+    rawTechType: d.tech_type || '',
+  };
+});
 ---
 
 <BaseLayout title="案例库" description="从入门到高阶，9 个真实项目带你实战 Vibe Coding——选择适合你的项目开始学习">
@@ -33,35 +55,30 @@ const sorted = allCases.sort((a, b) => a.data.order - b.data.order);
 
     <!-- Card grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-      {sorted.map((doc, i) => {
-        const d = doc.data;
-        // Cast to access extended frontmatter fields
-        const data = d as Record<string, any>;
-        return (
-          <div
-            data-case-card
-            data-difficulty={data.difficulty || ''}
-            data-category={data.category || ''}
-            data-tech-type={data.tech_type || ''}
-          >
-            <CaseCard
-              title={data.title}
-              description={data.description || ''}
-              emoji={data.emoji || '📁'}
-              slug={doc.id.split('/').pop() || doc.id}
-              difficulty={(data.difficulty as '入门' | '进阶' | '高阶') || '入门'}
-              category={data.category || ''}
-              tech_type={data.tech_type || ''}
-              frontend={data.frontend || ''}
-              database={data.database || ''}
-              backend={data.backend || ''}
-              deploy={data.deploy || ''}
-              estimated_hours={data.estimated_hours || 1}
-              index={i}
-            />
-          </div>
-        );
-      })}
+      {prepared.map((c) => (
+        <div
+          data-case-card
+          data-difficulty={c.rawDifficulty}
+          data-category={c.rawCategory}
+          data-tech-type={c.rawTechType}
+        >
+          <CaseCard
+            title={c.title}
+            description={c.description}
+            emoji={c.emoji}
+            slug={c.slug}
+            difficulty={c.difficulty}
+            category={c.category}
+            tech_type={c.tech_type}
+            frontend={c.frontend}
+            database={c.database}
+            backend={c.backend}
+            deploy={c.deploy}
+            estimated_hours={c.estimated_hours}
+            index={c.index}
+          />
+        </div>
+      ))}
     </div>
   </div>
 </BaseLayout>
