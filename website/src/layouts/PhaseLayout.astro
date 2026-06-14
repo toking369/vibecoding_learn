@@ -1,0 +1,46 @@
+---
+// website/src/layouts/PhaseLayout.astro
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '@components/layout/Sidebar.astro';
+import PhaseNav from '@components/content/PhaseNav.astro';
+import type { CollectionEntry } from 'astro:content';
+
+export interface Props {
+  title: string;
+  phase: CollectionEntry<'phases'>;
+  description?: string;
+}
+const { title, phase, description } = Astro.props;
+const { data } = phase;
+---
+
+<BaseLayout title={title} description={description || data.description}>
+  <div class="flex max-w-7xl mx-auto">
+    <Sidebar class="hidden lg:block h-[calc(100vh-4rem)] sticky top-16" currentPhase={phase.id} />
+    <main class="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-8 lg:py-12 max-w-3xl mx-auto">
+      <div class="flex items-center gap-3 mb-8 pb-8 border-b border-[var(--color-border)]">
+        <span class="text-3xl">{data.icon}</span>
+        <div>
+          <div class="text-xs font-semibold text-[var(--color-accent)] uppercase tracking-wider">阶段 {data.phase} / 9</div>
+          <h1 class="text-2xl lg:text-3xl font-bold mt-1">{data.title}</h1>
+          <p class="text-[var(--color-text-secondary)] mt-1">{data.description}</p>
+        </div>
+      </div>
+      <PhaseNav currentPhase={phase.id} currentNum={data.phase} />
+      <article class="prose prose-slate max-w-none mt-8
+        prose-headings:text-[var(--color-primary)]
+        prose-a:text-[var(--color-accent)] prose-a:no-underline hover:prose-a:text-[var(--color-accent-light)]
+        prose-code:text-sm prose-code:bg-[var(--color-bg-secondary)] prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+        prose-pre:bg-[var(--color-primary)] prose-pre:border prose-pre:border-[var(--color-border)]
+        prose-img:rounded-xl prose-img:shadow-md
+        prose-hr:border-[var(--color-border)]
+        prose-strong:text-[var(--color-primary)]
+        prose-blockquote:border-l-[var(--color-accent)] prose-blockquote:text-[var(--color-text-secondary)]
+        prose-ul:list-disc prose-ol:list-decimal
+      ">
+        <slot />
+      </article>
+      <PhaseNav currentPhase={phase.id} currentNum={data.phase} class="mt-12 pt-6 border-t border-[var(--color-border)]" />
+    </main>
+  </div>
+</BaseLayout>

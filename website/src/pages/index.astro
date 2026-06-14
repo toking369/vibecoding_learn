@@ -1,0 +1,87 @@
+---
+// website/src/pages/index.astro
+import BaseLayout from '@layouts/BaseLayout.astro';
+import PhaseCard from '@components/ui/PhaseCard.astro';
+import { PHASES, SITE_TITLE, SITE_DESCRIPTION } from '@lib/constants';
+---
+
+<BaseLayout title="首页" description={SITE_DESCRIPTION}>
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      <div class="text-center max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)] text-sm font-medium mb-6 animate-fade-in-up">
+          <span class="w-2 h-2 rounded-full bg-[var(--color-accent)] animate-pulse" />零编程基础也能建站
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight animate-fade-in-up" style="animation-delay: 100ms">
+          <span class="text-[var(--color-primary)]">用</span>
+          <span class="text-[var(--color-accent)]"> AI </span>
+          <span class="text-[var(--color-primary)]">建网站，</span><br/>
+          <span class="text-[var(--color-primary)]">像聊天一样简单</span>
+        </h1>
+        <p class="mt-6 text-lg lg:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto animate-fade-in-up" style="animation-delay: 200ms">{SITE_DESCRIPTION}</p>
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style="animation-delay: 300ms">
+          <a href="/intro/what-is-vibe-coding" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-[var(--color-accent)] text-white font-semibold hover:bg-[var(--color-accent-light)] transition-all shadow-lg shadow-[var(--color-accent)]/20">
+            开始学习
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="/phases/phase-00" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl border border-[var(--color-border)] text-[var(--color-text)] font-semibold hover:bg-[var(--color-bg-secondary)] transition-colors">直接进入实战</a>
+        </div>
+      </div>
+    </div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] pointer-events-none -z-10">
+      <div class="absolute inset-0 bg-gradient-radial from-[var(--color-accent)]/5 to-transparent rounded-full" />
+    </div>
+  </section>
+
+  <!-- Phase Timeline -->
+  <section class="py-16 lg:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl lg:text-3xl font-bold">全流程实战路线图</h2>
+        <p class="mt-3 text-[var(--color-text-secondary)]">9 个阶段，从想法到上线，手把手带你走完</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+        {PHASES.map((phase, i) => (<PhaseCard phase={phase} index={i} href={`/phases/${phase.id}`} />))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Vibe Coding -->
+  <section class="py-16 lg:py-24 bg-[var(--color-bg-secondary)]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl lg:text-3xl font-bold">为什么选择 Vibe Coding？</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
+          <div class="w-12 h-12 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center text-2xl mb-4">⏱️</div>
+          <h3 class="font-semibold text-lg mb-2">几小时而非几个月</h3>
+          <p class="text-sm text-[var(--color-text-secondary)]">传统建站需要数月学习编程，Vibe Coding 让你几小时内从想法到上线。</p>
+        </div>
+        <div class="p-6 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
+          <div class="w-12 h-12 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center text-2xl mb-4">💰</div>
+          <h3 class="font-semibold text-lg mb-2">完全免费</h3>
+          <p class="text-sm text-[var(--color-text-secondary)]">所有工具都有免费版，部署也是免费的。</p>
+        </div>
+        <div class="p-6 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)]">
+          <div class="w-12 h-12 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center text-2xl mb-4">🎯</div>
+          <h3 class="font-semibold text-lg mb-2">无需编程经验</h3>
+          <p class="text-sm text-[var(--color-text-secondary)]">用自然语言跟 AI 对话即可。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 lg:py-24">
+    <div class="max-w-3xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl lg:text-3xl font-bold mb-4">准备好了吗？</h2>
+      <p class="text-[var(--color-text-secondary)] mb-8">不需要任何编程基础，现在就开始你的第一个网站。</p>
+      <a href="/setup/checklist" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[var(--color-primary)] text-white font-semibold hover:bg-[var(--color-primary-light)] transition-colors">
+        查看准备工作
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

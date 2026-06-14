@@ -1,0 +1,31 @@
+---
+// website/src/layouts/DocLayout.astro
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '@components/layout/Sidebar.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="flex max-w-7xl mx-auto">
+    <Sidebar class="hidden lg:block h-[calc(100vh-4rem)] sticky top-16" />
+    <main class="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-8 lg:py-12 max-w-3xl mx-auto">
+      <article class="prose prose-slate max-w-none
+        prose-headings:text-[var(--color-primary)]
+        prose-a:text-[var(--color-accent)] prose-a:no-underline hover:prose-a:text-[var(--color-accent-light)]
+        prose-code:text-sm prose-code:bg-[var(--color-bg-secondary)] prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+        prose-pre:bg-[var(--color-primary)] prose-pre:border prose-pre:border-[var(--color-border)]
+        prose-img:rounded-xl prose-img:shadow-md
+        prose-hr:border-[var(--color-border)]
+        prose-strong:text-[var(--color-primary)]
+        prose-blockquote:border-l-[var(--color-accent)] prose-blockquote:text-[var(--color-text-secondary)]
+      ">
+        <slot />
+      </article>
+    </main>
+  </div>
+</BaseLayout>

@@ -1,0 +1,34 @@
+---
+// website/src/components/content/PhaseNav.astro
+import { PHASES } from '@lib/constants';
+
+export interface Props {
+  currentPhase: string;
+  currentNum: number;
+  class?: string;
+}
+const { currentPhase, currentNum, class: className = '' } = Astro.props;
+const prevPhase = currentNum > 0 ? PHASES[currentNum - 1] : null;
+const nextPhase = currentNum < PHASES.length - 1 ? PHASES[currentNum + 1] : null;
+---
+
+<div class={`flex items-center justify-between gap-4 ${className}`}>
+  {prevPhase ? (
+    <a href={`/phases/${prevPhase.id}`} class="flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors group">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="group-hover:-translate-x-1 transition-transform"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      <span class="hidden sm:inline">
+        <span class="text-xs block text-[var(--color-text-muted)]">上一阶段</span>
+        <span>{prevPhase.icon} {prevPhase.title}</span>
+      </span>
+    </a>
+  ) : <div />}
+  {nextPhase ? (
+    <a href={`/phases/${nextPhase.id}`} class="flex items-center gap-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors group text-right">
+      <span class="hidden sm:inline">
+        <span class="text-xs block text-[var(--color-text-muted)]">下一阶段</span>
+        <span>{nextPhase.icon} {nextPhase.title}</span>
+      </span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="group-hover:translate-x-1 transition-transform"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  ) : <div />}
+</div>

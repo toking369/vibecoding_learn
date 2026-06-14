@@ -1,0 +1,17 @@
+---
+import { getCollection, render } from 'astro:content';
+import PhaseLayout from '@layouts/PhaseLayout.astro';
+
+export async function getStaticPaths() {
+  const phases = await getCollection('phases');
+  return phases.map((phase) => ({
+    params: { slug: phase.id.split('/').pop() },
+    props: { phase },
+  }));
+}
+const { phase } = Astro.props;
+const { Content } = await render(phase);
+---
+<PhaseLayout title={phase.data.title} phase={phase} description={phase.data.description}>
+  <Content />
+</PhaseLayout>
