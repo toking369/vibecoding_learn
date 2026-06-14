@@ -1,0 +1,57 @@
+---
+// src/components/ui/CaseCard.astro
+export interface Props {
+  title: string;
+  description: string;
+  emoji: string;
+  slug: string;
+  difficulty: '入门' | '进阶' | '高阶';
+  category: string;
+  tech_type: string;
+  frontend: string;
+  database: string;
+  backend: string;
+  deploy: string;
+  estimated_hours: number;
+  index: number;
+}
+const { title, description, emoji, slug, difficulty, category, tech_type, frontend, database, backend, deploy, estimated_hours, index } = Astro.props;
+
+const difficultyColors: Record<string, string> = {
+  '入门': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+  '进阶': 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+  '高阶': 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300',
+};
+
+const techTags = [frontend, database, backend].filter(t => t && t !== '无');
+---
+
+<a href={`/cases/${slug}`} class="group relative p-5 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-accent)]/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 reveal" style={`transition-delay: ${index * 80}ms`}>
+  <div class="absolute inset-0 rounded-xl bg-gradient-to-br from-[var(--color-accent)]/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" aria-hidden="true" />
+  <div class="relative z-[1] flex flex-col gap-3">
+    <!-- Row 1: emoji + title -->
+    <div class="flex items-start gap-3">
+      <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-accent)]/10 to-[var(--color-accent)]/5 flex items-center justify-center text-xl group-hover:scale-110 group-hover:-rotate-3 transition-all duration-300">{emoji}</span>
+      <div class="min-w-0 flex-1">
+        <h3 class="font-semibold text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors leading-tight">{title}</h3>
+        <p class="text-sm text-[var(--color-text-secondary)] mt-1 line-clamp-2 leading-relaxed">{description}</p>
+      </div>
+    </div>
+    <!-- Row 2: badges row -->
+    <div class="flex flex-wrap items-center gap-1.5">
+      <span class={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${difficultyColors[difficulty]}`}>{difficulty}</span>
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)]">{category}</span>
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)]">{tech_type}</span>
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs text-[var(--color-text-muted)]">
+        <span>⏱️</span>
+        <span>{estimated_hours} 小时</span>
+      </span>
+    </div>
+    <!-- Row 3: tech tags -->
+    <div class="flex flex-wrap gap-1">
+      {techTags.map((tag) => (
+        <code class="text-[0.7rem] px-1.5 py-0.5 rounded-md bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)] font-mono">{tag}</code>
+      ))}
+    </div>
+  </div>
+</a>
