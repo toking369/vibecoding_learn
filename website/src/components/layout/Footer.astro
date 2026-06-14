@@ -3,35 +3,39 @@ import { SITE_TITLE } from '@lib/constants';
 ---
 
 <footer class="border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
       <div>
-        <h3 class="font-bold text-lg mb-3">{SITE_TITLE}</h3>
-        <p class="text-sm text-[var(--color-text-secondary)]">
+        <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+          <span class="text-2xl">⚡</span>
+          {SITE_TITLE}
+        </h3>
+        <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed">
           面向零编程基础人群的 Vibe Coding 实操指南。<br/>
           用 AI 辅助编程，从想法到上线，几小时搞定。
         </p>
       </div>
       <div>
-        <h4 class="font-semibold text-sm mb-3">快速导航</h4>
-        <ul class="space-y-2 text-sm text-[var(--color-text-secondary)]">
-          <li><a href="/intro/what-is-vibe-coding" class="hover:text-[var(--color-accent)]">了解 Vibe Coding</a></li>
-          <li><a href="/phases/phase-00" class="hover:text-[var(--color-accent)]">全流程实战</a></li>
-          <li><a href="/skills" class="hover:text-[var(--color-accent)]">Skills 索引</a></li>
-          <li><a href="/faq" class="hover:text-[var(--color-accent)]">FAQ</a></li>
+        <h4 class="font-semibold text-sm mb-4 text-[var(--color-text)]">快速导航</h4>
+        <ul class="space-y-2.5 text-sm text-[var(--color-text-secondary)]">
+          <li><a href="/intro/what-is-vibe-coding" class="hover:text-[var(--color-accent)] transition-colors">了解 Vibe Coding</a></li>
+          <li><a href="/phases/phase-00" class="hover:text-[var(--color-accent)] transition-colors">全流程实战</a></li>
+          <li><a href="/skills" class="hover:text-[var(--color-accent)] transition-colors">Skills 索引</a></li>
+          <li><a href="/faq" class="hover:text-[var(--color-accent)] transition-colors">FAQ</a></li>
         </ul>
       </div>
       <div>
-        <h4 class="font-semibold text-sm mb-3">相关资源</h4>
-        <ul class="space-y-2 text-sm text-[var(--color-text-secondary)]">
-          <li><a href="https://docs.astro.build" target="_blank" class="hover:text-[var(--color-accent)]">Astro 文档</a></li>
-          <li><a href="https://tailwindcss.com" target="_blank" class="hover:text-[var(--color-accent)]">Tailwind CSS</a></li>
-          <li><a href="https://vercel.com" target="_blank" class="hover:text-[var(--color-accent)]">Vercel</a></li>
+        <h4 class="font-semibold text-sm mb-4 text-[var(--color-text)]">相关资源</h4>
+        <ul class="space-y-2.5 text-sm text-[var(--color-text-secondary)]">
+          <li><a href="https://docs.astro.build" target="_blank" rel="noopener" class="hover:text-[var(--color-accent)] transition-colors inline-flex items-center gap-1">Astro 文档 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></li>
+          <li><a href="https://tailwindcss.com" target="_blank" rel="noopener" class="hover:text-[var(--color-accent)] transition-colors inline-flex items-center gap-1">Tailwind CSS <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></li>
+          <li><a href="https://vercel.com" target="_blank" rel="noopener" class="hover:text-[var(--color-accent)] transition-colors inline-flex items-center gap-1">Vercel <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></li>
         </ul>
       </div>
     </div>
-    <div class="mt-8 pt-6 border-t border-[var(--color-border)] text-center text-xs text-[var(--color-text-muted)]">
-      <p>© {new Date().getFullYear()} Vibe Coding 建站指南. Built with Astro ⚡</p>
+    <div class="mt-10 pt-6 border-t border-[var(--color-border)] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--color-text-muted)]">
+      <p>© {new Date().getFullYear()} {SITE_TITLE}</p>
+      <p class="flex items-center gap-1">Built with <span class="text-[var(--color-accent)]">♥</span> using Astro</p>
     </div>
   </div>
 </footer>

@@ -1,37 +1,51 @@
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
-/* 自定义主题变量 */
+/* ============================================================
+   Vibe Coding 建站指南 — Design System
+   Aesthetic: "Warm Creative Tech" — friendly, distinctive, premium
+   ============================================================ */
+
+/* ----- Theme Tokens (Light) ----- */
 :root {
-  /* 主色板 */
-  --color-primary: #0F172A;
-  --color-primary-light: #1E293B;
-  --color-accent: #0891B2;
-  --color-accent-light: #06B6D4;
-  --color-accent-dark: #0E7490;
+  /* Brand colors — warm indigo + coral for distinctive identity */
+  --color-brand: #2D1B69;
+  --color-brand-light: #4C2D8A;
+  --color-brand-dark: #1A103C;
 
-  /* 中性色 */
-  --color-bg: #F8FAFC;
-  --color-bg-secondary: #F1F5F9;
+  --color-accent: #E85D3A;
+  --color-accent-light: #FB8B67;
+  --color-accent-dark: #C94D2E;
+  --color-accent-glow: rgba(232, 93, 58, 0.15);
+
+  --color-accent-secondary: #F59E0B;
+  --color-accent-tertiary: #10B981;
+
+  /* Backgrounds — warm off-white palette */
+  --color-bg: #FCFCFA;
+  --color-bg-secondary: #F5F4F1;
   --color-surface: #FFFFFF;
-  --color-border: #E2E8F0;
+  --color-surface-hover: #FAFAF8;
+  --color-border: #E7E5E4;
+  --color-border-light: #F0EFED;
 
-  /* 文字 */
-  --color-text: #1E293B;
-  --color-text-secondary: #64748B;
-  --color-text-muted: #94A3B8;
+  /* Text — warm dark gray for comfortable reading */
+  --color-text: #292524;
+  --color-text-secondary: #78716C;
+  --color-text-muted: #A8A29E;
 
-  /* 功能色 */
+  /* Semantic colors */
   --color-success: #10B981;
   --color-warning: #F59E0B;
   --color-error: #EF4444;
-  --color-info: #3B82F6;
+  --color-info: #6366F1;
 
-  /* 排版 */
+  /* Typography */
+  --font-display: 'ZCOOL QingKe HuangYou', 'Noto Sans SC', sans-serif;
   --font-sans: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-  /* 间距系统 */
+  /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -40,49 +54,70 @@
   --space-8: 2rem;
   --space-12: 3rem;
   --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
 
-  /* 圆角 */
+  /* Border radius */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
 
-  /* 阴影 */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(41, 37, 36, 0.05);
+  --shadow-md: 0 4px 12px rgba(41, 37, 36, 0.07);
+  --shadow-lg: 0 12px 24px rgba(41, 37, 36, 0.08);
+  --shadow-xl: 0 20px 48px rgba(41, 37, 36, 0.1);
+
+  /* Brand gradient */
+  --gradient-brand: linear-gradient(135deg, var(--color-brand) 0%, var(--color-accent) 100%);
+  --gradient-warm: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-secondary) 100%);
+  --gradient-subtle: linear-gradient(180deg, rgba(45, 27, 105, 0.03) 0%, transparent 100%);
 }
 
-/* 深色模式 */
+/* ----- Theme Tokens (Dark) ----- */
 .dark {
-  --color-primary: #F8FAFC;
-  --color-primary-light: #E2E8F0;
-  --color-accent: #22D3EE;
-  --color-accent-light: #67E8F9;
-  --color-accent-dark: #06B6D4;
+  --color-brand: #B8A9E0;
+  --color-brand-light: #D4C9EE;
+  --color-brand-dark: #2D1B69;
 
-  --color-bg: #0F172A;
-  --color-bg-secondary: #1E293B;
-  --color-surface: #1E293B;
-  --color-border: #334155;
+  --color-accent: #FB8B67;
+  --color-accent-light: #FFA98D;
+  --color-accent-dark: #E85D3A;
+  --color-accent-glow: rgba(251, 139, 103, 0.2);
 
-  --color-text: #F1F5F9;
-  --color-text-secondary: #94A3B8;
-  --color-text-muted: #64748B;
+  --color-bg: #1C1917;
+  --color-bg-secondary: #292524;
+  --color-surface: #292524;
+  --color-surface-hover: #33302E;
+  --color-border: #44403C;
+  --color-border-light: #3A3734;
 
-  /* 功能色 — 深色模式 */
+  --color-text: #F5F5F4;
+  --color-text-secondary: #A8A29E;
+  --color-text-muted: #78716C;
+
   --color-success: #34D399;
   --color-warning: #FBBF24;
   --color-error: #F87171;
-  --color-info: #60A5FA;
+  --color-info: #818CF8;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.6);
+
+  --gradient-subtle: linear-gradient(180deg, rgba(184, 169, 224, 0.05) 0%, transparent 100%);
 }
 
-/* 全局基础样式 */
+/* ============================================================
+   Base Styles
+   ============================================================ */
 html {
   font-family: var(--font-sans);
   background-color: var(--color-bg);
   color: var(--color-text);
-  scroll-behavior: smooth;
 }
 
 body {
@@ -92,53 +127,484 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 排版样式 */
+/* ----- Typography ----- */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.3;
-  color: var(--color-primary);
+  color: var(--color-text, var(--color-primary));
+  scroll-margin-top: 6rem; /* offset for sticky header */
 }
 
-h1 { font-size: 2.5rem; letter-spacing: -0.02em; }
-h2 { font-size: 1.75rem; letter-spacing: -0.01em; }
+h1 {
+  font-size: 2.5rem;
+  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+}
+
+@media (min-width: 768px) {
+  h1 { font-size: 3rem; }
+}
+
+h2 {
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+}
+
 h3 { font-size: 1.375rem; }
 h4 { font-size: 1.125rem; }
+
+/* ============================================================
+   Article Content Styles
+   Shared by PhaseLayout and DocLayout — add .content-article
+   to any <article> that wraps MDX content.
+   ============================================================ */
+
+.content-article h2 {
+  margin-top: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.content-article h3 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.content-article h2:first-child,
+.content-article h3:first-child {
+  margin-top: 0;
+}
+
+.content-article p {
+  margin-bottom: 1.25rem;
+  line-height: 1.85;
+}
+
+/* Lists */
+.content-article ul,
+.content-article ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.content-article ul {
+  list-style-type: disc;
+}
+
+.content-article ol {
+  list-style-type: decimal;
+}
+
+.content-article li {
+  margin-bottom: 0.4rem;
+  line-height: 1.75;
+}
+
+.content-article li > ul,
+.content-article li > ol {
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Links */
+.content-article a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.content-article a:hover {
+  color: var(--color-accent-light);
+  border-bottom-color: var(--color-accent-light);
+}
+
+/* Inline code */
+.content-article code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.2em 0.45em;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  color: var(--color-accent-dark);
+}
+
+.dark .content-article code:not(pre code) {
+  color: var(--color-accent-light);
+}
+
+/* Code blocks */
+.content-article pre {
+  font-family: var(--font-mono);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.content-article pre code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Blockquotes */
+.content-article blockquote {
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-bg-secondary);
+  padding: 0.75rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+/* Tables */
+.content-article table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 1.5rem;
+  font-size: 0.9375rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.content-article th {
+  background: var(--color-bg-secondary);
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.content-article td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border-light);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.content-article tr:last-child td {
+  border-bottom: none;
+}
+
+.content-article tr:hover td {
+  background: var(--color-surface-hover);
+}
+
+/* Horizontal rule */
+.content-article hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5rem 0;
+}
+
+/* Strong / bold */
+.content-article strong {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Images */
+.content-article img {
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  margin: 1.5rem 0;
+  max-width: 100%;
+  height: auto;
+}
 
 a {
   color: var(--color-accent);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 a:hover { color: var(--color-accent-light); }
 
+/* Inline code */
 code {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  padding: 0.2em 0.4em;
+  padding: 0.15em 0.4em;
   background: var(--color-bg-secondary);
   border-radius: var(--radius-sm);
+  color: var(--color-accent-dark);
 }
 
+.dark code {
+  color: var(--color-accent-light);
+}
+
+code, pre, .prose code, .prose pre {
+  font-variant-ligatures: none;
+}
+
+/* Code blocks */
 pre {
   font-family: var(--font-mono);
-  background: var(--color-primary) !important;
-  border-radius: var(--radius-lg);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
   padding: 1.25rem;
   overflow-x: auto;
+  position: relative;
 }
 
 pre code {
   background: transparent;
   padding: 0;
   font-size: 0.8125rem;
+  color: inherit;
 }
 
-/* 动画 */
+/* Blockquotes */
+blockquote {
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-bg-secondary);
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  color: var(--color-text-secondary);
+}
+
+/* Selection */
+::selection {
+  background: var(--color-accent-glow);
+  color: var(--color-text);
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+   Animation Keyframes
+   ============================================================ */
+
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(1rem); }
+  from { opacity: 0; transform: translateY(1.5rem); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-1rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-1.5rem); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(1.5rem); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 8px var(--color-accent-glow); }
+  50% { box-shadow: 0 0 20px var(--color-accent-glow); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   Utility Animation Classes
+   ============================================================ */
+
 .animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out both;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.5s ease-out both;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in-right {
+  animation: fadeInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* ============================================================
+   Scroll-Triggered Reveal (Intersection Observer)
+   ============================================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 100ms; }
+.reveal-delay-2 { transition-delay: 200ms; }
+.reveal-delay-3 { transition-delay: 300ms; }
+.reveal-delay-4 { transition-delay: 400ms; }
+.reveal-delay-5 { transition-delay: 500ms; }
+
+/* ============================================================
+   Visual Effects
+   ============================================================ */
+
+/* Noise texture overlay — subtle grain for depth */
+.noise-overlay::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-warm {
+  background: var(--gradient-warm);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass morphism card */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass {
+  background: rgba(41, 37, 36, 0.7);
+  border: 1px solid rgba(68, 64, 60, 0.3);
+}
+
+/* Gradient border card */
+.gradient-border {
+  position: relative;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--gradient-warm);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ============================================================
+   View Transitions (Astro)
+   — DISABLED: crossfade causes visual flash on nav clicks.
+     Content/docs sites benefit from instant navigation.
+   ============================================================ */
+/* intentionally blank — no view transition animations */
+
+/* ============================================================
+   Prose overrides for MDX content
+   ============================================================ */
+.prose-custom {
+  --tw-prose-body: var(--color-text);
+  --tw-prose-headings: var(--color-text);
+  --tw-prose-links: var(--color-accent);
+  --tw-prose-bold: var(--color-text);
+  --tw-prose-code: var(--color-accent-dark);
+  --tw-prose-pre-bg: var(--color-bg-secondary);
+  --tw-prose-quotes: var(--color-text-secondary);
+  --tw-prose-quote-borders: var(--color-accent);
+  --tw-prose-hr: var(--color-border);
+}
+
+.dark .prose-custom {
+  --tw-prose-code: var(--color-accent-light);
+}
+
+/* ============================================================
+   Scrollbar Styling
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
 }

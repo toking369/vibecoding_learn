@@ -11,7 +11,7 @@ export async function getPhaseBySlug(slug: string) {
 }
 
 export async function getDocsBySection(section: string) {
-  const docs = await getCollection(section as 'intro' | 'setup' | 'cases');
+  const docs = await getCollection(section as 'intro' | 'cases');
   return docs.sort((a, b) => a.data.order - b.data.order);
 }
 

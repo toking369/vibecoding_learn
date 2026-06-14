@@ -24,17 +24,6 @@ const intro = defineCollection({
   }),
 });
 
-const setup = defineCollection({
-  loader: glob({ pattern: 'zh/setup/**/*.mdx', base: './src/content' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    section: z.string(),
-    order: z.number(),
-    draft: z.boolean().optional(),
-  }),
-});
-
 const cases = defineCollection({
   loader: glob({ pattern: 'zh/cases/**/*.mdx', base: './src/content' }),
   schema: z.object({
@@ -46,4 +35,4 @@ const cases = defineCollection({
   }),
 });
 
-export const collections = { phases, intro, setup, cases };
+export const collections = { phases, intro, cases };

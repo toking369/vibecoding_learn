@@ -16,22 +16,25 @@ const exercises = [
 ---
 
 <BaseLayout title="交互式练习总览" description="所有练习任务汇总">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-3xl font-bold mb-2">交互式练习总览</h1>
-    <p class="text-[var(--color-text-secondary)] mb-8">本指南共包含 10 个练习，建议按顺序完成。每天完成 1-2 个，一周走完全流程。</p>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    <h1 class="text-3xl lg:text-4xl font-bold mb-2">交互式练习总览</h1>
+    <p class="text-[var(--color-text-secondary)] mb-10">本指南共包含 10 个练习，建议按顺序完成。每天完成 1-2 个，一周走完全流程。</p>
 
     <div class="space-y-3">
-      {exercises.map((ex) => (
-        <a href={`/phases/${ex.phase}`} class="block p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)] transition-colors group">
+      {exercises.map((ex, i) => (
+        <a href={`/phases/${ex.phase}`} class="group block p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 reveal" style={`transition-delay: ${i * 60}ms`}>
           <div class="flex items-start justify-between gap-4">
             <div class="flex items-start gap-3">
-              <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center text-sm font-bold text-[var(--color-accent)]">{ex.num}</span>
+              <span class="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--color-accent)]/10 to-[var(--color-accent)]/5 flex items-center justify-center text-sm font-bold text-[var(--color-accent)] group-hover:scale-110 transition-transform">{ex.num}</span>
               <div>
                 <h3 class="font-semibold group-hover:text-[var(--color-accent)] transition-colors">{ex.title}</h3>
                 <p class="text-sm text-[var(--color-text-secondary)]">{ex.desc}</p>
               </div>
             </div>
-            <span class="text-xs text-[var(--color-text-muted)] whitespace-nowrap">{ex.time}</span>
+            <span class="text-xs text-[var(--color-text-muted)] whitespace-nowrap flex items-center gap-1">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              {ex.time}
+            </span>
           </div>
         </a>
       ))}
