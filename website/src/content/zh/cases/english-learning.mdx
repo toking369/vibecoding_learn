@@ -1,0 +1,125 @@
+---
+title: '英语学习平台'
+description: '从零搭建一个在线英语学习平台——课程管理、学习进度追踪、小测验'
+emoji: '📚'
+section: 'cases'
+order: 7
+difficulty: '进阶'
+category: '学习平台'
+tech_type: '全栈'
+frontend: 'Astro + React islands + Tailwind CSS'
+database: 'Supabase（PostgreSQL）'
+backend: 'Supabase Edge Functions'
+ai_api: 'OpenAI API（AI 对话练习）'
+payment: 'Stripe（订阅付费）'
+auth: 'Supabase Auth'
+deploy: 'Vercel'
+estimated_hours: 8
+---
+
+## 项目概览
+
+**人物**：小刘，英语老师，想做一个在线学习平台辅助教学
+**目标**：课程展示 + 学习进度追踪 + AI 口语练习 + 小测验
+**用时**：约 8 小时
+**最终成果**：一个带 AI 功能的学习平台
+
+---
+
+## 用到的 Skills 一览
+
+```bash
+# 前端
+npx skills add busirocket/agents-skills@busirocket-tailwindcss-v4 -g -y
+
+# AI
+npx skills add use-ai-sdk -g -y
+
+# 部署
+npx skills add yonatangross/orchestkit@devops-deployment -g -y
+```
+
+---
+
+## 阶段 1：技术选型分析
+
+### 为什么选 Astro + React islands？
+
+学习平台大部分是内容页（课程介绍），少部分需要交互（测验、AI 对话）。Astro 的 islands 架构正好匹配——静态内容用 Astro，交互组件用 React。
+
+### 数据库选择
+
+| 表 | 说明 |
+|----|------|
+| `courses` | 课程信息 |
+| `lessons` | 课时内容 |
+| `user_progress` | 学习进度 |
+| `quiz_attempts` | 测验记录 |
+| `subscriptions` | 订阅信息 |
+
+PostgreSQL 的关系型结构完美匹配这种有严格数据关系的场景。
+
+---
+
+## 阶段 2：数据库构建
+
+```sql
+CREATE TABLE courses (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  level TEXT CHECK (level IN ('beginner', 'intermediate', 'advanced')),
+  price INTEGER,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE lessons (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  course_id BIGINT REFERENCES courses,
+  title TEXT NOT NULL,
+  content_url TEXT,
+  order_num INTEGER,
+  duration_minutes INTEGER
+);
+
+CREATE TABLE user_progress (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id UUID REFERENCES auth.users,
+  lesson_id BIGINT REFERENCES lessons,
+  completed BOOLEAN DEFAULT false,
+  score INTEGER,
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, lesson_id)
+);
+```
+
+---
+
+## 阶段 3：AI 口语练习功能
+
+使用 OpenAI API 做一个 AI 对话练习：
+
+```javascript
+import OpenAI from 'openai';
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+async function aiTutor(userMessage, level) {
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      { role: 'system', content: `你是英语陪练，用户水平：${level}。请用适合的词汇和语速回应，并在对话结束后给出语法纠正建议。` },
+      { role: 'user', content: userMessage },
+    ],
+  });
+  return response.choices[0].message.content;
+}
+```
+
+---
+
+## 阶段 4：部署 + SEO + 营销
+
+- **部署**：Vercel + Supabase
+- **SEO**：课程页面独立 URL + 结构化数据（Course Schema）+ 博客引流
+- **营销**：免费试学课程 → 邮件收集 → 订阅转化。小红书发「30 天英语学习打卡」系列
